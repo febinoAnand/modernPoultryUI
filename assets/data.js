@@ -10,6 +10,18 @@
   var USERS_KEY = "ui_users_v1";
   var TRADES_KEY = "ui_trades_v1";
   var BILLS_KEY = "ui_bills_v1";
+  var PROFILE_KEY = "ui_profile_v1";
+
+  var GROUP_OPTIONS = [
+    "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
+    "workout", "temp", "febino2", "NEW TECH TRADERS", "DURAI BROILERS",
+    "MANIES BROILERS", "PP AGENCY", "SELVAM BROILERS", "ASS BROILER", "MINNAL TRADERS",
+    "SRS COUNTRY CHICKEN", "Maya", "KONAR CHICKEN", "GR CHICKEN", "Febinosolutions",
+    "Abi chicken", "ABU BROILERS", "VHL", "RG CHICKEN", "THARANI POULTRY",
+    "AADHI CHICKEN", "BASHA FRESH CHICKEN", "MOHA POULTRY FARMS", "MURUGAN TRADERS", "JK CHICKEN",
+    "MJ CHICKEN", "SR BISMI", "RRG CHICKEN", "KONGU BROILERS GUDALUR", "KONGU BROILERS PANDALUR",
+    "KONGU BROILERS MANJOOR", "KONGU BROILERS COONOOR", "KONGU BROILERS OOTY", "ANNAI POULTRY FARM", "CLEAN KANNUR VENTURES"
+  ];
 
   var FIRST_NAMES = ["Ramesh", "Suresh", "Priya", "Anitha", "Karthik", "Vijay", "Deepa", "Manoj", "Lakshmi", "Arjun", "Sneha", "Vikram", "Divya", "Rahul", "Meena", "Sathish", "Pooja", "Naveen", "Kavya", "Ashok", "Revathi", "Bala", "Nithya", "Ganesh"];
   var LAST_NAMES = ["Kumar", "Raj", "Nair", "Iyer", "Reddy", "Sharma", "Pillai", "Menon", "Gupta", "Rao"];
@@ -118,12 +130,38 @@
     localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
   }
 
+  function getProfile() {
+    var raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to default */ }
+    }
+    var email = sessionStorage.getItem("ui_user_email") || "vijay@gmail";
+    var username = email.split("@")[0];
+    var defaultProfile = {
+      name: username.charAt(0).toUpperCase() + username.slice(1),
+      username: username,
+      email: email,
+      mobile: "",
+      machineId: "",
+      group: ""
+    };
+    saveProfile(defaultProfile);
+    return defaultProfile;
+  }
+
+  function saveProfile(profile) {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  }
+
   window.Data = {
     getUsers: getUsers,
     saveUsers: saveUsers,
     getTrades: getTrades,
     saveTrades: saveTrades,
     getBills: getBills,
-    saveBills: saveBills
+    saveBills: saveBills,
+    getProfile: getProfile,
+    saveProfile: saveProfile,
+    GROUP_OPTIONS: GROUP_OPTIONS
   };
 })();
