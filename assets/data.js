@@ -11,6 +11,7 @@
   var TRADES_KEY = "ui_trades_v1";
   var BILLS_KEY = "ui_bills_v1";
   var PROFILE_KEY = "ui_profile_v1";
+  var GROUPS_KEY = "ui_groups_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -130,6 +131,38 @@
     localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
   }
 
+  var GROUP_DESCRIPTIONS = [
+    "Regular poultry supplier", "Trusted trading partner", "Bulk order specialist",
+    "Premium quality broilers", "Long-term associate", "Local farm distributor",
+    "Wholesale chicken trader", "Verified vendor", "High volume dealer", "New partnership"
+  ];
+
+  function buildSeedGroups() {
+    return GROUP_OPTIONS.map(function (name, i) {
+      return {
+        id: i + 1,
+        groupName: name,
+        mobile: "96" + String(40000000 + i * 151).slice(0, 8),
+        description: GROUP_DESCRIPTIONS[i % GROUP_DESCRIPTIONS.length],
+        status: i % 7 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
+  function getGroups() {
+    var raw = localStorage.getItem(GROUPS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedGroups();
+    saveGroups(seeded);
+    return seeded;
+  }
+
+  function saveGroups(groups) {
+    localStorage.setItem(GROUPS_KEY, JSON.stringify(groups));
+  }
+
   function getProfile() {
     var raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
@@ -162,6 +195,8 @@
     saveBills: saveBills,
     getProfile: getProfile,
     saveProfile: saveProfile,
+    getGroups: getGroups,
+    saveGroups: saveGroups,
     GROUP_OPTIONS: GROUP_OPTIONS
   };
 })();
