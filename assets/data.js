@@ -13,6 +13,7 @@
   var PROFILE_KEY = "ui_profile_v1";
   var GROUPS_KEY = "ui_groups_v1";
   var FARM_CODES_KEY = "ui_farm_codes_v1";
+  var TRADER_CODES_KEY = "ui_trader_codes_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -196,6 +197,35 @@
     localStorage.setItem(FARM_CODES_KEY, JSON.stringify(farmCodes));
   }
 
+  function buildSeedTraderCodes() {
+    return FIRST_NAMES.map(function (first, i) {
+      var last = LAST_NAMES[i % LAST_NAMES.length];
+      var name = first + " " + last;
+      return {
+        id: i + 1,
+        traderCode: "TC-" + (3000 + i * 7),
+        traderName: name,
+        mobile: "94" + String(40000000 + i * 173).slice(0, 8),
+        city: LOCATIONS[i % LOCATIONS.length],
+        status: i % 6 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
+  function getTraderCodes() {
+    var raw = localStorage.getItem(TRADER_CODES_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedTraderCodes();
+    saveTraderCodes(seeded);
+    return seeded;
+  }
+
+  function saveTraderCodes(traderCodes) {
+    localStorage.setItem(TRADER_CODES_KEY, JSON.stringify(traderCodes));
+  }
+
   function getProfile() {
     var raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
@@ -232,6 +262,8 @@
     saveGroups: saveGroups,
     getFarmCodes: getFarmCodes,
     saveFarmCodes: saveFarmCodes,
+    getTraderCodes: getTraderCodes,
+    saveTraderCodes: saveTraderCodes,
     GROUP_OPTIONS: GROUP_OPTIONS
   };
 })();
