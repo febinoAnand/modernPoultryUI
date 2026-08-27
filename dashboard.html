@@ -109,38 +109,36 @@
 
       <div class="stat-grid">
         <div class="stat-card">
-          <span class="stat-trend up">+12%</span>
           <div class="stat-icon icon-violet">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg>
           </div>
-          <div class="stat-value">1,284</div>
+          <div class="stat-value" id="dashTotalUsers">0</div>
           <div class="stat-label">Total Users</div>
         </div>
 
         <div class="stat-card">
-          <span class="stat-trend up">+8%</span>
           <div class="stat-icon icon-blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
           </div>
-          <div class="stat-value">356</div>
+          <div class="stat-value" id="dashActiveTrades">0</div>
           <div class="stat-label">Active Trades</div>
         </div>
 
         <div class="stat-card">
-          <span class="stat-trend down">-3%</span>
+          <span class="stat-trend soon">Soon</span>
           <div class="stat-icon icon-pink">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/></svg>
           </div>
-          <div class="stat-value">742</div>
+          <div class="stat-value">—</div>
           <div class="stat-label">Bills Generated</div>
         </div>
 
         <div class="stat-card">
-          <span class="stat-trend up">+5%</span>
+          <span class="stat-trend soon">Soon</span>
           <div class="stat-icon icon-amber">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/></svg>
           </div>
-          <div class="stat-value">64</div>
+          <div class="stat-value">—</div>
           <div class="stat-label">Farm Codes</div>
         </div>
       </div>
@@ -184,24 +182,7 @@
             <h3>Recent Activity</h3>
             <a href="#">View all</a>
           </div>
-          <div class="activity-list">
-            <div class="activity-item">
-              <span class="activity-dot"></span>
-              <p>New trader code <strong>#TC-2291</strong> was added.<br><span>10 minutes ago</span></p>
-            </div>
-            <div class="activity-item">
-              <span class="activity-dot"></span>
-              <p>Bill <strong>#B-5521</strong> generated for Group A.<br><span>42 minutes ago</span></p>
-            </div>
-            <div class="activity-item">
-              <span class="activity-dot"></span>
-              <p>New user <strong>Ramesh K.</strong> registered.<br><span>1 hour ago</span></p>
-            </div>
-            <div class="activity-item">
-              <span class="activity-dot"></span>
-              <p>Farm code <strong>#F-118</strong> updated.<br><span>3 hours ago</span></p>
-            </div>
-          </div>
+          <div class="activity-list" id="activityList"></div>
         </div>
       </div>
     </main>
@@ -209,11 +190,56 @@
 </div>
 
 <script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
 <script>
   App.requireAuth();
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  var users = Data.getUsers();
+  var trades = Data.getTrades();
+
+  document.getElementById("dashTotalUsers").textContent = users.length;
+  document.getElementById("dashActiveTrades").textContent = trades.filter(function (t) { return t.status === "Active"; }).length;
+
+  var activityItems = [];
+  if (users.length) {
+    activityItems.push({
+      text: 'New user <strong>' + escapeHtml(users[0].name) + '</strong> registered.',
+      meta: users[0].createdDate
+    });
+  }
+  if (trades.length) {
+    activityItems.push({
+      text: 'Trade order <strong>' + escapeHtml(trades[0].orderNumber) + '</strong> logged for ' + escapeHtml(trades[0].name) + '.',
+      meta: trades[0].status === "Active" ? "Active" : "Disabled"
+    });
+  }
+  var inactiveUser = users.find(function (u) { return u.status === "Inactive"; });
+  if (inactiveUser) {
+    activityItems.push({
+      text: 'User <strong>' + escapeHtml(inactiveUser.name) + '</strong> is currently disabled.',
+      meta: inactiveUser.group
+    });
+  }
+  var inactiveTrade = trades.find(function (t) { return t.status === "Inactive"; });
+  if (inactiveTrade) {
+    activityItems.push({
+      text: 'Trade order <strong>' + escapeHtml(inactiveTrade.orderNumber) + '</strong> was disabled.',
+      meta: inactiveTrade.driverName
+    });
+  }
+
+  document.getElementById("activityList").innerHTML = activityItems.map(function (item) {
+    return '<div class="activity-item"><span class="activity-dot"></span><p>' + item.text + '<br><span>' + escapeHtml(item.meta) + '</span></p></div>';
+  }).join("");
 </script>
 
 </body>
