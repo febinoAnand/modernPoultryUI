@@ -12,6 +12,7 @@
   var BILLS_KEY = "ui_bills_v1";
   var PROFILE_KEY = "ui_profile_v1";
   var GROUPS_KEY = "ui_groups_v1";
+  var FARM_CODES_KEY = "ui_farm_codes_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -163,6 +164,38 @@
     localStorage.setItem(GROUPS_KEY, JSON.stringify(groups));
   }
 
+  var LOCATIONS = ["Erode", "Namakkal", "Salem", "Coimbatore", "Tirupur", "Karur", "Dindigul", "Trichy", "Madurai", "Theni"];
+
+  function buildSeedFarmCodes() {
+    return FIRST_NAMES.map(function (first, i) {
+      var last = LAST_NAMES[i % LAST_NAMES.length];
+      var name = first + " " + last;
+      return {
+        id: i + 1,
+        farmCode: "FC-" + (4000 + i * 9),
+        farmerName: name,
+        batchNumber: "BATCH-" + (100 + i * 4),
+        mobile: "95" + String(40000000 + i * 163).slice(0, 8),
+        location: LOCATIONS[i % LOCATIONS.length],
+        status: i % 6 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
+  function getFarmCodes() {
+    var raw = localStorage.getItem(FARM_CODES_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedFarmCodes();
+    saveFarmCodes(seeded);
+    return seeded;
+  }
+
+  function saveFarmCodes(farmCodes) {
+    localStorage.setItem(FARM_CODES_KEY, JSON.stringify(farmCodes));
+  }
+
   function getProfile() {
     var raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
@@ -197,6 +230,8 @@
     saveProfile: saveProfile,
     getGroups: getGroups,
     saveGroups: saveGroups,
+    getFarmCodes: getFarmCodes,
+    saveFarmCodes: saveFarmCodes,
     GROUP_OPTIONS: GROUP_OPTIONS
   };
 })();
