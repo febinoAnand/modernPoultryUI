@@ -608,6 +608,9 @@ button {
 
 .btn-outline:hover { border-color: var(--accent-2); color: var(--accent-2); }
 
+.btn-outline.danger { color: var(--danger); border-color: rgba(220, 38, 38, 0.3); }
+.btn-outline.danger:hover { border-color: var(--danger); background: rgba(220, 38, 38, 0.06); color: var(--danger); }
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -733,26 +736,6 @@ button {
 
 .data-table tbody tr:hover td:first-child {
   box-shadow: inset 3px 0 0 var(--accent-2);
-}
-
-.data-table tbody tr {
-  animation: rowFade 0.32s ease both;
-}
-
-.data-table tbody tr:nth-child(1) { animation-delay: 0.01s; }
-.data-table tbody tr:nth-child(2) { animation-delay: 0.03s; }
-.data-table tbody tr:nth-child(3) { animation-delay: 0.05s; }
-.data-table tbody tr:nth-child(4) { animation-delay: 0.07s; }
-.data-table tbody tr:nth-child(5) { animation-delay: 0.09s; }
-.data-table tbody tr:nth-child(6) { animation-delay: 0.11s; }
-.data-table tbody tr:nth-child(7) { animation-delay: 0.13s; }
-.data-table tbody tr:nth-child(8) { animation-delay: 0.15s; }
-.data-table tbody tr:nth-child(9) { animation-delay: 0.17s; }
-.data-table tbody tr:nth-child(10) { animation-delay: 0.19s; }
-
-@keyframes rowFade {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .stat-grid.stat-grid-tight {
@@ -961,16 +944,16 @@ button {
 .action-trigger svg { width: 17px; height: 17px; }
 
 .action-menu {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 6px);
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow-lg);
-  min-width: 160px;
+  min-width: 168px;
   padding: 6px;
-  z-index: 40;
+  z-index: 500;
   display: none;
   animation: menuIn 0.14s ease;
 }
@@ -991,9 +974,9 @@ button {
   border: none;
   background: none;
   border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #14161f;
   cursor: pointer;
   text-align: left;
 }
@@ -1002,7 +985,7 @@ button {
   background: var(--surface-2);
 }
 
-.action-menu button svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--muted); }
+.action-menu button svg { width: 15px; height: 15px; flex-shrink: 0; color: #14161f; }
 .action-menu button.danger { color: var(--danger); }
 .action-menu button.danger svg { color: var(--danger); }
 
@@ -1250,6 +1233,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 18px 26px;
   border-top: 1px solid var(--border);

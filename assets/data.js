@@ -9,6 +9,7 @@
 
   var USERS_KEY = "ui_users_v1";
   var TRADES_KEY = "ui_trades_v1";
+  var BILLS_KEY = "ui_bills_v1";
 
   var FIRST_NAMES = ["Ramesh", "Suresh", "Priya", "Anitha", "Karthik", "Vijay", "Deepa", "Manoj", "Lakshmi", "Arjun", "Sneha", "Vikram", "Divya", "Rahul", "Meena", "Sathish", "Pooja", "Naveen", "Kavya", "Ashok", "Revathi", "Bala", "Nithya", "Ganesh"];
   var LAST_NAMES = ["Kumar", "Raj", "Nair", "Iyer", "Reddy", "Sharma", "Pillai", "Menon", "Gupta", "Rao"];
@@ -53,6 +54,28 @@
     });
   }
 
+  function buildSeedBills() {
+    return FIRST_NAMES.map(function (first, i) {
+      var last = LAST_NAMES[i % LAST_NAMES.length];
+      var name = first + " " + last;
+      var day = 3 + (i % 24);
+      var month = 1 + (i % 8);
+      var totalBirds = 300 + i * 37;
+      var weight = Math.round(totalBirds * (1.8 + (i % 5) * 0.1) * 10) / 10;
+      return {
+        id: i + 1,
+        date: String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026",
+        billNumber: "BILL-" + (30000 + i * 17),
+        trader: name,
+        email: first.toLowerCase() + "." + last.toLowerCase() + "@example.com",
+        totalBirds: totalBirds,
+        birdsWeight: weight,
+        company: GROUPS[i % GROUPS.length],
+        status: i % 6 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
   function getUsers() {
     var raw = localStorage.getItem(USERS_KEY);
     if (raw) {
@@ -81,10 +104,26 @@
     localStorage.setItem(TRADES_KEY, JSON.stringify(trades));
   }
 
+  function getBills() {
+    var raw = localStorage.getItem(BILLS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedBills();
+    saveBills(seeded);
+    return seeded;
+  }
+
+  function saveBills(bills) {
+    localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
+  }
+
   window.Data = {
     getUsers: getUsers,
     saveUsers: saveUsers,
     getTrades: getTrades,
-    saveTrades: saveTrades
+    saveTrades: saveTrades,
+    getBills: getBills,
+    saveBills: saveBills
   };
 })();

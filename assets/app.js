@@ -73,6 +73,32 @@
     if (initialEl) initialEl.textContent = label.charAt(0).toUpperCase();
   }
 
+  function positionActionMenu(id) {
+    var trigger = document.querySelector('[data-menu-toggle="' + id + '"]');
+    var menu = document.querySelector('[data-menu="' + id + '"]');
+    if (!trigger || !menu) return;
+
+    var triggerRect = trigger.getBoundingClientRect();
+    var menuRect = menu.getBoundingClientRect();
+    var viewportW = window.innerWidth;
+    var viewportH = window.innerHeight;
+    var gap = 6;
+
+    var top;
+    if (viewportH - triggerRect.bottom < menuRect.height + gap + 8 && triggerRect.top > menuRect.height + gap) {
+      top = triggerRect.top - menuRect.height - gap;
+    } else {
+      top = triggerRect.bottom + gap;
+    }
+
+    var left = triggerRect.right - menuRect.width;
+    if (left < 8) left = 8;
+    if (left + menuRect.width > viewportW - 8) left = viewportW - menuRect.width - 8;
+
+    menu.style.top = top + "px";
+    menu.style.left = left + "px";
+  }
+
   window.App = {
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
@@ -80,6 +106,7 @@
     logout: logout,
     initSidebar: initSidebar,
     initLogout: initLogout,
-    initUserBadge: initUserBadge
+    initUserBadge: initUserBadge,
+    positionActionMenu: positionActionMenu
   };
 })();

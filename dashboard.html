@@ -125,11 +125,10 @@
         </div>
 
         <div class="stat-card">
-          <span class="stat-trend soon">Soon</span>
           <div class="stat-icon icon-pink">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/></svg>
           </div>
-          <div class="stat-value">—</div>
+          <div class="stat-value" id="dashTotalBills">0</div>
           <div class="stat-label">Bills Generated</div>
         </div>
 
@@ -205,9 +204,11 @@
 
   var users = Data.getUsers();
   var trades = Data.getTrades();
+  var bills = Data.getBills();
 
   document.getElementById("dashTotalUsers").textContent = users.length;
   document.getElementById("dashActiveTrades").textContent = trades.filter(function (t) { return t.status === "Active"; }).length;
+  document.getElementById("dashTotalBills").textContent = bills.length;
 
   var activityItems = [];
   if (users.length) {
@@ -220,6 +221,12 @@
     activityItems.push({
       text: 'Trade order <strong>' + escapeHtml(trades[0].orderNumber) + '</strong> logged for ' + escapeHtml(trades[0].name) + '.',
       meta: trades[0].status === "Active" ? "Active" : "Disabled"
+    });
+  }
+  if (bills.length) {
+    activityItems.push({
+      text: 'Bill <strong>' + escapeHtml(bills[0].billNumber) + '</strong> raised for ' + escapeHtml(bills[0].trader) + '.',
+      meta: bills[0].date
     });
   }
   var inactiveUser = users.find(function (u) { return u.status === "Inactive"; });

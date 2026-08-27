@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trading List</title>
+<title>Bill List</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -34,12 +34,12 @@
         User Lists
       </a>
 
-      <a class="nav-item active" href="trading-list.html">
+      <a class="nav-item" href="trading-list.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
         Trading List
       </a>
 
-      <a class="nav-item" href="bill-list.html">
+      <a class="nav-item active" href="bill-list.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
         Bill List
       </a>
@@ -90,8 +90,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="page-title">
-          Trading List
-          <span>Track every trade order in one place</span>
+          Bill List
+          <span>Every bill raised for your poultry trades</span>
         </div>
       </div>
       <div class="topbar-right"></div>
@@ -103,15 +103,15 @@
         <div class="header-spacer"></div>
         <div class="header-center">
           <div class="page-icon-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
           </div>
-          <h2>Trading List</h2>
-          <p>View, add, edit and manage every trade order.</p>
+          <h2>Bill List</h2>
+          <p>View, add, edit and manage every bill raised for a trade.</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" id="openAddTrade">
+          <button class="btn btn-primary" id="openAddBill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Trade
+            Add Bill
           </button>
         </div>
       </div>
@@ -119,31 +119,31 @@
       <div class="stat-grid stat-grid-tight">
         <div class="stat-card">
           <div class="stat-icon icon-violet">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
           </div>
           <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-label">Total Trades</div>
+          <div class="stat-label">Total Bills</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
           <div class="stat-value" id="statActive">0</div>
-          <div class="stat-label">Active Trades</div>
+          <div class="stat-label">Active Bills</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-pink">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.9" y1="9.1" x2="9.1" y2="14.9"/><line x1="9.1" y1="9.1" x2="14.9" y2="14.9"/></svg>
           </div>
           <div class="stat-value" id="statDisabled">0</div>
-          <div class="stat-label">Disabled Trades</div>
+          <div class="stat-label">Disabled Bills</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-amber">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><rect x="3" y="11" width="18" height="6" rx="2"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg>
           </div>
-          <div class="stat-value" id="statVehicles">0</div>
-          <div class="stat-label">Vehicles In Use</div>
+          <div class="stat-value" id="statBirds">0</div>
+          <div class="stat-label">Total Birds Billed</div>
         </div>
       </div>
 
@@ -151,9 +151,9 @@
         <div class="table-toolbar">
           <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" placeholder="Search by name, customer ID, vehicle or order number...">
+            <input type="text" id="searchInput" placeholder="Search by trader, bill number, email or company...">
           </div>
-          <div class="toolbar-meta" id="toolbarMeta">0 trades</div>
+          <div class="toolbar-meta" id="toolbarMeta">0 bills</div>
         </div>
 
         <div class="table-scroll">
@@ -161,13 +161,13 @@
             <thead>
               <tr>
                 <th>S.No</th>
-                <th>Name</th>
-                <th>Customer ID</th>
-                <th>Mobile</th>
-                <th>Vehicle Number</th>
-                <th>Machine Number</th>
-                <th>Order Number</th>
-                <th>Driver Name</th>
+                <th>Date</th>
+                <th>Bill Number</th>
+                <th>Trader</th>
+                <th>Email ID</th>
+                <th>Total Birds</th>
+                <th>Birds Weight</th>
+                <th>Company</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -177,7 +177,7 @@
 
         <div id="emptyState" class="empty-state" style="display:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <p>No trades match your search.</p>
+          <p>No bills match your search.</p>
         </div>
 
         <div class="table-pagination">
@@ -189,69 +189,69 @@
   </div>
 </div>
 
-<!-- Add / Edit Trade Modal -->
-<div class="modal-overlay" id="tradeModalOverlay">
+<!-- Add / Edit Bill Modal -->
+<div class="modal-overlay" id="billModalOverlay">
   <div class="modal-box">
     <div class="modal-header">
       <div>
-        <h3 id="tradeModalTitle">Add Trade</h3>
-        <p id="tradeModalSubtitle">Fill in the details to create a new trade entry.</p>
+        <h3 id="billModalTitle">Add Bill</h3>
+        <p id="billModalSubtitle">Fill in the details to create a new bill.</p>
       </div>
-      <button class="modal-close" id="closeTradeModal">
+      <button class="modal-close" id="closeBillModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="modal-body">
-      <form id="tradeForm" novalidate>
-        <input type="hidden" id="tradeId">
+      <form id="billForm" novalidate>
+        <input type="hidden" id="billId">
         <div class="field-grid">
+          <div class="field">
+            <label for="bDate">Date <span class="req">*</span></label>
+            <input type="date" id="bDate">
+            <span class="field-error" id="errBDate">Please select a date.</span>
+          </div>
+
+          <div class="field">
+            <label for="bBillNumber">Bill Number <span class="req">*</span></label>
+            <input type="text" id="bBillNumber" placeholder="e.g. BILL-30421">
+            <span class="field-error" id="errBBillNumber">Please enter a bill number.</span>
+          </div>
+
           <div class="field full">
-            <label for="tName">Name <span class="req">*</span></label>
-            <input type="text" id="tName" placeholder="e.g. Ramesh Kumar">
-            <span class="field-error" id="errTName">Please enter a name.</span>
+            <label for="bTrader">Trader <span class="req">*</span></label>
+            <input type="text" id="bTrader" placeholder="e.g. Ramesh Kumar">
+            <span class="field-error" id="errBTrader">Please enter the trader's name.</span>
+          </div>
+
+          <div class="field full">
+            <label for="bEmail">Email ID <span class="req">*</span></label>
+            <input type="text" id="bEmail" placeholder="e.g. ramesh@example.com">
+            <span class="field-error" id="errBEmail">Please enter a valid email address.</span>
           </div>
 
           <div class="field">
-            <label for="tCustomerId">Customer ID <span class="req">*</span></label>
-            <input type="text" id="tCustomerId" placeholder="e.g. CUST-1001">
-            <span class="field-error" id="errTCustomerId">Please enter a customer ID.</span>
+            <label for="bTotalBirds">Total Birds <span class="req">*</span></label>
+            <input type="text" id="bTotalBirds" placeholder="e.g. 480">
+            <span class="field-error" id="errBTotalBirds">Please enter a valid bird count.</span>
           </div>
 
           <div class="field">
-            <label for="tMobile">Mobile <span class="req">*</span></label>
-            <input type="text" id="tMobile" maxlength="10" placeholder="10-digit number">
-            <span class="field-error" id="errTMobile">Enter a valid 10-digit mobile number.</span>
+            <label for="bBirdsWeight">Birds Weight (kg) <span class="req">*</span></label>
+            <input type="text" id="bBirdsWeight" placeholder="e.g. 862.5">
+            <span class="field-error" id="errBBirdsWeight">Please enter a valid weight.</span>
           </div>
 
-          <div class="field">
-            <label for="tVehicleNumber">Vehicle Number <span class="req">*</span></label>
-            <input type="text" id="tVehicleNumber" placeholder="e.g. TN10AB1234">
-            <span class="field-error" id="errTVehicleNumber">Please enter a vehicle number.</span>
-          </div>
-
-          <div class="field">
-            <label for="tMachineNumber">Machine Number <span class="req">*</span></label>
-            <input type="text" id="tMachineNumber" placeholder="e.g. MC-1042">
-            <span class="field-error" id="errTMachineNumber">Please enter a machine number.</span>
-          </div>
-
-          <div class="field">
-            <label for="tOrderNumber">Order Number <span class="req">*</span></label>
-            <input type="text" id="tOrderNumber" placeholder="e.g. ORD-20456">
-            <span class="field-error" id="errTOrderNumber">Please enter an order number.</span>
-          </div>
-
-          <div class="field">
-            <label for="tDriverName">Driver Name <span class="req">*</span></label>
-            <input type="text" id="tDriverName" placeholder="e.g. Suresh Babu">
-            <span class="field-error" id="errTDriverName">Please enter the driver's name.</span>
+          <div class="field full">
+            <label for="bCompany">Company <span class="req">*</span></label>
+            <input type="text" id="bCompany" placeholder="e.g. Group A">
+            <span class="field-error" id="errBCompany">Please enter a company.</span>
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" id="cancelTradeModal">Cancel</button>
-      <button class="btn btn-primary" id="saveTradeBtn">Save Trade</button>
+      <button class="btn btn-outline" id="cancelBillModal">Cancel</button>
+      <button class="btn btn-primary" id="saveBillBtn">Save Bill</button>
     </div>
   </div>
 </div>
@@ -261,17 +261,17 @@
   <div class="modal-box" style="max-width:420px">
     <div class="modal-header">
       <div>
-        <h3>Rename Trade</h3>
-        <p>Update the customer name for this trade.</p>
+        <h3>Rename Trader</h3>
+        <p>Update the trader name on this bill.</p>
       </div>
       <button class="modal-close" id="closeRenameModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="renameTradeId">
+      <input type="hidden" id="renameBillId">
       <div class="field">
-        <label for="renameInput">Full Name <span class="req">*</span></label>
+        <label for="renameInput">Trader Name <span class="req">*</span></label>
         <input type="text" id="renameInput" placeholder="Enter new name">
         <span class="field-error" id="errRename">Please enter a name.</span>
       </div>
@@ -288,8 +288,8 @@
   <div class="modal-box">
     <div class="modal-header">
       <div>
-        <h3>Trade Details</h3>
-        <p>Read-only summary of this trade entry.</p>
+        <h3>Bill Details</h3>
+        <p>Read-only summary of this bill.</p>
       </div>
       <button class="modal-close" id="closeViewModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -330,10 +330,10 @@
   App.initUserBadge();
 
   /* ---------------- Data (persisted, shared with dashboard) ---------------- */
-  var trades = Data.getTrades();
-  var nextId = trades.reduce(function (m, t) { return Math.max(m, t.id); }, 0) + 1;
+  var bills = Data.getBills();
+  var nextId = bills.reduce(function (m, b) { return Math.max(m, b.id); }, 0) + 1;
 
-  function persist() { Data.saveTrades(trades); }
+  function persist() { Data.saveBills(bills); }
 
   /* ---------------- State ---------------- */
   var state = { search: "", page: 1, pageSize: 10, openMenuId: null };
@@ -359,13 +359,12 @@
 
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return trades;
-    return trades.filter(function (t) {
-      return t.name.toLowerCase().indexOf(term) !== -1 ||
-        t.customerId.toLowerCase().indexOf(term) !== -1 ||
-        t.vehicleNumber.toLowerCase().indexOf(term) !== -1 ||
-        t.orderNumber.toLowerCase().indexOf(term) !== -1 ||
-        t.driverName.toLowerCase().indexOf(term) !== -1;
+    if (!term) return bills;
+    return bills.filter(function (b) {
+      return b.trader.toLowerCase().indexOf(term) !== -1 ||
+        b.billNumber.toLowerCase().indexOf(term) !== -1 ||
+        b.email.toLowerCase().indexOf(term) !== -1 ||
+        b.company.toLowerCase().indexOf(term) !== -1;
     });
   }
 
@@ -377,39 +376,39 @@
     var start = (state.page - 1) * state.pageSize;
     var pageItems = filtered.slice(start, start + state.pageSize);
 
-    toolbarMeta.textContent = filtered.length + (filtered.length === 1 ? " trade" : " trades");
+    toolbarMeta.textContent = filtered.length + (filtered.length === 1 ? " bill" : " bills");
 
     if (pageItems.length === 0) {
       tableBody.innerHTML = "";
       emptyState.style.display = "block";
     } else {
       emptyState.style.display = "none";
-      tableBody.innerHTML = pageItems.map(function (t, idx) {
-        var isMenuOpen = state.openMenuId === t.id;
-        var rowClass = t.status === "Inactive" ? "row-inactive" : "";
-        var disabledBadge = t.status === "Inactive" ? '<span class="inline-badge">Disabled</span>' : "";
+      tableBody.innerHTML = pageItems.map(function (b, idx) {
+        var isMenuOpen = state.openMenuId === b.id;
+        var rowClass = b.status === "Inactive" ? "row-inactive" : "";
+        var disabledBadge = b.status === "Inactive" ? '<span class="inline-badge">Disabled</span>' : "";
         return (
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
-            '<td><div class="cell-user"><div class="cell-avatar sm">' + initials(t.name) + '</div><span class="cell-user-name">' + escapeHtml(t.name) + '</span>' + disabledBadge + '</div></td>' +
-            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><line x1="13" y1="10" x2="19" y2="10"/><line x1="13" y1="14" x2="19" y2="14"/></svg>' + escapeHtml(t.customerId) + '</span></td>' +
-            '<td>' + escapeHtml(t.mobile) + '</td>' +
-            '<td><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><rect x="3" y="11" width="18" height="6" rx="2"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>' + escapeHtml(t.vehicleNumber) + '</span></td>' +
-            '<td><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/></svg>' + escapeHtml(t.machineNumber) + '</span></td>' +
-            '<td><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(t.orderNumber) + '</span></td>' +
-            '<td>' + escapeHtml(t.driverName) + '</td>' +
+            '<td>' + escapeHtml(b.date) + '</td>' +
+            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>' + escapeHtml(b.billNumber) + '</span></td>' +
+            '<td><div class="cell-user"><div class="cell-avatar sm">' + initials(b.trader) + '</div><span class="cell-user-name">' + escapeHtml(b.trader) + '</span>' + disabledBadge + '</div></td>' +
+            '<td><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(b.email) + '</span></td>' +
+            '<td><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg>' + b.totalBirds + '</span></td>' +
+            '<td><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>' + b.birdsWeight + ' kg</span></td>' +
+            '<td>' + escapeHtml(b.company) + '</td>' +
             '<td>' +
               '<div class="row-actions">' +
-                '<button class="action-trigger" data-menu-toggle="' + t.id + '" aria-label="Actions">' +
+                '<button class="action-trigger" data-menu-toggle="' + b.id + '" aria-label="Actions">' +
                   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>' +
                 '</button>' +
-                '<div class="action-menu' + (isMenuOpen ? ' show' : '') + '" data-menu="' + t.id + '">' +
-                  '<button data-action="view" data-id="' + t.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>' +
-                  '<button data-action="edit" data-id="' + t.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button>' +
-                  '<button data-action="rename" data-id="' + t.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a2 2 0 0 1 2-2h2"/><path d="M4 17v2a2 2 0 0 0 2 2h2"/><path d="M18 3h2a2 2 0 0 1 2 2v2"/><path d="M18 21h2a2 2 0 0 0 2-2v-2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>Rename</button>' +
-                  '<button data-action="toggle" data-id="' + t.id + '" class="' + (t.status === 'Active' ? 'danger' : '') + '">' +
+                '<div class="action-menu' + (isMenuOpen ? ' show' : '') + '" data-menu="' + b.id + '">' +
+                  '<button data-action="view" data-id="' + b.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>' +
+                  '<button data-action="edit" data-id="' + b.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button>' +
+                  '<button data-action="rename" data-id="' + b.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a2 2 0 0 1 2-2h2"/><path d="M4 17v2a2 2 0 0 0 2 2h2"/><path d="M18 3h2a2 2 0 0 1 2 2v2"/><path d="M18 21h2a2 2 0 0 0 2-2v-2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>Rename</button>' +
+                  '<button data-action="toggle" data-id="' + b.id + '" class="' + (b.status === 'Active' ? 'danger' : '') + '">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg>' +
-                    (t.status === 'Active' ? 'Disable' : 'Enable') +
+                    (b.status === 'Active' ? 'Disable' : 'Enable') +
                   '</button>' +
                 '</div>' +
               '</div>' +
@@ -421,7 +420,7 @@
 
     paginationInfo.textContent = filtered.length === 0
       ? "No results"
-      : "Showing " + (start + 1) + "–" + Math.min(start + state.pageSize, filtered.length) + " of " + filtered.length + " trades";
+      : "Showing " + (start + 1) + "–" + Math.min(start + state.pageSize, filtered.length) + " of " + filtered.length + " bills";
 
     var controls = "";
     controls += '<button class="page-btn" data-page="prev" ' + (state.page === 1 ? "disabled" : "") + '>Prev</button>';
@@ -437,14 +436,14 @@
   }
 
   function updateStats() {
-    var total = trades.length;
-    var active = trades.filter(function (t) { return t.status === "Active"; }).length;
+    var total = bills.length;
+    var active = bills.filter(function (b) { return b.status === "Active"; }).length;
     var disabled = total - active;
-    var vehicles = new Set(trades.map(function (t) { return t.vehicleNumber.trim(); }).filter(Boolean)).size;
+    var totalBirds = bills.reduce(function (sum, b) { return sum + Number(b.totalBirds); }, 0);
     document.getElementById("statTotal").textContent = total;
     document.getElementById("statActive").textContent = active;
     document.getElementById("statDisabled").textContent = disabled;
-    document.getElementById("statVehicles").textContent = vehicles;
+    document.getElementById("statBirds").textContent = totalBirds.toLocaleString();
   }
 
   /* ---------------- Search ---------------- */
@@ -478,9 +477,9 @@
     var actionBtn = e.target.closest("[data-action]");
     if (actionBtn) {
       var action = actionBtn.getAttribute("data-action");
-      var tid = parseInt(actionBtn.getAttribute("data-id"), 10);
+      var bid = parseInt(actionBtn.getAttribute("data-id"), 10);
       state.openMenuId = null;
-      handleAction(action, tid);
+      handleAction(action, bid);
     }
   });
 
@@ -499,87 +498,107 @@
   }, true);
 
   function handleAction(action, id) {
-    var trade = trades.find(function (t) { return t.id === id; });
-    if (!trade) return;
+    var bill = bills.find(function (b) { return b.id === id; });
+    if (!bill) return;
 
-    if (action === "view") openViewModal(trade);
-    else if (action === "edit") openTradeModal(trade);
-    else if (action === "rename") openRenameModal(trade);
+    if (action === "view") openViewModal(bill);
+    else if (action === "edit") openBillModal(bill);
+    else if (action === "rename") openRenameModal(bill);
     else if (action === "toggle") {
-      trade.status = trade.status === "Active" ? "Inactive" : "Active";
+      bill.status = bill.status === "Active" ? "Inactive" : "Active";
       persist();
       render();
-      showToast(trade.name + "'s trade has been " + (trade.status === "Active" ? "enabled" : "disabled") + ".");
+      showToast("Bill " + bill.billNumber + " has been " + (bill.status === "Active" ? "enabled" : "disabled") + ".");
     }
   }
 
   /* ---------------- Add / Edit modal ---------------- */
-  var tradeModalOverlay = document.getElementById("tradeModalOverlay");
-  var tradeModalTitle = document.getElementById("tradeModalTitle");
-  var tradeModalSubtitle = document.getElementById("tradeModalSubtitle");
-  var fTradeId = document.getElementById("tradeId");
-  var tName = document.getElementById("tName");
-  var tCustomerId = document.getElementById("tCustomerId");
-  var tMobile = document.getElementById("tMobile");
-  var tVehicleNumber = document.getElementById("tVehicleNumber");
-  var tMachineNumber = document.getElementById("tMachineNumber");
-  var tOrderNumber = document.getElementById("tOrderNumber");
-  var tDriverName = document.getElementById("tDriverName");
+  var billModalOverlay = document.getElementById("billModalOverlay");
+  var billModalTitle = document.getElementById("billModalTitle");
+  var billModalSubtitle = document.getElementById("billModalSubtitle");
+  var fBillId = document.getElementById("billId");
+  var bDate = document.getElementById("bDate");
+  var bBillNumber = document.getElementById("bBillNumber");
+  var bTrader = document.getElementById("bTrader");
+  var bEmail = document.getElementById("bEmail");
+  var bTotalBirds = document.getElementById("bTotalBirds");
+  var bBirdsWeight = document.getElementById("bBirdsWeight");
+  var bCompany = document.getElementById("bCompany");
 
-  function openTradeModal(trade) {
-    document.querySelectorAll("#tradeForm .field-error").forEach(function (el) { el.classList.remove("show"); });
-    document.querySelectorAll("#tradeForm input").forEach(function (el) { el.classList.remove("error"); });
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-    if (trade) {
-      tradeModalTitle.textContent = "Edit Trade";
-      tradeModalSubtitle.textContent = "Update this trade's details.";
-      fTradeId.value = trade.id;
-      tName.value = trade.name;
-      tCustomerId.value = trade.customerId;
-      tMobile.value = trade.mobile;
-      tVehicleNumber.value = trade.vehicleNumber;
-      tMachineNumber.value = trade.machineNumber;
-      tOrderNumber.value = trade.orderNumber;
-      tDriverName.value = trade.driverName;
-    } else {
-      tradeModalTitle.textContent = "Add Trade";
-      tradeModalSubtitle.textContent = "Fill in the details to create a new trade entry.";
-      fTradeId.value = "";
-      tName.value = "";
-      tCustomerId.value = "";
-      tMobile.value = "";
-      tVehicleNumber.value = "";
-      tMachineNumber.value = "";
-      tOrderNumber.value = "";
-      tDriverName.value = "";
-    }
-    tradeModalOverlay.classList.add("show");
+  function displayDateToInput(display) {
+    var parts = display.split(" ");
+    if (parts.length !== 3) return "";
+    var day = parts[0];
+    var monthIdx = MONTHS.indexOf(parts[1]);
+    var year = parts[2];
+    if (monthIdx === -1) return "";
+    return year + "-" + String(monthIdx + 1).padStart(2, "0") + "-" + day;
   }
 
-  function closeTradeModal() { tradeModalOverlay.classList.remove("show"); }
+  function inputDateToDisplay(value) {
+    var parts = value.split("-");
+    if (parts.length !== 3) return value;
+    var year = parts[0], month = parts[1], day = parts[2];
+    return day + " " + MONTHS[parseInt(month, 10) - 1] + " " + year;
+  }
 
-  document.getElementById("openAddTrade").addEventListener("click", function () { openTradeModal(null); });
-  document.getElementById("closeTradeModal").addEventListener("click", closeTradeModal);
-  document.getElementById("cancelTradeModal").addEventListener("click", closeTradeModal);
-  tradeModalOverlay.addEventListener("click", function (e) { if (e.target === tradeModalOverlay) closeTradeModal(); });
+  function openBillModal(bill) {
+    document.querySelectorAll("#billForm .field-error").forEach(function (el) { el.classList.remove("show"); });
+    document.querySelectorAll("#billForm input").forEach(function (el) { el.classList.remove("error"); });
+
+    if (bill) {
+      billModalTitle.textContent = "Edit Bill";
+      billModalSubtitle.textContent = "Update this bill's details.";
+      fBillId.value = bill.id;
+      bDate.value = displayDateToInput(bill.date);
+      bBillNumber.value = bill.billNumber;
+      bTrader.value = bill.trader;
+      bEmail.value = bill.email;
+      bTotalBirds.value = bill.totalBirds;
+      bBirdsWeight.value = bill.birdsWeight;
+      bCompany.value = bill.company;
+    } else {
+      billModalTitle.textContent = "Add Bill";
+      billModalSubtitle.textContent = "Fill in the details to create a new bill.";
+      fBillId.value = "";
+      bDate.value = "";
+      bBillNumber.value = "";
+      bTrader.value = "";
+      bEmail.value = "";
+      bTotalBirds.value = "";
+      bBirdsWeight.value = "";
+      bCompany.value = "";
+    }
+    billModalOverlay.classList.add("show");
+  }
+
+  function closeBillModal() { billModalOverlay.classList.remove("show"); }
+
+  document.getElementById("openAddBill").addEventListener("click", function () { openBillModal(null); });
+  document.getElementById("closeBillModal").addEventListener("click", closeBillModal);
+  document.getElementById("cancelBillModal").addEventListener("click", closeBillModal);
+  billModalOverlay.addEventListener("click", function (e) { if (e.target === billModalOverlay) closeBillModal(); });
 
   function setFieldError(input, errorEl, hasError) {
     input.classList.toggle("error", hasError);
     errorEl.classList.toggle("show", hasError);
   }
 
-  document.getElementById("saveTradeBtn").addEventListener("click", function () {
+  document.getElementById("saveBillBtn").addEventListener("click", function () {
     var valid = true;
-    var mobileRe = /^[0-9]{10}$/;
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var numberRe = /^[0-9]+(\.[0-9]+)?$/;
 
     var checks = [
-      [tName, "errTName", tName.value.trim().length > 0],
-      [tCustomerId, "errTCustomerId", tCustomerId.value.trim().length > 0],
-      [tMobile, "errTMobile", mobileRe.test(tMobile.value.trim())],
-      [tVehicleNumber, "errTVehicleNumber", tVehicleNumber.value.trim().length > 0],
-      [tMachineNumber, "errTMachineNumber", tMachineNumber.value.trim().length > 0],
-      [tOrderNumber, "errTOrderNumber", tOrderNumber.value.trim().length > 0],
-      [tDriverName, "errTDriverName", tDriverName.value.trim().length > 0]
+      [bDate, "errBDate", bDate.value !== ""],
+      [bBillNumber, "errBBillNumber", bBillNumber.value.trim().length > 0],
+      [bTrader, "errBTrader", bTrader.value.trim().length > 0],
+      [bEmail, "errBEmail", emailRe.test(bEmail.value.trim())],
+      [bTotalBirds, "errBTotalBirds", numberRe.test(bTotalBirds.value.trim())],
+      [bBirdsWeight, "errBBirdsWeight", numberRe.test(bBirdsWeight.value.trim())],
+      [bCompany, "errBCompany", bCompany.value.trim().length > 0]
     ];
 
     checks.forEach(function (c) {
@@ -589,48 +608,50 @@
 
     if (!valid) return;
 
-    if (fTradeId.value) {
-      var trade = trades.find(function (t) { return t.id === parseInt(fTradeId.value, 10); });
-      trade.name = tName.value.trim();
-      trade.customerId = tCustomerId.value.trim();
-      trade.mobile = tMobile.value.trim();
-      trade.vehicleNumber = tVehicleNumber.value.trim();
-      trade.machineNumber = tMachineNumber.value.trim();
-      trade.orderNumber = tOrderNumber.value.trim();
-      trade.driverName = tDriverName.value.trim();
-      showToast("Trade updated successfully.");
+    var displayDate = inputDateToDisplay(bDate.value);
+
+    if (fBillId.value) {
+      var bill = bills.find(function (b) { return b.id === parseInt(fBillId.value, 10); });
+      bill.date = displayDate;
+      bill.billNumber = bBillNumber.value.trim();
+      bill.trader = bTrader.value.trim();
+      bill.email = bEmail.value.trim();
+      bill.totalBirds = Number(bTotalBirds.value.trim());
+      bill.birdsWeight = Number(bBirdsWeight.value.trim());
+      bill.company = bCompany.value.trim();
+      showToast("Bill updated successfully.");
     } else {
-      trades.unshift({
+      bills.unshift({
         id: nextId++,
-        name: tName.value.trim(),
-        customerId: tCustomerId.value.trim(),
-        mobile: tMobile.value.trim(),
-        vehicleNumber: tVehicleNumber.value.trim(),
-        machineNumber: tMachineNumber.value.trim(),
-        orderNumber: tOrderNumber.value.trim(),
-        driverName: tDriverName.value.trim(),
+        date: displayDate,
+        billNumber: bBillNumber.value.trim(),
+        trader: bTrader.value.trim(),
+        email: bEmail.value.trim(),
+        totalBirds: Number(bTotalBirds.value.trim()),
+        birdsWeight: Number(bBirdsWeight.value.trim()),
+        company: bCompany.value.trim(),
         status: "Active"
       });
       state.search = "";
       searchInput.value = "";
       state.page = 1;
-      showToast("Trade added successfully.");
+      showToast("Bill added successfully.");
     }
 
     persist();
-    closeTradeModal();
+    closeBillModal();
     render();
   });
 
   /* ---------------- Rename modal ---------------- */
   var renameModalOverlay = document.getElementById("renameModalOverlay");
-  var renameTradeId = document.getElementById("renameTradeId");
+  var renameBillId = document.getElementById("renameBillId");
   var renameInput = document.getElementById("renameInput");
   var errRename = document.getElementById("errRename");
 
-  function openRenameModal(trade) {
-    renameTradeId.value = trade.id;
-    renameInput.value = trade.name;
+  function openRenameModal(bill) {
+    renameBillId.value = bill.id;
+    renameInput.value = bill.trader;
     renameInput.classList.remove("error");
     errRename.classList.remove("show");
     renameModalOverlay.classList.add("show");
@@ -648,12 +669,12 @@
       errRename.classList.add("show");
       return;
     }
-    var trade = trades.find(function (t) { return t.id === parseInt(renameTradeId.value, 10); });
-    trade.name = renameInput.value.trim();
+    var bill = bills.find(function (b) { return b.id === parseInt(renameBillId.value, 10); });
+    bill.trader = renameInput.value.trim();
     persist();
     closeRenameModal();
     render();
-    showToast("Trade renamed successfully.");
+    showToast("Trader renamed successfully.");
   });
 
   /* ---------------- View modal ---------------- */
@@ -661,53 +682,50 @@
   var viewDetailGrid = document.getElementById("viewDetailGrid");
   var viewToggleBtn = document.getElementById("viewToggleBtn");
   var viewToggleLabel = document.getElementById("viewToggleLabel");
-  var currentViewTrade = null;
+  var currentViewBill = null;
 
-  function openViewModal(trade) {
-    currentViewTrade = trade;
+  function openViewModal(bill) {
+    currentViewBill = bill;
     var fields = [
-      ["Name", trade.name],
-      ["Customer ID", trade.customerId],
-      ["Mobile", trade.mobile],
-      ["Vehicle Number", trade.vehicleNumber],
-      ["Machine Number", trade.machineNumber],
-      ["Order Number", trade.orderNumber],
-      ["Driver Name", trade.driverName],
-      ["Status", trade.status]
+      ["Date", bill.date],
+      ["Bill Number", bill.billNumber],
+      ["Trader", bill.trader],
+      ["Email ID", bill.email],
+      ["Total Birds", bill.totalBirds],
+      ["Birds Weight", bill.birdsWeight + " kg"],
+      ["Company", bill.company],
+      ["Status", bill.status]
     ];
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
-    viewToggleLabel.textContent = trade.status === "Active" ? "Disable" : "Enable";
-    viewToggleBtn.classList.toggle("danger", trade.status === "Active");
+    viewToggleLabel.textContent = bill.status === "Active" ? "Disable" : "Enable";
+    viewToggleBtn.classList.toggle("danger", bill.status === "Active");
     viewModalOverlay.classList.add("show");
   }
 
   function closeViewModal() { viewModalOverlay.classList.remove("show"); }
 
-  function initViewModalActions() {
-    document.getElementById("viewEditBtn").addEventListener("click", function () {
-      var trade = currentViewTrade;
-      closeViewModal();
-      openTradeModal(trade);
-    });
+  document.getElementById("viewEditBtn").addEventListener("click", function () {
+    var bill = currentViewBill;
+    closeViewModal();
+    openBillModal(bill);
+  });
 
-    document.getElementById("viewRenameBtn").addEventListener("click", function () {
-      var trade = currentViewTrade;
-      closeViewModal();
-      openRenameModal(trade);
-    });
+  document.getElementById("viewRenameBtn").addEventListener("click", function () {
+    var bill = currentViewBill;
+    closeViewModal();
+    openRenameModal(bill);
+  });
 
-    viewToggleBtn.addEventListener("click", function () {
-      var trade = currentViewTrade;
-      trade.status = trade.status === "Active" ? "Inactive" : "Active";
-      persist();
-      render();
-      closeViewModal();
-      showToast(trade.name + "'s trade has been " + (trade.status === "Active" ? "enabled" : "disabled") + ".");
-    });
-  }
-  initViewModalActions();
+  viewToggleBtn.addEventListener("click", function () {
+    var bill = currentViewBill;
+    bill.status = bill.status === "Active" ? "Inactive" : "Active";
+    persist();
+    render();
+    closeViewModal();
+    showToast("Bill " + bill.billNumber + " has been " + (bill.status === "Active" ? "enabled" : "disabled") + ".");
+  });
 
   document.getElementById("closeViewModal").addEventListener("click", closeViewModal);
   document.getElementById("closeViewModalBtn").addEventListener("click", closeViewModal);
