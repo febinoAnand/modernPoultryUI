@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Lists</title>
+<title>Sales Order</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
         Dashboard
       </a>
 
-      <a class="nav-item active" href="user-list.html">
+      <a class="nav-item" href="user-list.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         User Lists
       </a>
@@ -44,7 +44,7 @@
         Bill List
       </a>
 
-      <a class="nav-item" href="sales-order.html">
+      <a class="nav-item active" href="sales-order.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         Sales Order
       </a>
@@ -95,8 +95,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="page-title">
-          User Lists
-          <span>Manage all registered users</span>
+          Sales Order
+          <span>Track every sales order end-to-end</span>
         </div>
       </div>
       <div class="topbar-right"></div>
@@ -108,15 +108,15 @@
         <div class="header-spacer"></div>
         <div class="header-center">
           <div class="page-icon-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           </div>
-          <h2>User Lists</h2>
-          <p>View, add, edit and manage every user registered on the platform.</p>
+          <h2>Sales Order</h2>
+          <p>View, add, edit and manage every sales order.</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" id="openAddUser">
+          <button class="btn btn-primary" id="openAddOrder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add User
+            Add Order
           </button>
         </div>
       </div>
@@ -124,31 +124,31 @@
       <div class="stat-grid stat-grid-tight">
         <div class="stat-card">
           <div class="stat-icon icon-violet">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           </div>
           <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-label">Total Users</div>
+          <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-value" id="statPending">0</div>
+          <div class="stat-label">Pending Orders</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
-          <div class="stat-value" id="statActive">0</div>
-          <div class="stat-label">Active Users</div>
+          <div class="stat-value" id="statDelivered">0</div>
+          <div class="stat-label">Delivered Orders</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-pink">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.9" y1="9.1" x2="9.1" y2="14.9"/><line x1="9.1" y1="9.1" x2="14.9" y2="14.9"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.5-.5-1.3-.8-2.5-.8-2 0-3 .8-3 1.8s1 1.3 3 1.7c2 .4 3 .8 3 1.8s-1 1.8-3 1.8c-1.2 0-2-.3-2.5-.8"/></svg>
           </div>
-          <div class="stat-value" id="statInactive">0</div>
-          <div class="stat-label">Inactive Users</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon icon-amber">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          </div>
-          <div class="stat-value" id="statGroups">0</div>
-          <div class="stat-label">Company Groups</div>
+          <div class="stat-value" id="statRevenue">₹0</div>
+          <div class="stat-label">Total Revenue</div>
         </div>
       </div>
 
@@ -156,9 +156,9 @@
         <div class="table-toolbar">
           <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" placeholder="Search by name, email, group or machine ID...">
+            <input type="text" id="searchInput" placeholder="Search by order number, customer or product...">
           </div>
-          <div class="toolbar-meta" id="toolbarMeta">0 users</div>
+          <div class="toolbar-meta" id="toolbarMeta">0 orders</div>
         </div>
 
         <div class="table-scroll">
@@ -166,13 +166,14 @@
             <thead>
               <tr>
                 <th>S.No</th>
-                <th>Name</th>
-                <th>Email Address</th>
-                <th>Company Group</th>
-                <th>Mobile</th>
+                <th>Order Number</th>
+                <th>Customer Name</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Total Amount</th>
+                <th>Order Date</th>
                 <th>Status</th>
-                <th>Machine ID</th>
-                <th>Created Date</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -182,7 +183,7 @@
 
         <div id="emptyState" class="empty-state" style="display:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <p>No users match your search.</p>
+          <p>No orders match your search.</p>
         </div>
 
         <div class="table-pagination">
@@ -194,76 +195,77 @@
   </div>
 </div>
 
-<!-- Add / Edit User Modal -->
-<div class="modal-overlay" id="userModalOverlay">
+<!-- Add / Edit Order Modal -->
+<div class="modal-overlay" id="orderModalOverlay">
   <div class="modal-box">
     <div class="modal-header">
       <div>
-        <h3 id="userModalTitle">Add User</h3>
-        <p id="userModalSubtitle">Fill in the details to create a new user.</p>
+        <h3 id="orderModalTitle">Add Order</h3>
+        <p id="orderModalSubtitle">Fill in the details to create a new sales order.</p>
       </div>
-      <button class="modal-close" id="closeUserModal">
+      <button class="modal-close" id="closeOrderModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="modal-body">
-      <form id="userForm" novalidate>
-        <input type="hidden" id="userId">
+      <form id="orderForm" novalidate>
+        <input type="hidden" id="orderId">
         <div class="field-grid">
-          <div class="field full">
-            <label for="fName">Name <span class="req">*</span></label>
-            <input type="text" id="fName" placeholder="e.g. Ramesh Kumar">
-            <span class="field-error" id="errName">Please enter the user's name.</span>
-          </div>
-
-          <div class="field full">
-            <label for="fEmail">Email Address <span class="req">*</span></label>
-            <input type="text" id="fEmail" placeholder="e.g. ramesh@example.com">
-            <span class="field-error" id="errEmail">Please enter a valid email address.</span>
+          <div class="field">
+            <label for="oOrderNumber">Order Number <span class="req">*</span></label>
+            <input type="text" id="oOrderNumber" placeholder="e.g. SO-5041">
+            <span class="field-error" id="errOOrderNumber">Please enter an order number.</span>
           </div>
 
           <div class="field">
-            <label for="fGroup">Company Group <span class="req">*</span></label>
-            <input type="text" id="fGroup" placeholder="e.g. Group A">
-            <span class="field-error" id="errGroup">Please enter a company group.</span>
-          </div>
-
-          <div class="field">
-            <label for="fMobile">Mobile <span class="req">*</span></label>
-            <input type="text" id="fMobile" maxlength="10" placeholder="10-digit number">
-            <span class="field-error" id="errMobile">Enter a valid 10-digit mobile number.</span>
-          </div>
-
-          <div class="field">
-            <label for="fMachineId">Machine ID <span class="req">*</span></label>
-            <input type="text" id="fMachineId" placeholder="e.g. MC-1042">
-            <span class="field-error" id="errMachineId">Please enter a machine ID.</span>
-          </div>
-
-          <div class="field" id="createdDateField" style="display:none">
-            <label>Created Date</label>
-            <input type="text" id="fCreatedDate" disabled>
+            <label for="oOrderDate">Order Date <span class="req">*</span></label>
+            <input type="date" id="oOrderDate">
+            <span class="field-error" id="errOOrderDate">Please select a date.</span>
           </div>
 
           <div class="field full">
-            <label>Status</label>
-            <div class="status-toggle-group">
-              <label data-state="active">
-                <input type="radio" name="fStatus" value="Active" checked>
-                <span>Active</span>
-              </label>
-              <label data-state="inactive">
-                <input type="radio" name="fStatus" value="Inactive">
-                <span>Inactive</span>
-              </label>
-            </div>
+            <label for="oCustomerName">Customer Name <span class="req">*</span></label>
+            <input type="text" id="oCustomerName" placeholder="e.g. Ramesh Kumar">
+            <span class="field-error" id="errOCustomerName">Please enter the customer's name.</span>
+          </div>
+
+          <div class="field full">
+            <label for="oProduct">Product <span class="req">*</span></label>
+            <input type="text" id="oProduct" placeholder="e.g. Broiler Chicken">
+            <span class="field-error" id="errOProduct">Please enter a product.</span>
+          </div>
+
+          <div class="field">
+            <label for="oQuantity">Quantity <span class="req">*</span></label>
+            <input type="text" id="oQuantity" placeholder="e.g. 250">
+            <span class="field-error" id="errOQuantity">Please enter a valid quantity.</span>
+          </div>
+
+          <div class="field">
+            <label for="oRate">Rate (₹) <span class="req">*</span></label>
+            <input type="text" id="oRate" placeholder="e.g. 185.50">
+            <span class="field-error" id="errORate">Please enter a valid rate.</span>
+          </div>
+
+          <div class="field">
+            <label>Total Amount</label>
+            <input type="text" id="oTotalAmount" disabled value="₹0.00">
+          </div>
+
+          <div class="field">
+            <label for="oStatus">Status</label>
+            <select id="oStatus">
+              <option value="Pending">Pending</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Delivered">Delivered</option>
+            </select>
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" id="cancelUserModal">Cancel</button>
-      <button class="btn btn-primary" id="saveUserBtn">Save User</button>
+      <button class="btn btn-outline" id="cancelOrderModal">Cancel</button>
+      <button class="btn btn-primary" id="saveOrderBtn">Save Order</button>
     </div>
   </div>
 </div>
@@ -273,17 +275,17 @@
   <div class="modal-box" style="max-width:420px">
     <div class="modal-header">
       <div>
-        <h3>Rename User</h3>
-        <p>Update the display name for this user.</p>
+        <h3>Rename Customer</h3>
+        <p>Update the customer name on this order.</p>
       </div>
       <button class="modal-close" id="closeRenameModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="renameUserId">
+      <input type="hidden" id="renameOrderId">
       <div class="field">
-        <label for="renameInput">Full Name <span class="req">*</span></label>
+        <label for="renameInput">Customer Name <span class="req">*</span></label>
         <input type="text" id="renameInput" placeholder="Enter new name">
         <span class="field-error" id="errRename">Please enter a name.</span>
       </div>
@@ -300,8 +302,8 @@
   <div class="modal-box">
     <div class="modal-header">
       <div>
-        <h3>User Details</h3>
-        <p>Read-only summary of this user's profile.</p>
+        <h3>Order Details</h3>
+        <p>Read-only summary of this sales order.</p>
       </div>
       <button class="modal-close" id="closeViewModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -342,10 +344,10 @@
   App.initUserBadge();
 
   /* ---------------- Data (persisted, shared with dashboard) ---------------- */
-  var users = Data.getUsers();
-  var nextId = users.reduce(function (m, u) { return Math.max(m, u.id); }, 0) + 1;
+  var orders = Data.getSalesOrders();
+  var nextId = orders.reduce(function (m, o) { return Math.max(m, o.id); }, 0) + 1;
 
-  function persist() { Data.saveUsers(users); }
+  function persist() { Data.saveSalesOrders(orders); }
 
   /* ---------------- State ---------------- */
   var state = { search: "", page: 1, pageSize: 10, openMenuId: null };
@@ -369,14 +371,17 @@
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
+  function formatCurrency(n) {
+    return "₹" + Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return users;
-    return users.filter(function (u) {
-      return u.name.toLowerCase().indexOf(term) !== -1 ||
-        u.email.toLowerCase().indexOf(term) !== -1 ||
-        u.group.toLowerCase().indexOf(term) !== -1 ||
-        u.machineId.toLowerCase().indexOf(term) !== -1;
+    if (!term) return orders;
+    return orders.filter(function (o) {
+      return o.orderNumber.toLowerCase().indexOf(term) !== -1 ||
+        o.customerName.toLowerCase().indexOf(term) !== -1 ||
+        o.product.toLowerCase().indexOf(term) !== -1;
     });
   }
 
@@ -388,38 +393,41 @@
     var start = (state.page - 1) * state.pageSize;
     var pageItems = filtered.slice(start, start + state.pageSize);
 
-    toolbarMeta.textContent = filtered.length + (filtered.length === 1 ? " user" : " users");
+    toolbarMeta.textContent = filtered.length + (filtered.length === 1 ? " order" : " orders");
 
     if (pageItems.length === 0) {
       tableBody.innerHTML = "";
       emptyState.style.display = "block";
     } else {
       emptyState.style.display = "none";
-      tableBody.innerHTML = pageItems.map(function (u, idx) {
-        var statusClass = u.status === "Active" ? "active" : "inactive";
-        var isMenuOpen = state.openMenuId === u.id;
+      tableBody.innerHTML = pageItems.map(function (o, idx) {
+        var isMenuOpen = state.openMenuId === o.id;
+        var rowClass = o.status === "Inactive" ? "row-inactive" : "";
+        var disabledBadge = o.status === "Inactive" ? '<span class="inline-badge">Disabled</span>' : "";
+        var statusClass = o.orderStatus.toLowerCase();
         return (
-          '<tr>' +
+          '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
-            '<td><div class="cell-user"><div class="cell-avatar">' + initials(u.name) + '</div><span class="cell-user-name">' + escapeHtml(u.name) + '</span></div></td>' +
-            '<td><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(u.email) + '</span></td>' +
-            '<td><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>' + escapeHtml(u.group) + '</span></td>' +
-            '<td><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' + escapeHtml(u.mobile) + '</span></td>' +
-            '<td><span class="status-pill ' + statusClass + '">' + u.status + '</span></td>' +
-            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/></svg>' + escapeHtml(u.machineId) + '</span></td>' +
-            '<td>' + u.createdDate + '</td>' +
+            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(o.orderNumber) + '</span></td>' +
+            '<td><div class="cell-user"><div class="cell-avatar">' + initials(o.customerName) + '</div><span class="cell-user-name">' + escapeHtml(o.customerName) + '</span>' + disabledBadge + '</div></td>' +
+            '<td><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/></svg>' + escapeHtml(o.product) + '</span></td>' +
+            '<td>' + o.quantity + '</td>' +
+            '<td><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.5-.5-1.3-.8-2.5-.8-2 0-3 .8-3 1.8s1 1.3 3 1.7c2 .4 3 .8 3 1.8s-1 1.8-3 1.8c-1.2 0-2-.3-2.5-.8"/></svg>' + formatCurrency(o.rate) + '</span></td>' +
+            '<td><span class="total-amount">' + formatCurrency(o.totalAmount) + '</span></td>' +
+            '<td>' + escapeHtml(o.orderDate) + '</td>' +
+            '<td><span class="status-pill ' + statusClass + '">' + o.orderStatus + '</span></td>' +
             '<td>' +
               '<div class="row-actions">' +
-                '<button class="action-trigger" data-menu-toggle="' + u.id + '" aria-label="Actions">' +
+                '<button class="action-trigger" data-menu-toggle="' + o.id + '" aria-label="Actions">' +
                   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>' +
                 '</button>' +
-                '<div class="action-menu' + (isMenuOpen ? ' show' : '') + '" data-menu="' + u.id + '">' +
-                  '<button data-action="view" data-id="' + u.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>' +
-                  '<button data-action="edit" data-id="' + u.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button>' +
-                  '<button data-action="rename" data-id="' + u.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a2 2 0 0 1 2-2h2"/><path d="M4 17v2a2 2 0 0 0 2 2h2"/><path d="M18 3h2a2 2 0 0 1 2 2v2"/><path d="M18 21h2a2 2 0 0 0 2-2v-2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>Rename</button>' +
-                  '<button data-action="toggle" data-id="' + u.id + '" class="' + (u.status === 'Active' ? 'danger' : '') + '">' +
+                '<div class="action-menu' + (isMenuOpen ? ' show' : '') + '" data-menu="' + o.id + '">' +
+                  '<button data-action="view" data-id="' + o.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>' +
+                  '<button data-action="edit" data-id="' + o.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button>' +
+                  '<button data-action="rename" data-id="' + o.id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a2 2 0 0 1 2-2h2"/><path d="M4 17v2a2 2 0 0 0 2 2h2"/><path d="M18 3h2a2 2 0 0 1 2 2v2"/><path d="M18 21h2a2 2 0 0 0 2-2v-2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>Rename</button>' +
+                  '<button data-action="toggle" data-id="' + o.id + '" class="' + (o.status === 'Active' ? 'danger' : '') + '">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg>' +
-                    (u.status === 'Active' ? 'Disable' : 'Enable') +
+                    (o.status === 'Active' ? 'Disable' : 'Enable') +
                   '</button>' +
                 '</div>' +
               '</div>' +
@@ -431,7 +439,7 @@
 
     paginationInfo.textContent = filtered.length === 0
       ? "No results"
-      : "Showing " + (start + 1) + "–" + Math.min(start + state.pageSize, filtered.length) + " of " + filtered.length + " users";
+      : "Showing " + (start + 1) + "–" + Math.min(start + state.pageSize, filtered.length) + " of " + filtered.length + " orders";
 
     var controls = "";
     controls += '<button class="page-btn" data-page="prev" ' + (state.page === 1 ? "disabled" : "") + '>Prev</button>';
@@ -447,14 +455,14 @@
   }
 
   function updateStats() {
-    var total = users.length;
-    var active = users.filter(function (u) { return u.status === "Active"; }).length;
-    var inactive = total - active;
-    var groups = new Set(users.map(function (u) { return u.group.trim(); }).filter(Boolean)).size;
+    var total = orders.length;
+    var pending = orders.filter(function (o) { return o.orderStatus === "Pending"; }).length;
+    var delivered = orders.filter(function (o) { return o.orderStatus === "Delivered"; }).length;
+    var revenue = orders.reduce(function (sum, o) { return sum + Number(o.totalAmount); }, 0);
     document.getElementById("statTotal").textContent = total;
-    document.getElementById("statActive").textContent = active;
-    document.getElementById("statInactive").textContent = inactive;
-    document.getElementById("statGroups").textContent = groups;
+    document.getElementById("statPending").textContent = pending;
+    document.getElementById("statDelivered").textContent = delivered;
+    document.getElementById("statRevenue").textContent = formatCurrency(revenue);
   }
 
   /* ---------------- Search ---------------- */
@@ -488,9 +496,9 @@
     var actionBtn = e.target.closest("[data-action]");
     if (actionBtn) {
       var action = actionBtn.getAttribute("data-action");
-      var uid = parseInt(actionBtn.getAttribute("data-id"), 10);
+      var oid = parseInt(actionBtn.getAttribute("data-id"), 10);
       state.openMenuId = null;
-      handleAction(action, uid);
+      handleAction(action, oid);
     }
   });
 
@@ -509,150 +517,172 @@
   }, true);
 
   function handleAction(action, id) {
-    var user = users.find(function (u) { return u.id === id; });
-    if (!user) return;
+    var order = orders.find(function (o) { return o.id === id; });
+    if (!order) return;
 
-    if (action === "view") openViewModal(user);
-    else if (action === "edit") openUserModal(user);
-    else if (action === "rename") openRenameModal(user);
+    if (action === "view") openViewModal(order);
+    else if (action === "edit") openOrderModal(order);
+    else if (action === "rename") openRenameModal(order);
     else if (action === "toggle") {
-      user.status = user.status === "Active" ? "Inactive" : "Active";
+      order.status = order.status === "Active" ? "Inactive" : "Active";
       persist();
       render();
-      showToast(user.name + " has been " + (user.status === "Active" ? "enabled" : "disabled") + ".");
+      showToast(order.orderNumber + " has been " + (order.status === "Active" ? "enabled" : "disabled") + ".");
     }
   }
 
   /* ---------------- Add / Edit modal ---------------- */
-  var userModalOverlay = document.getElementById("userModalOverlay");
-  var userModalTitle = document.getElementById("userModalTitle");
-  var userModalSubtitle = document.getElementById("userModalSubtitle");
-  var createdDateField = document.getElementById("createdDateField");
-  var fUserId = document.getElementById("userId");
-  var fName = document.getElementById("fName");
-  var fEmail = document.getElementById("fEmail");
-  var fGroup = document.getElementById("fGroup");
-  var fMobile = document.getElementById("fMobile");
-  var fMachineId = document.getElementById("fMachineId");
-  var fCreatedDate = document.getElementById("fCreatedDate");
+  var orderModalOverlay = document.getElementById("orderModalOverlay");
+  var orderModalTitle = document.getElementById("orderModalTitle");
+  var orderModalSubtitle = document.getElementById("orderModalSubtitle");
+  var fOrderId = document.getElementById("orderId");
+  var oOrderNumber = document.getElementById("oOrderNumber");
+  var oOrderDate = document.getElementById("oOrderDate");
+  var oCustomerName = document.getElementById("oCustomerName");
+  var oProduct = document.getElementById("oProduct");
+  var oQuantity = document.getElementById("oQuantity");
+  var oRate = document.getElementById("oRate");
+  var oTotalAmount = document.getElementById("oTotalAmount");
+  var oStatus = document.getElementById("oStatus");
 
-  function openUserModal(user) {
-    document.querySelectorAll("#userForm .field-error").forEach(function (el) { el.classList.remove("show"); });
-    document.querySelectorAll("#userForm input, #userForm select").forEach(function (el) { el.classList.remove("error"); });
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-    if (user) {
-      userModalTitle.textContent = "Edit User";
-      userModalSubtitle.textContent = "Update this user's details.";
-      fUserId.value = user.id;
-      fName.value = user.name;
-      fEmail.value = user.email;
-      fGroup.value = user.group;
-      fMobile.value = user.mobile;
-      fMachineId.value = user.machineId;
-      fCreatedDate.value = user.createdDate;
-      createdDateField.style.display = "flex";
-      document.querySelector('input[name="fStatus"][value="' + user.status + '"]').checked = true;
+  function displayDateToInput(display) {
+    var parts = display.split(" ");
+    if (parts.length !== 3) return "";
+    var day = parts[0];
+    var monthIdx = MONTHS.indexOf(parts[1]);
+    var year = parts[2];
+    if (monthIdx === -1) return "";
+    return year + "-" + String(monthIdx + 1).padStart(2, "0") + "-" + day;
+  }
+
+  function inputDateToDisplay(value) {
+    var parts = value.split("-");
+    if (parts.length !== 3) return value;
+    var year = parts[0], month = parts[1], day = parts[2];
+    return day + " " + MONTHS[parseInt(month, 10) - 1] + " " + year;
+  }
+
+  function recalcTotal() {
+    var qty = parseFloat(oQuantity.value) || 0;
+    var rate = parseFloat(oRate.value) || 0;
+    oTotalAmount.value = formatCurrency(qty * rate);
+  }
+  oQuantity.addEventListener("input", recalcTotal);
+  oRate.addEventListener("input", recalcTotal);
+
+  function openOrderModal(order) {
+    document.querySelectorAll("#orderForm .field-error").forEach(function (el) { el.classList.remove("show"); });
+    document.querySelectorAll("#orderForm input").forEach(function (el) { el.classList.remove("error"); });
+
+    if (order) {
+      orderModalTitle.textContent = "Edit Order";
+      orderModalSubtitle.textContent = "Update this sales order's details.";
+      fOrderId.value = order.id;
+      oOrderNumber.value = order.orderNumber;
+      oOrderDate.value = displayDateToInput(order.orderDate);
+      oCustomerName.value = order.customerName;
+      oProduct.value = order.product;
+      oQuantity.value = order.quantity;
+      oRate.value = order.rate;
+      oStatus.value = order.orderStatus;
     } else {
-      userModalTitle.textContent = "Add User";
-      userModalSubtitle.textContent = "Fill in the details to create a new user.";
-      fUserId.value = "";
-      fName.value = "";
-      fEmail.value = "";
-      fGroup.value = "";
-      fMobile.value = "";
-      fMachineId.value = "";
-      createdDateField.style.display = "none";
-      document.querySelector('input[name="fStatus"][value="Active"]').checked = true;
+      orderModalTitle.textContent = "Add Order";
+      orderModalSubtitle.textContent = "Fill in the details to create a new sales order.";
+      fOrderId.value = "";
+      oOrderNumber.value = "";
+      oOrderDate.value = "";
+      oCustomerName.value = "";
+      oProduct.value = "";
+      oQuantity.value = "";
+      oRate.value = "";
+      oStatus.value = "Pending";
     }
-    userModalOverlay.classList.add("show");
+    recalcTotal();
+    orderModalOverlay.classList.add("show");
   }
 
-  function closeUserModal() {
-    userModalOverlay.classList.remove("show");
-  }
+  function closeOrderModal() { orderModalOverlay.classList.remove("show"); }
 
-  document.getElementById("openAddUser").addEventListener("click", function () { openUserModal(null); });
-  document.getElementById("closeUserModal").addEventListener("click", closeUserModal);
-  document.getElementById("cancelUserModal").addEventListener("click", closeUserModal);
-  userModalOverlay.addEventListener("click", function (e) { if (e.target === userModalOverlay) closeUserModal(); });
+  document.getElementById("openAddOrder").addEventListener("click", function () { openOrderModal(null); });
+  document.getElementById("closeOrderModal").addEventListener("click", closeOrderModal);
+  document.getElementById("cancelOrderModal").addEventListener("click", closeOrderModal);
+  orderModalOverlay.addEventListener("click", function (e) { if (e.target === orderModalOverlay) closeOrderModal(); });
 
   function setFieldError(input, errorEl, hasError) {
     input.classList.toggle("error", hasError);
     errorEl.classList.toggle("show", hasError);
   }
 
-  document.getElementById("saveUserBtn").addEventListener("click", function () {
+  document.getElementById("saveOrderBtn").addEventListener("click", function () {
     var valid = true;
-    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    var mobileRe = /^[0-9]{10}$/;
+    var numberRe = /^[0-9]+(\.[0-9]+)?$/;
 
-    var nameOk = fName.value.trim().length > 0;
-    setFieldError(fName, document.getElementById("errName"), !nameOk);
-    valid = valid && nameOk;
+    var checks = [
+      [oOrderNumber, "errOOrderNumber", oOrderNumber.value.trim().length > 0],
+      [oOrderDate, "errOOrderDate", oOrderDate.value !== ""],
+      [oCustomerName, "errOCustomerName", oCustomerName.value.trim().length > 0],
+      [oProduct, "errOProduct", oProduct.value.trim().length > 0],
+      [oQuantity, "errOQuantity", numberRe.test(oQuantity.value.trim())],
+      [oRate, "errORate", numberRe.test(oRate.value.trim())]
+    ];
 
-    var emailOk = emailRe.test(fEmail.value.trim());
-    setFieldError(fEmail, document.getElementById("errEmail"), !emailOk);
-    valid = valid && emailOk;
-
-    var groupOk = fGroup.value.trim() !== "";
-    setFieldError(fGroup, document.getElementById("errGroup"), !groupOk);
-    valid = valid && groupOk;
-
-    var mobileOk = mobileRe.test(fMobile.value.trim());
-    setFieldError(fMobile, document.getElementById("errMobile"), !mobileOk);
-    valid = valid && mobileOk;
-
-    var machineOk = fMachineId.value.trim().length > 0;
-    setFieldError(fMachineId, document.getElementById("errMachineId"), !machineOk);
-    valid = valid && machineOk;
+    checks.forEach(function (c) {
+      setFieldError(c[0], document.getElementById(c[1]), !c[2]);
+      valid = valid && c[2];
+    });
 
     if (!valid) return;
 
-    var status = document.querySelector('input[name="fStatus"]:checked').value;
+    var displayDate = inputDateToDisplay(oOrderDate.value);
+    var qty = Number(oQuantity.value.trim());
+    var rate = Number(oRate.value.trim());
 
-    if (fUserId.value) {
-      var user = users.find(function (u) { return u.id === parseInt(fUserId.value, 10); });
-      user.name = fName.value.trim();
-      user.email = fEmail.value.trim();
-      user.group = fGroup.value.trim();
-      user.mobile = fMobile.value.trim();
-      user.machineId = fMachineId.value.trim();
-      user.status = status;
-      showToast("User updated successfully.");
+    if (fOrderId.value) {
+      var order = orders.find(function (o) { return o.id === parseInt(fOrderId.value, 10); });
+      order.orderNumber = oOrderNumber.value.trim();
+      order.orderDate = displayDate;
+      order.customerName = oCustomerName.value.trim();
+      order.product = oProduct.value.trim();
+      order.quantity = qty;
+      order.rate = rate;
+      order.totalAmount = qty * rate;
+      order.orderStatus = oStatus.value;
+      showToast("Order updated successfully.");
     } else {
-      var today = new Date();
-      var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-      var createdDate = String(today.getDate()).padStart(2, "0") + " " + months[today.getMonth()] + " " + today.getFullYear();
-      users.unshift({
+      orders.unshift({
         id: nextId++,
-        name: fName.value.trim(),
-        email: fEmail.value.trim(),
-        group: fGroup.value.trim(),
-        mobile: fMobile.value.trim(),
-        status: status,
-        machineId: fMachineId.value.trim(),
-        createdDate: createdDate
+        orderNumber: oOrderNumber.value.trim(),
+        orderDate: displayDate,
+        customerName: oCustomerName.value.trim(),
+        product: oProduct.value.trim(),
+        quantity: qty,
+        rate: rate,
+        totalAmount: qty * rate,
+        orderStatus: oStatus.value,
+        status: "Active"
       });
       state.search = "";
       searchInput.value = "";
       state.page = 1;
-      showToast("User added successfully.");
+      showToast("Order added successfully.");
     }
 
     persist();
-    closeUserModal();
+    closeOrderModal();
     render();
   });
 
   /* ---------------- Rename modal ---------------- */
   var renameModalOverlay = document.getElementById("renameModalOverlay");
-  var renameUserId = document.getElementById("renameUserId");
+  var renameOrderId = document.getElementById("renameOrderId");
   var renameInput = document.getElementById("renameInput");
   var errRename = document.getElementById("errRename");
 
-  function openRenameModal(user) {
-    renameUserId.value = user.id;
-    renameInput.value = user.name;
+  function openRenameModal(order) {
+    renameOrderId.value = order.id;
+    renameInput.value = order.customerName;
     renameInput.classList.remove("error");
     errRename.classList.remove("show");
     renameModalOverlay.classList.add("show");
@@ -670,12 +700,12 @@
       errRename.classList.add("show");
       return;
     }
-    var user = users.find(function (u) { return u.id === parseInt(renameUserId.value, 10); });
-    user.name = renameInput.value.trim();
+    var order = orders.find(function (o) { return o.id === parseInt(renameOrderId.value, 10); });
+    order.customerName = renameInput.value.trim();
     persist();
     closeRenameModal();
     render();
-    showToast("User renamed successfully.");
+    showToast("Customer renamed successfully.");
   });
 
   /* ---------------- View modal ---------------- */
@@ -683,24 +713,25 @@
   var viewDetailGrid = document.getElementById("viewDetailGrid");
   var viewToggleBtn = document.getElementById("viewToggleBtn");
   var viewToggleLabel = document.getElementById("viewToggleLabel");
-  var currentViewUser = null;
+  var currentViewOrder = null;
 
-  function openViewModal(user) {
-    currentViewUser = user;
+  function openViewModal(order) {
+    currentViewOrder = order;
     var fields = [
-      ["Name", user.name],
-      ["Email Address", user.email],
-      ["Company Group", user.group],
-      ["Mobile", user.mobile],
-      ["Status", user.status],
-      ["Machine ID", user.machineId],
-      ["Created Date", user.createdDate]
+      ["Order Number", order.orderNumber],
+      ["Customer Name", order.customerName],
+      ["Product", order.product],
+      ["Quantity", order.quantity],
+      ["Rate", formatCurrency(order.rate)],
+      ["Total Amount", formatCurrency(order.totalAmount)],
+      ["Order Date", order.orderDate],
+      ["Order Status", order.orderStatus]
     ];
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
-    viewToggleLabel.textContent = user.status === "Active" ? "Disable" : "Enable";
-    viewToggleBtn.classList.toggle("danger", user.status === "Active");
+    viewToggleLabel.textContent = order.status === "Active" ? "Disable" : "Enable";
+    viewToggleBtn.classList.toggle("danger", order.status === "Active");
     viewModalOverlay.classList.add("show");
   }
 
@@ -708,28 +739,28 @@
 
   document.getElementById("closeViewModal").addEventListener("click", closeViewModal);
   document.getElementById("closeViewModalBtn").addEventListener("click", closeViewModal);
+  viewModalOverlay.addEventListener("click", function (e) { if (e.target === viewModalOverlay) closeViewModal(); });
 
   document.getElementById("viewEditBtn").addEventListener("click", function () {
-    var user = currentViewUser;
+    var order = currentViewOrder;
     closeViewModal();
-    openUserModal(user);
+    openOrderModal(order);
   });
 
   document.getElementById("viewRenameBtn").addEventListener("click", function () {
-    var user = currentViewUser;
+    var order = currentViewOrder;
     closeViewModal();
-    openRenameModal(user);
+    openRenameModal(order);
   });
 
   viewToggleBtn.addEventListener("click", function () {
-    var user = currentViewUser;
-    user.status = user.status === "Active" ? "Inactive" : "Active";
+    var order = currentViewOrder;
+    order.status = order.status === "Active" ? "Inactive" : "Active";
     persist();
     render();
     closeViewModal();
-    showToast(user.name + " has been " + (user.status === "Active" ? "enabled" : "disabled") + ".");
+    showToast(order.orderNumber + " has been " + (order.status === "Active" ? "enabled" : "disabled") + ".");
   });
-  viewModalOverlay.addEventListener("click", function (e) { if (e.target === viewModalOverlay) closeViewModal(); });
 
   /* ---------------- Toast ---------------- */
   var toastNotice = document.getElementById("toastNotice");

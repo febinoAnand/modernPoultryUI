@@ -11,9 +11,10 @@
   var TRADES_KEY = "ui_trades_v1";
   var BILLS_KEY = "ui_bills_v1";
   var PROFILE_KEY = "ui_profile_v1";
-  var GROUPS_KEY = "ui_groups_v1";
+  var GROUPS_KEY = "ui_groups_v2";
   var FARM_CODES_KEY = "ui_farm_codes_v1";
   var TRADER_CODES_KEY = "ui_trader_codes_v1";
+  var SALES_ORDERS_KEY = "ui_sales_orders_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -141,12 +142,14 @@
 
   function buildSeedGroups() {
     return GROUP_OPTIONS.map(function (name, i) {
+      var m = i % 10;
+      var status = m === 0 ? "Inactive" : (m === 1 || m === 2 ? "Pending Approval" : "Active");
       return {
         id: i + 1,
         groupName: name,
         mobile: "96" + String(40000000 + i * 151).slice(0, 8),
         description: GROUP_DESCRIPTIONS[i % GROUP_DESCRIPTIONS.length],
-        status: i % 7 === 0 ? "Inactive" : "Active"
+        status: status
       };
     });
   }
@@ -226,6 +229,46 @@
     localStorage.setItem(TRADER_CODES_KEY, JSON.stringify(traderCodes));
   }
 
+  var PRODUCTS = ["Broiler Chicken", "Country Chicken", "Chicken Feed", "Layer Feed", "Chick Starter Feed", "Poultry Vaccine", "Egg Tray", "Vitamin Supplement", "Broiler Chicks", "Layer Chicks"];
+  var ORDER_STATUSES = ["Pending", "Confirmed", "Delivered"];
+
+  function buildSeedSalesOrders() {
+    return FIRST_NAMES.map(function (first, i) {
+      var last = LAST_NAMES[i % LAST_NAMES.length];
+      var name = first + " " + last;
+      var day = 3 + (i % 24);
+      var month = 1 + (i % 8);
+      var qty = 50 + (i * 17) % 450;
+      var rate = 120 + (i * 7) % 180;
+      return {
+        id: i + 1,
+        orderNumber: "SO-" + (5000 + i * 11),
+        customerName: name,
+        product: PRODUCTS[i % PRODUCTS.length],
+        quantity: qty,
+        rate: rate,
+        totalAmount: qty * rate,
+        orderDate: String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026",
+        orderStatus: ORDER_STATUSES[i % 3],
+        status: i % 8 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
+  function getSalesOrders() {
+    var raw = localStorage.getItem(SALES_ORDERS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedSalesOrders();
+    saveSalesOrders(seeded);
+    return seeded;
+  }
+
+  function saveSalesOrders(salesOrders) {
+    localStorage.setItem(SALES_ORDERS_KEY, JSON.stringify(salesOrders));
+  }
+
   function getProfile() {
     var raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
@@ -264,6 +307,8 @@
     saveFarmCodes: saveFarmCodes,
     getTraderCodes: getTraderCodes,
     saveTraderCodes: saveTraderCodes,
+    getSalesOrders: getSalesOrders,
+    saveSalesOrders: saveSalesOrders,
     GROUP_OPTIONS: GROUP_OPTIONS
   };
 })();
