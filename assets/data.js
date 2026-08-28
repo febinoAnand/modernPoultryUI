@@ -15,6 +15,8 @@
   var FARM_CODES_KEY = "ui_farm_codes_v1";
   var TRADER_CODES_KEY = "ui_trader_codes_v1";
   var SALES_ORDERS_KEY = "ui_sales_orders_v1";
+  var BRANCHES_KEY = "ui_branches_v1";
+  var PRODUCTS_KEY = "ui_products_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -364,6 +366,61 @@
     localStorage.setItem(SALES_ORDERS_KEY, JSON.stringify(salesOrders));
   }
 
+  function buildSeedBranches() {
+    return LOCATIONS.concat(LOCATIONS).map(function (city, i) {
+      var suffix = i >= LOCATIONS.length ? " " + (Math.floor(i / LOCATIONS.length) + 1) : "";
+      return {
+        id: i + 1,
+        branchName: city + " Branch" + suffix,
+        branchCode: "BR-" + (1000 + i * 7),
+        address: (100 + i * 13) + " Main Road, " + city,
+        status: i % 7 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
+  function getBranches() {
+    var raw = localStorage.getItem(BRANCHES_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedBranches();
+    saveBranches(seeded);
+    return seeded;
+  }
+
+  function saveBranches(branches) {
+    localStorage.setItem(BRANCHES_KEY, JSON.stringify(branches));
+  }
+
+  var PRODUCT_CATEGORIES = ["Poultry", "Feed", "Medicine", "Equipment"];
+
+  function buildSeedProducts() {
+    return PRODUCTS.map(function (name, i) {
+      return {
+        id: i + 1,
+        productName: name,
+        productCode: "PRD-" + (1000 + i * 7),
+        category: PRODUCT_CATEGORIES[i % PRODUCT_CATEGORIES.length],
+        status: i % 5 === 0 ? "Inactive" : "Active"
+      };
+    });
+  }
+
+  function getProducts() {
+    var raw = localStorage.getItem(PRODUCTS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedProducts();
+    saveProducts(seeded);
+    return seeded;
+  }
+
+  function saveProducts(products) {
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  }
+
   function getProfile() {
     var raw = localStorage.getItem(PROFILE_KEY);
     if (raw) {
@@ -404,6 +461,10 @@
     saveTraderCodes: saveTraderCodes,
     getSalesOrders: getSalesOrders,
     saveSalesOrders: saveSalesOrders,
+    getBranches: getBranches,
+    saveBranches: saveBranches,
+    getProducts: getProducts,
+    saveProducts: saveProducts,
     GROUP_OPTIONS: GROUP_OPTIONS
   };
 })();
