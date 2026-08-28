@@ -9,7 +9,7 @@
 
   var USERS_KEY = "ui_users_v1";
   var TRADES_KEY = "ui_trades_v1";
-  var BILLS_KEY = "ui_bills_v1";
+  var BILLS_KEY = "ui_bills_v2";
   var PROFILE_KEY = "ui_profile_v1";
   var GROUPS_KEY = "ui_groups_v2";
   var FARM_CODES_KEY = "ui_farm_codes_v1";
@@ -70,24 +70,119 @@
     });
   }
 
+  function pad2(n) { return String(n).padStart(2, "0"); }
+
   function buildSeedBills() {
+    var BIRD_TYPES = ["Broiler", "Country Chicken", "Layer"];
+
     return FIRST_NAMES.map(function (first, i) {
       var last = LAST_NAMES[i % LAST_NAMES.length];
       var name = first + " " + last;
       var day = 3 + (i % 24);
       var month = 1 + (i % 8);
+      var dateStr = String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026";
+      var isoDate = "2026-" + pad2(month) + "-" + pad2(day);
       var totalBirds = 300 + i * 37;
       var weight = Math.round(totalBirds * (1.8 + (i % 5) * 0.1) * 10) / 10;
+
+      var startHour = 9 + (i % 3);
+      var startMin = (i * 11) % 60;
+      var startSec = (i * 13) % 60;
+      var durationMin = 12 + (i % 10);
+      var startTotalSec = startHour * 3600 + startMin * 60 + startSec;
+      var endTotalSec = startTotalSec + durationMin * 60 + ((i * 3) % 60);
+      var endHour = Math.floor(endTotalSec / 3600) % 24;
+      var endMin = Math.floor((endTotalSec % 3600) / 60);
+      var endSec = endTotalSec % 60;
+
+      var startTime = isoDate + " " + pad2(startHour) + ":" + pad2(startMin) + ":" + pad2(startSec);
+      var endTime = isoDate + " " + pad2(endHour) + ":" + pad2(endMin) + ":" + pad2(endSec);
+
+      var supervisor = DRIVER_FIRST[i % DRIVER_FIRST.length] + " " + LAST_NAMES[(i + 2) % LAST_NAMES.length];
+      var driver = DRIVER_FIRST[(i + 4) % DRIVER_FIRST.length] + " " + LAST_NAMES[(i + 5) % LAST_NAMES.length];
+      var vehicleNo = STATE_CODES[i % STATE_CODES.length].replace(" ", "") + String.fromCharCode(65 + (i % 26)) + String.fromCharCode(66 + (i % 20)) + (1000 + i * 23).toString().slice(-4);
+      var mobileNo = "90" + String(40000000 + i * 191).slice(0, 8);
+      var farmCode = "FC-" + (4000 + i * 9);
+      var age = 28 + (i % 15);
+      var balanceStock = 100 + (i * 23) % 900;
+      var birdType = BIRD_TYPES[i % BIRD_TYPES.length];
+
+      var emptyWeight = Math.round(weight * 0.28 * 10) / 10;
+      var loadWeight = Math.round((weight + emptyWeight) * 10) / 10;
+      var netWeight = weight;
+      var avgWeight = Math.round((netWeight / totalBirds) * 100) / 100;
+      var totalBox = 3 + (i % 4);
+      var filledBox = Math.round(totalBirds / (3 + (i % 3)));
+      var emptyBox = Math.max(1, Math.round(totalBox * 0.3));
+      var loadingMin = 10 + (i % 15);
+      var loadingSec = (i * 7) % 60;
+      var loadingTime = loadingMin + "Min " + loadingSec + "Sec";
+
+      var sessionCount = 3;
+      var sessions = [];
+      var remainingBirds = totalBirds;
+      var remainingWeight = netWeight;
+      for (var s = 0; s < sessionCount; s++) {
+        var isLast = s === sessionCount - 1;
+        var boxCount = 5 + ((i + s) % 3);
+        var sessFilled = isLast ? remainingBirds : Math.round(totalBirds / sessionCount);
+        var sessNet = isLast ? Math.round(remainingWeight * 10) / 10 : Math.round((netWeight / sessionCount) * 10) / 10;
+        var sessEmptyWeight = Math.round((emptyWeight / sessionCount) * 10) / 10;
+        var sessGross = Math.round((sessNet + sessEmptyWeight) * 10) / 10;
+        remainingBirds -= sessFilled;
+        remainingWeight -= sessNet;
+        var sessTimeSec = startTotalSec + (s + 1) * Math.floor((durationMin * 60) / (sessionCount + 1));
+        var sh = Math.floor(sessTimeSec / 3600) % 24;
+        var sm = Math.floor((sessTimeSec % 3600) / 60);
+        var ss = sessTimeSec % 60;
+        sessions.push({
+          noOfBox: boxCount,
+          filledBox: sessFilled,
+          emptyWeight: sessEmptyWeight,
+          grossWeight: sessGross,
+          netWeight: sessNet,
+          time: isoDate + " " + pad2(sh) + ":" + pad2(sm) + ":" + pad2(ss)
+        });
+      }
+
+      var birdTypeBreakdown = [
+        { slNo: 1, birdsType: birdType, box: totalBox, count: totalBirds, total: netWeight }
+      ];
+
       return {
         id: i + 1,
-        date: String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026",
+        date: dateStr,
         billNumber: "BILL-" + (30000 + i * 17),
         trader: name,
         email: first.toLowerCase() + "." + last.toLowerCase() + "@example.com",
         totalBirds: totalBirds,
         birdsWeight: weight,
         company: GROUPS[i % GROUPS.length],
-        status: i % 6 === 0 ? "Inactive" : "Active"
+        status: i % 6 === 0 ? "Inactive" : "Active",
+
+        startTime: startTime,
+        endTime: endTime,
+        supervisor: supervisor,
+        driver: driver,
+        vehicleNo: vehicleNo,
+        farmer: name,
+        mobileNo: mobileNo,
+        farmCode: farmCode,
+        age: age,
+        balanceStock: balanceStock,
+        birdType: birdType,
+
+        filledBox: filledBox,
+        emptyBox: emptyBox,
+        totalBox: totalBox,
+        loadWeight: loadWeight,
+        emptyWeight: emptyWeight,
+        netWeight: netWeight,
+        avgWeight: avgWeight,
+        loadingTime: loadingTime,
+
+        weighingSessions: sessions,
+        birdTypeBreakdown: birdTypeBreakdown
       };
     });
   }
