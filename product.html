@@ -178,6 +178,7 @@
                 <th>S.No</th>
                 <th>Product Name</th>
                 <th>Product Code</th>
+                <th>Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -362,12 +363,13 @@
       tableBody.innerHTML = pageItems.map(function (p, idx) {
         var isMenuOpen = state.openMenuId === p.id;
         var rowClass = p.status === "Inactive" ? "row-inactive" : "";
-        var disabledBadge = p.status === "Inactive" ? '<span class="inline-badge">Disabled</span>' : "";
+        var statusClass = p.status === "Active" ? "active" : "inactive";
         return (
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
-            '<td><div class="cell-user"><div class="cell-avatar">' + PRODUCT_ICON.replace(/width="\d+" height="\d+"/, "") + '</div><span class="cell-user-name">' + escapeHtml(p.productName) + '</span>' + disabledBadge + '</div></td>' +
+            '<td><div class="cell-user"><div class="cell-avatar">' + PRODUCT_ICON.replace(/width="\d+" height="\d+"/, "") + '</div><span class="cell-user-name">' + escapeHtml(p.productName) + '</span></div></td>' +
             '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(p.productCode) + '</span></td>' +
+            '<td><span class="status-pill ' + statusClass + '">' + p.status + '</span></td>' +
             '<td>' +
               '<div class="row-actions">' +
                 '<button class="action-trigger" data-menu-toggle="' + p.id + '" aria-label="Actions">' +

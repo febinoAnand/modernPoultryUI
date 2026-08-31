@@ -226,20 +226,6 @@
               <span class="field-error" id="errPMobile">Enter a valid 10-digit contact number.</span>
             </div>
 
-            <div class="field">
-              <label for="pMachineId">Machine ID <span class="req">*</span></label>
-              <input type="text" id="pMachineId" placeholder="e.g. MC-1042">
-              <span class="field-error" id="errPMachineId">Please enter a machine ID.</span>
-            </div>
-
-            <div class="field">
-              <label for="pGroup">Select Group <span class="req">*</span></label>
-              <select id="pGroup">
-                <option value="">Select group</option>
-              </select>
-              <span class="field-error" id="errPGroup">Please select a group.</span>
-            </div>
-
             <div class="field full">
               <label for="pCompanyName">Company Name <span class="req">*</span></label>
               <input type="text" id="pCompanyName" placeholder="e.g. AgriTrade Poultry Pvt Ltd">
@@ -333,21 +319,12 @@
   var pUsername = document.getElementById("pUsername");
   var pEmail = document.getElementById("pEmail");
   var pMobile = document.getElementById("pMobile");
-  var pMachineId = document.getElementById("pMachineId");
-  var pGroup = document.getElementById("pGroup");
   var pCompanyName = document.getElementById("pCompanyName");
   var pCompanyWebsite = document.getElementById("pCompanyWebsite");
   var pTeamSize = document.getElementById("pTeamSize");
   var pOrgIdDisplay = document.getElementById("pOrgIdDisplay");
   var bigAvatar = document.querySelector(".big-avatar");
   var profileNameHeading = document.querySelector(".profile-avatar-row h3");
-
-  Data.getGroups().forEach(function (g) {
-    var opt = document.createElement("option");
-    opt.value = g.groupName;
-    opt.textContent = g.groupName;
-    pGroup.appendChild(opt);
-  });
 
   var profile = Data.getProfile();
 
@@ -374,8 +351,6 @@
     pUsername.value = profile.username;
     pEmail.value = profile.email;
     pMobile.value = profile.mobile;
-    pMachineId.value = profile.machineId;
-    pGroup.value = profile.group;
     pCompanyName.value = profile.companyName || "";
     pCompanyWebsite.value = profile.companyWebsite || "";
     pTeamSize.value = profile.teamSize || "";
@@ -419,14 +394,6 @@
     setFieldError(pMobile, document.getElementById("errPMobile"), !mobileOk);
     valid = valid && mobileOk;
 
-    var machineOk = pMachineId.value.trim().length > 0;
-    setFieldError(pMachineId, document.getElementById("errPMachineId"), !machineOk);
-    valid = valid && machineOk;
-
-    var groupOk = pGroup.value !== "";
-    setFieldError(pGroup, document.getElementById("errPGroup"), !groupOk);
-    valid = valid && groupOk;
-
     var companyNameOk = pCompanyName.value.trim().length > 0;
     setFieldError(pCompanyName, document.getElementById("errPCompanyName"), !companyNameOk);
     valid = valid && companyNameOk;
@@ -445,8 +412,6 @@
     profile.username = pUsername.value.trim();
     profile.email = pEmail.value.trim();
     profile.mobile = pMobile.value.trim();
-    profile.machineId = pMachineId.value.trim();
-    profile.group = pGroup.value;
     profile.companyName = pCompanyName.value.trim();
     profile.companyWebsite = pCompanyWebsite.value.trim();
     profile.teamSize = pTeamSize.value;
