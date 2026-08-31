@@ -224,20 +224,35 @@
 
           <div class="field">
             <label for="oOrderDate">Order Date <span class="req">*</span></label>
-            <input type="date" id="oOrderDate">
+            <div class="icon-field-wrap">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input type="date" id="oOrderDate">
+            </div>
             <span class="field-error" id="errOOrderDate">Please select a date.</span>
           </div>
 
           <div class="field full">
             <label for="oCustomerName">Customer Name <span class="req">*</span></label>
-            <input type="text" id="oCustomerName" placeholder="e.g. Ramesh Kumar">
-            <span class="field-error" id="errOCustomerName">Please enter the customer's name.</span>
+            <div class="combo-wrap" id="customerComboWrap">
+              <div class="icon-field-wrap">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="oCustomerName" placeholder="Search a trader by name or code..." autocomplete="off">
+              </div>
+              <div class="combo-panel" id="customerComboPanel"></div>
+            </div>
+            <span class="field-error" id="errOCustomerName">Please select a trader from the list.</span>
           </div>
 
           <div class="field full">
             <label for="oProduct">Product <span class="req">*</span></label>
-            <input type="text" id="oProduct" placeholder="e.g. Broiler Chicken">
-            <span class="field-error" id="errOProduct">Please enter a product.</span>
+            <div class="combo-wrap" id="productComboWrap">
+              <div class="icon-field-wrap">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="oProduct" placeholder="Search a product by name or code..." autocomplete="off">
+              </div>
+              <div class="combo-panel" id="productComboPanel"></div>
+            </div>
+            <span class="field-error" id="errOProduct">Please select a product from the list.</span>
           </div>
 
           <div class="field">
@@ -351,6 +366,9 @@
   /* ---------------- Data (persisted, shared with dashboard) ---------------- */
   var orders = Data.getSalesOrders();
   var nextId = orders.reduce(function (m, o) { return Math.max(m, o.id); }, 0) + 1;
+
+  var traderPool = Data.getTraderCodes().filter(function (t) { return t.status !== "Inactive"; });
+  var productPool = Data.getProducts().filter(function (p) { return p.status !== "Inactive"; });
 
   function persist() { Data.saveSalesOrders(orders); }
 
@@ -549,6 +567,42 @@
   var oRate = document.getElementById("oRate");
   var oTotalAmount = document.getElementById("oTotalAmount");
   var oStatus = document.getElementById("oStatus");
+
+  var customerCombo = App.initCombobox({
+    input: oCustomerName,
+    panel: document.getElementById("customerComboPanel"),
+    wrap: document.getElementById("customerComboWrap"),
+    items: traderPool,
+    getInitial: function (t) { return initials(t.traderName); },
+    getLabel: function (t) { return escapeHtml(t.traderName); },
+    getSub: function (t) { return escapeHtml(t.traderCode) + " &middot; " + escapeHtml(t.city); },
+    matches: function (t, term) {
+      if (!term) return true;
+      return t.traderName.toLowerCase().indexOf(term) !== -1 || t.traderCode.toLowerCase().indexOf(term) !== -1;
+    },
+    onSelect: function (t) {
+      oCustomerName.value = t.traderName;
+      setFieldError(oCustomerName, document.getElementById("errOCustomerName"), false);
+    }
+  });
+
+  var productCombo = App.initCombobox({
+    input: oProduct,
+    panel: document.getElementById("productComboPanel"),
+    wrap: document.getElementById("productComboWrap"),
+    items: productPool,
+    getInitial: function (p) { return p.productName.charAt(0).toUpperCase(); },
+    getLabel: function (p) { return escapeHtml(p.productName); },
+    getSub: function (p) { return escapeHtml(p.productCode) + " &middot; " + escapeHtml(p.category); },
+    matches: function (p, term) {
+      if (!term) return true;
+      return p.productName.toLowerCase().indexOf(term) !== -1 || p.productCode.toLowerCase().indexOf(term) !== -1;
+    },
+    onSelect: function (p) {
+      oProduct.value = p.productName;
+      setFieldError(oProduct, document.getElementById("errOProduct"), false);
+    }
+  });
 
   var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 

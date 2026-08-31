@@ -106,6 +106,98 @@
     menu.style.left = left + "px";
   }
 
+  /* ---------------- Searchable combobox (trader/product pickers etc.) ---------------- */
+
+  function initCombobox(opts) {
+    var filtered = [];
+    var activeIndex = -1;
+
+    function position() {
+      var rect = opts.wrap.getBoundingClientRect();
+      opts.panel.style.left = rect.left + "px";
+      opts.panel.style.top = (rect.bottom + 6) + "px";
+      opts.panel.style.width = rect.width + "px";
+    }
+
+    function renderOptions() {
+      if (!filtered.length) {
+        opts.panel.innerHTML = '<div class="combo-empty">No matches found</div>';
+        return;
+      }
+      opts.panel.innerHTML = filtered.map(function (item, i) {
+        return '<div class="combo-option' + (i === activeIndex ? ' active' : '') + '" data-idx="' + i + '">' +
+          '<div class="combo-avatar">' + opts.getInitial(item) + '</div>' +
+          '<div class="combo-text"><span class="combo-title">' + opts.getLabel(item) + '</span><span class="combo-sub">' + opts.getSub(item) + '</span></div>' +
+        '</div>';
+      }).join("");
+    }
+
+    function filter() {
+      var term = opts.input.value.trim().toLowerCase();
+      filtered = opts.items.filter(function (item) { return opts.matches(item, term); });
+      activeIndex = -1;
+      renderOptions();
+    }
+
+    function open() {
+      filter();
+      position();
+      opts.panel.classList.add("show");
+    }
+
+    function close() {
+      opts.panel.classList.remove("show");
+      activeIndex = -1;
+    }
+
+    function select(item) {
+      opts.onSelect(item);
+      close();
+    }
+
+    opts.input.addEventListener("focus", open);
+    opts.input.addEventListener("input", open);
+
+    opts.input.addEventListener("keydown", function (e) {
+      if (!opts.panel.classList.contains("show")) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        activeIndex = Math.min(activeIndex + 1, filtered.length - 1);
+        renderOptions();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, 0);
+        renderOptions();
+      } else if (e.key === "Enter") {
+        if (activeIndex >= 0 && filtered[activeIndex]) {
+          e.preventDefault();
+          select(filtered[activeIndex]);
+        }
+      } else if (e.key === "Escape") {
+        close();
+      }
+    });
+
+    opts.panel.addEventListener("mousedown", function (e) {
+      var optEl = e.target.closest(".combo-option");
+      if (!optEl) return;
+      e.preventDefault();
+      var idx = parseInt(optEl.getAttribute("data-idx"), 10);
+      select(filtered[idx]);
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!opts.wrap.contains(e.target) && !opts.panel.contains(e.target)) close();
+    });
+    window.addEventListener("scroll", function () { if (opts.panel.classList.contains("show")) position(); }, true);
+    window.addEventListener("resize", function () { if (opts.panel.classList.contains("show")) position(); });
+
+    return {
+      close: close,
+      setItems: function (items) { opts.items = items; }
+    };
+  }
+
   window.App = {
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
@@ -115,6 +207,7 @@
     initSidebar: initSidebar,
     initLogout: initLogout,
     initUserBadge: initUserBadge,
-    positionActionMenu: positionActionMenu
+    positionActionMenu: positionActionMenu,
+    initCombobox: initCombobox
   };
 })();
