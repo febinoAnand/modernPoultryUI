@@ -17,6 +17,7 @@
   var SALES_ORDERS_KEY = "ui_sales_orders_v1";
   var BRANCHES_KEY = "ui_branches_v1";
   var PRODUCTS_KEY = "ui_products_v1";
+  var ORGANIZATIONS_KEY = "ui_organizations_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -434,7 +435,11 @@
       email: email,
       mobile: "",
       machineId: "",
-      group: ""
+      group: "",
+      orgId: "AGRITRADE",
+      companyName: "AgriTrade Poultry Pvt Ltd",
+      companyWebsite: "www.agritrade.com",
+      teamSize: "11-50"
     };
     saveProfile(defaultProfile);
     return defaultProfile;
@@ -442,6 +447,74 @@
 
   function saveProfile(profile) {
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  }
+
+  /* ---------------- Organizations (multi-tenant registration) ---------------- */
+
+  function getOrganizations() {
+    var raw = localStorage.getItem(ORGANIZATIONS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through */ }
+    }
+    return [];
+  }
+
+  function saveOrganizations(orgs) {
+    localStorage.setItem(ORGANIZATIONS_KEY, JSON.stringify(orgs));
+  }
+
+  function generateOrgId(existingOrgs) {
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no ambiguous 0/O/1/I
+    var taken = existingOrgs.map(function (o) { return o.orgId; });
+    var id;
+    do {
+      id = "";
+      for (var i = 0; i < 8; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+    } while (taken.indexOf(id) !== -1);
+    return id;
+  }
+
+  function findOrganization(orgId) {
+    if (!orgId) return null;
+    var orgs = getOrganizations();
+    for (var i = 0; i < orgs.length; i++) {
+      if (orgs[i].orgId.toUpperCase() === String(orgId).toUpperCase()) return orgs[i];
+    }
+    return null;
+  }
+
+  function isUsernameTaken(username) {
+    var orgs = getOrganizations();
+    return orgs.some(function (o) { return o.username.toLowerCase() === String(username).toLowerCase(); });
+  }
+
+  function registerOrganization(details) {
+    var orgs = getOrganizations();
+    var org = {
+      orgId: generateOrgId(orgs),
+      username: details.username,
+      email: details.email,
+      password: details.password,
+      companyName: details.companyName,
+      companyWebsite: details.companyWebsite,
+      contactNumber: details.contactNumber,
+      teamSize: details.teamSize,
+      status: "Active",
+      createdAt: new Date().toISOString()
+    };
+    orgs.push(org);
+    saveOrganizations(orgs);
+    return org;
+  }
+
+  function authenticateOrganization(orgId, username, password) {
+    var org = findOrganization(orgId);
+    if (!org) return null;
+    if (org.username.toLowerCase() !== String(username).trim().toLowerCase()) return null;
+    if (org.password !== password) return null;
+    return org;
   }
 
   window.Data = {
@@ -465,6 +538,12 @@
     saveBranches: saveBranches,
     getProducts: getProducts,
     saveProducts: saveProducts,
-    GROUP_OPTIONS: GROUP_OPTIONS
+    GROUP_OPTIONS: GROUP_OPTIONS,
+    getOrganizations: getOrganizations,
+    saveOrganizations: saveOrganizations,
+    findOrganization: findOrganization,
+    isUsernameTaken: isUsernameTaken,
+    registerOrganization: registerOrganization,
+    authenticateOrganization: authenticateOrganization
   };
 })();

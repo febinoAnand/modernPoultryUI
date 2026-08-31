@@ -190,6 +190,11 @@
           </div>
         </div>
 
+        <div class="org-id-box" style="margin-top:0">
+          <div class="org-id-label">Organisation ID</div>
+          <div class="org-id-value" id="pOrgIdDisplay" style="font-size:20px">—</div>
+        </div>
+
         <form id="profileForm" novalidate>
           <div class="field-grid">
             <div class="field">
@@ -211,9 +216,9 @@
             </div>
 
             <div class="field">
-              <label for="pMobile">Mobile Number <span class="req">*</span></label>
+              <label for="pMobile">Contact Number <span class="req">*</span></label>
               <input type="text" id="pMobile" maxlength="10" placeholder="10-digit number">
-              <span class="field-error" id="errPMobile">Enter a valid 10-digit mobile number.</span>
+              <span class="field-error" id="errPMobile">Enter a valid 10-digit contact number.</span>
             </div>
 
             <div class="field">
@@ -228,6 +233,31 @@
                 <option value="">Select group</option>
               </select>
               <span class="field-error" id="errPGroup">Please select a group.</span>
+            </div>
+
+            <div class="field full">
+              <label for="pCompanyName">Company Name <span class="req">*</span></label>
+              <input type="text" id="pCompanyName" placeholder="e.g. AgriTrade Poultry Pvt Ltd">
+              <span class="field-error" id="errPCompanyName">Please enter your company name.</span>
+            </div>
+
+            <div class="field">
+              <label for="pCompanyWebsite">Company Website <span class="req">*</span></label>
+              <input type="text" id="pCompanyWebsite" placeholder="e.g. www.agritrade.com">
+              <span class="field-error" id="errPCompanyWebsite">Please enter a valid website.</span>
+            </div>
+
+            <div class="field">
+              <label for="pTeamSize">Team Size <span class="req">*</span></label>
+              <select id="pTeamSize">
+                <option value="">Select team size</option>
+                <option value="1-10">1 – 10 people</option>
+                <option value="11-50">11 – 50 people</option>
+                <option value="51-200">51 – 200 people</option>
+                <option value="201-500">201 – 500 people</option>
+                <option value="500+">500+ people</option>
+              </select>
+              <span class="field-error" id="errPTeamSize">Please select your team size.</span>
             </div>
           </div>
         </form>
@@ -296,6 +326,10 @@
   var pMobile = document.getElementById("pMobile");
   var pMachineId = document.getElementById("pMachineId");
   var pGroup = document.getElementById("pGroup");
+  var pCompanyName = document.getElementById("pCompanyName");
+  var pCompanyWebsite = document.getElementById("pCompanyWebsite");
+  var pTeamSize = document.getElementById("pTeamSize");
+  var pOrgIdDisplay = document.getElementById("pOrgIdDisplay");
   var bigAvatar = document.querySelector(".big-avatar");
   var profileNameHeading = document.querySelector(".profile-avatar-row h3");
 
@@ -308,6 +342,24 @@
 
   var profile = Data.getProfile();
 
+  // First login after a fresh registration: pull the organisation's
+  // details into the profile so they don't have to re-type them.
+  var sessionOrgId = App.getOrgId();
+  if (sessionOrgId && profile.orgId !== sessionOrgId) {
+    var org = Data.findOrganization(sessionOrgId);
+    if (org) {
+      profile.orgId = org.orgId;
+      profile.username = org.username;
+      profile.email = org.email;
+      profile.mobile = org.contactNumber;
+      profile.companyName = org.companyName;
+      profile.companyWebsite = org.companyWebsite;
+      profile.teamSize = org.teamSize;
+      if (!profile.name) profile.name = org.username.charAt(0).toUpperCase() + org.username.slice(1);
+      Data.saveProfile(profile);
+    }
+  }
+
   function loadProfileIntoForm() {
     pName.value = profile.name;
     pUsername.value = profile.username;
@@ -315,8 +367,21 @@
     pMobile.value = profile.mobile;
     pMachineId.value = profile.machineId;
     pGroup.value = profile.group;
+    pCompanyName.value = profile.companyName || "";
+    pCompanyWebsite.value = profile.companyWebsite || "";
+    pTeamSize.value = profile.teamSize || "";
+    pOrgIdDisplay.textContent = profile.orgId || "—";
   }
   loadProfileIntoForm();
+
+  function syncIdentityDisplay() {
+    var initial = profile.name.charAt(0).toUpperCase();
+    bigAvatar.textContent = initial;
+    profileNameHeading.textContent = profile.name;
+    document.querySelectorAll("[data-user-initial]").forEach(function (el) { el.textContent = initial; });
+    document.querySelectorAll("[data-user-name]").forEach(function (el) { el.textContent = profile.name; });
+  }
+  syncIdentityDisplay();
 
   function setFieldError(input, errorEl, hasError) {
     input.classList.toggle("error", hasError);
@@ -327,6 +392,7 @@
     var valid = true;
     var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     var mobileRe = /^[0-9]{10}$/;
+    var websiteRe = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([/?#].*)?$/;
 
     var nameOk = pName.value.trim().length > 0;
     setFieldError(pName, document.getElementById("errPName"), !nameOk);
@@ -352,6 +418,18 @@
     setFieldError(pGroup, document.getElementById("errPGroup"), !groupOk);
     valid = valid && groupOk;
 
+    var companyNameOk = pCompanyName.value.trim().length > 0;
+    setFieldError(pCompanyName, document.getElementById("errPCompanyName"), !companyNameOk);
+    valid = valid && companyNameOk;
+
+    var websiteOk = websiteRe.test(pCompanyWebsite.value.trim());
+    setFieldError(pCompanyWebsite, document.getElementById("errPCompanyWebsite"), !websiteOk);
+    valid = valid && websiteOk;
+
+    var teamSizeOk = pTeamSize.value !== "";
+    setFieldError(pTeamSize, document.getElementById("errPTeamSize"), !teamSizeOk);
+    valid = valid && teamSizeOk;
+
     if (!valid) return;
 
     profile.name = pName.value.trim();
@@ -360,13 +438,12 @@
     profile.mobile = pMobile.value.trim();
     profile.machineId = pMachineId.value.trim();
     profile.group = pGroup.value;
+    profile.companyName = pCompanyName.value.trim();
+    profile.companyWebsite = pCompanyWebsite.value.trim();
+    profile.teamSize = pTeamSize.value;
     Data.saveProfile(profile);
 
-    var initial = profile.name.charAt(0).toUpperCase();
-    bigAvatar.textContent = initial;
-    profileNameHeading.textContent = profile.name;
-    document.querySelectorAll("[data-user-initial]").forEach(function (el) { el.textContent = initial; });
-    document.querySelectorAll("[data-user-name]").forEach(function (el) { el.textContent = profile.name; });
+    syncIdentityDisplay();
 
     showToast("Profile updated successfully.");
   });

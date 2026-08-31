@@ -18,14 +18,21 @@
     }
   }
 
-  function login(email) {
+  function login(email, orgId) {
     sessionStorage.setItem(SESSION_KEY, "true");
     sessionStorage.setItem("ui_user_email", email);
+    if (orgId) sessionStorage.setItem("ui_org_id", orgId);
+    else sessionStorage.removeItem("ui_org_id");
+  }
+
+  function getOrgId() {
+    return sessionStorage.getItem("ui_org_id") || "";
   }
 
   function logout() {
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem("ui_user_email");
+    sessionStorage.removeItem("ui_org_id");
     window.location.href = "index.html";
   }
 
@@ -103,6 +110,7 @@
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
     login: login,
+    getOrgId: getOrgId,
     logout: logout,
     initSidebar: initSidebar,
     initLogout: initLogout,

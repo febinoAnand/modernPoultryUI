@@ -5,264 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sign In</title>
 <link rel="stylesheet" href="assets/style.css">
-<style>
-  body.login-body {
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    background: #0f0b1e;
-  }
-
-  .bg-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(70px);
-    opacity: 0.55;
-    z-index: 0;
-  }
-
-  .bg-blob.b1 {
-    width: 480px; height: 480px;
-    background: #6d28d9;
-    top: -160px; left: -140px;
-    animation: float1 12s ease-in-out infinite;
-  }
-
-  .bg-blob.b2 {
-    width: 420px; height: 420px;
-    background: #ec4899;
-    bottom: -160px; right: -120px;
-    animation: float2 14s ease-in-out infinite;
-  }
-
-  .bg-blob.b3 {
-    width: 300px; height: 300px;
-    background: #0ea5e9;
-    top: 40%; right: 8%;
-    animation: float1 16s ease-in-out infinite reverse;
-  }
-
-  @keyframes float1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(30px, -20px) scale(1.06); }
-  }
-
-  @keyframes float2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-25px, 25px) scale(1.08); }
-  }
-
-  .login-wrap {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 408px;
-  }
-
-  .login-card {
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(20px);
-    border-radius: var(--radius-lg);
-    padding: 44px 36px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    animation: rise 0.5s ease;
-  }
-
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .login-logo {
-    width: 58px;
-    height: 58px;
-    border-radius: 16px;
-    background: var(--gradient-brand);
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 24px;
-    font-weight: 800;
-    box-shadow: 0 10px 26px rgba(109, 40, 217, 0.4);
-  }
-
-  .login-card h1 {
-    font-size: 23px;
-    font-weight: 800;
-    text-align: center;
-    margin: 0 0 6px;
-  }
-
-  .login-card .subtitle {
-    text-align: center;
-    color: var(--muted);
-    font-size: 13.5px;
-    margin: 0 0 28px;
-  }
-
-  .form-group {
-    margin-bottom: 18px;
-  }
-
-  .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .input-wrapper {
-    position: relative;
-  }
-
-  .input-wrapper svg.leading-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 17px;
-    height: 17px;
-    color: var(--muted);
-  }
-
-  .login-card input[type="text"],
-  .login-card input[type="password"] {
-    width: 100%;
-    padding: 12px 14px 12px 40px;
-    font-size: 14.5px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface-2);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  .login-card input:focus {
-    border-color: var(--accent-2);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-    background: #fff;
-  }
-
-  .login-card input.error {
-    border-color: var(--danger);
-  }
-
-  .toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 12.5px;
-    font-weight: 600;
-    padding: 4px 6px;
-  }
-
-  .toggle-password:hover { color: var(--accent-2); }
-
-  .form-alert {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    background: rgba(220, 38, 38, 0.08);
-    color: var(--danger);
-    border: 1px solid rgba(220, 38, 38, 0.25);
-    font-size: 13px;
-    font-weight: 600;
-    padding: 10px 12px;
-    border-radius: 10px;
-    margin-bottom: 18px;
-  }
-
-  .form-alert.show { display: flex; }
-  .form-alert svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-  .row-between {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 22px;
-    font-size: 13px;
-  }
-
-  .remember-me {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--muted);
-  }
-
-  .remember-me input {
-    width: 15px;
-    height: 15px;
-    accent-color: var(--accent-2);
-  }
-
-  .forgot-link {
-    color: var(--accent-2);
-    font-weight: 600;
-  }
-
-  .forgot-link:hover { text-decoration: underline; }
-
-  .submit-btn {
-    width: 100%;
-    padding: 13px;
-  }
-
-  .demo-hint {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 12px;
-    color: var(--muted);
-    background: var(--surface-2);
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .demo-hint b { color: var(--text); }
-
-  @media (max-width: 460px) {
-    .login-card { padding: 34px 24px; }
-  }
-</style>
 </head>
-<body class="login-body">
+<body class="auth-body">
 
 <div class="bg-blob b1"></div>
 <div class="bg-blob b2"></div>
 <div class="bg-blob b3"></div>
 
-<div class="login-wrap">
-  <div class="login-card">
-    <div class="login-logo">A</div>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">A</div>
     <h1>Welcome back</h1>
-    <p class="subtitle">Sign in to access your dashboard</p>
+    <p class="subtitle">Sign in to your organisation's dashboard</p>
 
     <div class="form-alert" id="formAlert">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span id="formAlertText">Invalid email or password.</span>
+      <span id="formAlertText">Invalid credentials.</span>
     </div>
 
     <form id="loginForm" novalidate>
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="orgId">Organisation ID</label>
         <div class="input-wrapper">
-          <svg class="leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
-          <input type="text" id="email" name="email" placeholder="vijay@gmail" autocomplete="username" required>
+          <svg class="leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><line x1="3" y1="13" x2="21" y2="13"/></svg>
+          <input type="text" id="orgId" name="orgId" placeholder="e.g. AGRITRADE" autocomplete="organization" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-wrapper">
+          <svg class="leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          <input type="text" id="username" name="username" placeholder="e.g. vijay" autocomplete="username" required>
         </div>
       </div>
 
@@ -286,17 +60,23 @@
       <button type="submit" class="btn btn-primary submit-btn">Sign In</button>
     </form>
 
-    <div class="demo-hint">Demo login &mdash; <b>vijay@gmail</b> / <b>Vijay1304</b></div>
+    <div class="demo-hint">Demo login &mdash; Org <b>AGRITRADE</b>, user <b>vijay</b> / <b>Vijay1304</b></div>
+
+    <p class="auth-switch">New organisation? <a href="register.html">Create an account</a></p>
   </div>
 </div>
 
 <script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
 <script>
-  var VALID_EMAIL = "vijay@gmail";
-  var VALID_PASSWORD = "Vijay1304";
+  var DEMO_ORG = "AGRITRADE";
+  var DEMO_USERNAME = "vijay";
+  var DEMO_PASSWORD = "Vijay1304";
+  var DEMO_EMAIL = "vijay@gmail";
 
   var form = document.getElementById("loginForm");
-  var emailInput = document.getElementById("email");
+  var orgIdInput = document.getElementById("orgId");
+  var usernameInput = document.getElementById("username");
   var passwordInput = document.getElementById("password");
   var togglePassword = document.getElementById("togglePassword");
   var formAlert = document.getElementById("formAlert");
@@ -309,38 +89,48 @@
   });
 
   function clearErrors() {
-    emailInput.classList.remove("error");
+    orgIdInput.classList.remove("error");
+    usernameInput.classList.remove("error");
     passwordInput.classList.remove("error");
     formAlert.classList.remove("show");
   }
 
+  [orgIdInput, usernameInput, passwordInput].forEach(function (el) {
+    el.addEventListener("input", clearErrors);
+  });
+
   function showAlert(message) {
     formAlertText.textContent = message;
     formAlert.classList.add("show");
-    emailInput.classList.add("error");
+    orgIdInput.classList.add("error");
+    usernameInput.classList.add("error");
     passwordInput.classList.add("error");
   }
-
-  [emailInput, passwordInput].forEach(function (el) {
-    el.addEventListener("input", clearErrors);
-  });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    var email = emailInput.value.trim();
+    var orgId = orgIdInput.value.trim();
+    var username = usernameInput.value.trim();
     var password = passwordInput.value;
 
-    if (!email || !password) {
-      showAlert("Please fill in both fields.");
+    if (!orgId || !username || !password) {
+      showAlert("Please fill in all fields.");
       return;
     }
 
-    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      App.login(email);
+    if (orgId.toUpperCase() === DEMO_ORG && username.toLowerCase() === DEMO_USERNAME && password === DEMO_PASSWORD) {
+      App.login(DEMO_EMAIL, DEMO_ORG);
+      window.location.href = "dashboard.html";
+      return;
+    }
+
+    var org = Data.authenticateOrganization(orgId, username, password);
+    if (org) {
+      App.login(org.email, org.orgId);
       window.location.href = "dashboard.html";
     } else {
-      showAlert("Invalid email or password.");
+      showAlert("Invalid organisation ID, username or password.");
     }
   });
 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awaiting Approval</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="auth-body">
+
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<div class="bg-blob b3"></div>
+<div class="bg-blob b4"></div>
+
+<div class="auth-wrap">
+  <div class="auth-card" style="text-align:center">
+    <div class="auth-logo" style="background:var(--gradient-brand)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+    </div>
+    <h1>Awaiting Approval</h1>
+    <p class="subtitle">Your organisation account is being reviewed by the administrator.</p>
+
+    <div class="org-ref-chip" id="orgRefChip" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/></svg>
+      <span id="orgRefValue">—</span>
+    </div>
+
+    <div class="progress-steps">
+      <div class="progress-step done">
+        <div class="step-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div class="step-label">Account Created</div>
+      </div>
+      <div class="progress-connector done"></div>
+      <div class="progress-step active">
+        <div class="step-circle">2</div>
+        <div class="step-label">Under Review</div>
+      </div>
+      <div class="progress-connector"></div>
+      <div class="progress-step">
+        <div class="step-circle">3</div>
+        <div class="step-label">Approved</div>
+      </div>
+    </div>
+
+    <div class="info-box" style="text-align:left">
+      <div class="info-box-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        What happens next?
+      </div>
+      <ul>
+        <li>Administrator will review your organisation's details</li>
+        <li>You'll receive an email notification once approved</li>
+        <li>Typical approval time is 24–48 hours</li>
+      </ul>
+    </div>
+
+    <p class="auth-switch" style="margin-top:0">This demo environment approves new organisations instantly — you can continue to login below.</p>
+
+    <button type="button" class="btn btn-primary submit-btn" id="continueToLoginBtn">Continue to Login</button>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  var pendingOrg = sessionStorage.getItem("ui_pending_org");
+  if (pendingOrg) {
+    document.getElementById("orgRefChip").style.display = "inline-flex";
+    document.getElementById("orgRefValue").textContent = pendingOrg;
+  }
+
+  document.getElementById("continueToLoginBtn").addEventListener("click", function () {
+    sessionStorage.removeItem("ui_pending_org");
+    window.location.href = "index.html";
+  });
+</script>
+
+</body>
+</html>
