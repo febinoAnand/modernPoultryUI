@@ -59,6 +59,11 @@
         Product
       </a>
 
+      <a class="nav-item" href="machine-management.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+        Machine Management
+      </a>
+
       <span class="nav-section-label">User Management</span>
 
       <a class="nav-item" href="user-list.html">
@@ -119,7 +124,7 @@
           <p>View, add, edit and manage every company group.</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" id="openAddGroup">
+          <button class="btn btn-primary" id="openAddGroup" data-perm-action="create">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Group
           </button>
@@ -370,6 +375,7 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
+  App.enforcePermissions("groups");
 
   /* ---------------- Data (persisted, shared with dashboard/profile) ---------------- */
   var groups = Data.getGroups();
@@ -585,9 +591,9 @@
     { key: "addTrader", label: "Add Trader", desc: "Trader code registry", icon: '<path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/>' },
     { key: "branch", label: "Branch", desc: "Branch locations", icon: '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/>' },
     { key: "product", label: "Product", desc: "Product catalog", icon: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>' },
+    { key: "machineManagement", label: "Machine Management", desc: "Weighing machines, parameters & service history", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/>', singleToggle: true },
     { key: "user", label: "User", desc: "User accounts and access", icon: '<path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-    { key: "groups", label: "Groups", desc: "Group and permission management", icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/>' },
-    { key: "profile", label: "Profile", desc: "Personal profile & password", icon: '<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>' }
+    { key: "groups", label: "Groups", desc: "Group and permission management", icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/>' }
   ];
 
   var PERM_ACTIONS = ["create", "read", "update", "delete"];
@@ -744,12 +750,21 @@
       '</div>';
 
     var rows = PERMISSION_MODULES.map(function (m) {
-      var switches = PERM_ACTIONS.map(function (a) {
-        var checked = activePermissions[m.key][a];
-        return '<span class="perm-switch-cell"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-action="' + a + '" ' + (checked ? "checked" : "") + '><span class="slider"></span></label></span>';
-      }).join("");
+      var switches;
+      var rowClass = "perm-row";
+      if (m.singleToggle) {
+        rowClass += " perm-row-single";
+        var on = activePermissions[m.key].read;
+        switches =
+          '<span class="perm-single-toggle"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-single="true" ' + (on ? "checked" : "") + '><span class="slider"></span></label><span>ACCESS</span></span>';
+      } else {
+        switches = PERM_ACTIONS.map(function (a) {
+          var checked = activePermissions[m.key][a];
+          return '<span class="perm-switch-cell"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-action="' + a + '" ' + (checked ? "checked" : "") + '><span class="slider"></span></label></span>';
+        }).join("");
+      }
       return (
-        '<div class="perm-row">' +
+        '<div class="' + rowClass + '">' +
           '<div class="perm-module">' +
             '<div class="perm-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + m.icon + '</svg></div>' +
             '<div class="perm-module-text"><div class="perm-module-name">' + m.label + '</div><div class="perm-module-desc">' + m.desc + '</div></div>' +
@@ -765,7 +780,12 @@
   permTable.addEventListener("change", function (e) {
     var input = e.target;
     if (input.tagName !== "INPUT") return;
-    activePermissions[input.getAttribute("data-module")][input.getAttribute("data-action")] = input.checked;
+    var moduleKey = input.getAttribute("data-module");
+    if (input.getAttribute("data-single") === "true") {
+      activePermissions[moduleKey] = { create: input.checked, read: input.checked, update: input.checked, delete: input.checked };
+    } else {
+      activePermissions[moduleKey][input.getAttribute("data-action")] = input.checked;
+    }
     permTabCount.textContent = countEnabledPermissions();
   });
 
@@ -774,7 +794,11 @@
     if (!colLabel) return;
     var action = colLabel.getAttribute("data-toggle-col");
     var allOn = PERMISSION_MODULES.every(function (m) { return activePermissions[m.key][action]; });
-    PERMISSION_MODULES.forEach(function (m) { activePermissions[m.key][action] = !allOn; });
+    var next = !allOn;
+    PERMISSION_MODULES.forEach(function (m) {
+      if (m.singleToggle) activePermissions[m.key] = { create: next, read: next, update: next, delete: next };
+      else activePermissions[m.key][action] = next;
+    });
     renderPermTable();
   });
 

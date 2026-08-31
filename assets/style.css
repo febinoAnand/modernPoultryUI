@@ -2538,3 +2538,322 @@ button {
   .perm-head-row, .perm-row { grid-template-columns: 1fr repeat(4, 56px); }
   .perm-module-desc { display: none; }
 }
+
+/* ---------- Single-toggle permission row (e.g. Machine Management) ---------- */
+
+.perm-row.perm-row-single {
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+}
+
+.perm-single-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+}
+
+.perm-single-toggle .perm-switch { width: 34px; height: 20px; }
+.perm-single-toggle .perm-switch .slider::before { width: 14px; height: 14px; }
+.perm-single-toggle .perm-switch input:checked + .slider::before { transform: translateX(14px); }
+
+.perm-single-toggle span {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+/* ============================================================
+   Permission enforcement — restricted overlay & disabled state
+   ============================================================ */
+
+.perm-restricted-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(15, 11, 30, 0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: authRise 0.3s ease;
+}
+
+.perm-restricted-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 44px 40px;
+  max-width: 380px;
+  text-align: center;
+}
+
+.perm-restricted-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+}
+
+.perm-restricted-icon svg { width: 28px; height: 28px; }
+
+.perm-restricted-card h3 { margin: 0 0 8px; font-size: 18px; font-weight: 800; }
+
+.perm-restricted-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.perm-restricted-actions .btn { flex: 1; }
+.perm-restricted-card p { margin: 0 0 22px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+.toast-notice.perm-denied svg { color: var(--danger); }
+
+.btn.perm-disabled,
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+
+.btn.perm-disabled:hover,
+.btn:disabled:hover {
+  filter: grayscale(0.3);
+  transform: none;
+}
+
+/* ============================================================
+   Machine Management page
+   ============================================================ */
+
+.machine-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.machine-status-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.machine-status-pill.active { background: rgba(22, 163, 74, 0.1); color: var(--success); }
+.machine-status-pill.maintenance { background: rgba(217, 119, 6, 0.12); color: var(--warning); }
+.machine-status-pill.inactive { background: rgba(220, 38, 38, 0.1); color: var(--danger); }
+
+.weighing-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.weighing-spec-tile {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.weighing-spec-tile::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  opacity: 0.08;
+}
+
+.weighing-spec-tile .spec-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.weighing-spec-tile .spec-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.weighing-spec-tile .spec-value small {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-left: 2px;
+}
+
+.calibration-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(79, 70, 229, 0.06));
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  border-radius: var(--radius);
+  padding: 13px 16px;
+  margin-top: 14px;
+}
+
+.calibration-banner .cal-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #0ea5e9;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.calibration-banner .cal-icon svg { width: 17px; height: 17px; }
+.calibration-banner .cal-text { font-size: 12.5px; color: var(--text); }
+.calibration-banner .cal-text strong { color: #0369a1; }
+
+/* ---------- Service history timeline ---------- */
+
+.service-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.service-timeline {
+  position: relative;
+  padding-left: 26px;
+}
+
+.service-timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--border);
+}
+
+.service-entry {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.service-entry:last-child { padding-bottom: 0; }
+
+.service-entry::before {
+  content: "";
+  position: absolute;
+  left: -26px;
+  top: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 2px var(--accent-2);
+}
+
+.service-entry.pending::before { background: var(--warning); box-shadow: 0 0 0 2px var(--warning); }
+
+.service-entry-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px 16px;
+}
+
+.service-entry-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.service-entry-type {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.service-entry-date {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.service-entry-notes {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0 0 8px;
+}
+
+.service-entry-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.service-entry-tech {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.service-entry-tech svg { width: 12px; height: 12px; }
+
+.service-status-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+
+.service-status-badge.completed { background: rgba(22, 163, 74, 0.1); color: var(--success); }
+.service-status-badge.pending { background: rgba(217, 119, 6, 0.12); color: var(--warning); }
+
+.service-empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+@media (max-width: 640px) {
+  .weighing-spec-grid { grid-template-columns: 1fr 1fr; }
+}

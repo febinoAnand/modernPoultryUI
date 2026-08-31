@@ -119,6 +119,11 @@
         Product
       </a>
 
+      <a class="nav-item" href="machine-management.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+        Machine Management
+      </a>
+
       <span class="nav-section-label">User Management</span>
 
       <a class="nav-item" href="user-list.html">
@@ -319,6 +324,10 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
+  /* Profile is intentionally never permission-gated — it's the one page a
+     user can always reach to review or change their own group, so a
+     newly created (default-locked-down) group can never fully lock
+     someone out of the app. */
 
   var pName = document.getElementById("pName");
   var pUsername = document.getElementById("pUsername");
@@ -333,10 +342,10 @@
   var bigAvatar = document.querySelector(".big-avatar");
   var profileNameHeading = document.querySelector(".profile-avatar-row h3");
 
-  Data.GROUP_OPTIONS.forEach(function (g) {
+  Data.getGroups().forEach(function (g) {
     var opt = document.createElement("option");
-    opt.value = g;
-    opt.textContent = g;
+    opt.value = g.groupName;
+    opt.textContent = g.groupName;
     pGroup.appendChild(opt);
   });
 

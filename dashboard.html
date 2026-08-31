@@ -59,6 +59,11 @@
         Product
       </a>
 
+      <a class="nav-item" href="machine-management.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+        Machine Management
+      </a>
+
       <span class="nav-section-label">User Management</span>
 
       <a class="nav-item" href="user-list.html">
@@ -191,6 +196,10 @@
               <span class="ql-icon icon-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
               Product
             </a>
+            <a class="quick-link" href="machine-management.html">
+              <span class="ql-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg></span>
+              Machine Management
+            </a>
           </div>
         </div>
 
@@ -213,6 +222,7 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
+  App.enforcePermissions("dashboard");
 
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, function (c) {

@@ -18,6 +18,7 @@
   var BRANCHES_KEY = "ui_branches_v1";
   var PRODUCTS_KEY = "ui_products_v1";
   var ORGANIZATIONS_KEY = "ui_organizations_v1";
+  var MACHINES_KEY = "ui_machines_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -517,6 +518,119 @@
     return org;
   }
 
+  /* ---------------- Machine management ---------------- */
+
+  var MACHINE_MODELS = [
+    "Digital Platform Scale", "Heavy Duty Floor Scale", "Truck Weighbridge",
+    "Poultry Crate Scale", "Electronic Hanging Scale", "Load Cell Weighing System"
+  ];
+  var MACHINE_STATUSES = ["Active", "Under Maintenance", "Inactive"];
+  var SERVICE_TYPES = ["Calibration", "Preventive Maintenance", "Repair", "Inspection", "Software Update"];
+  var SERVICE_NOTES = [
+    "Routine check completed, readings within tolerance.",
+    "Replaced worn load cell and recalibrated to factory spec.",
+    "Cleaned platform and sensors, verified zero-point accuracy.",
+    "Firmware updated to latest version, display recalibrated.",
+    "Inspected wiring and indicator unit, no faults found.",
+    "Adjusted tare settings after drift was reported by operator."
+  ];
+
+  function buildSeedMachines() {
+    return MACHINE_MODELS.concat(MACHINE_MODELS, MACHINE_MODELS.slice(0, 3)).map(function (model, i) {
+      var capacity = [500, 1000, 1500, 2000, 3000, 5000][i % 6];
+      var precision = [0.05, 0.1, 0.2, 0.5][i % 4];
+      var tare = Math.round(capacity * 0.03);
+      var day = 3 + (i % 24);
+      var month = 1 + (i % 8);
+      var installDate = String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2024";
+      var calDay = 2 + ((i * 5) % 24);
+      var calMonth = 1 + ((i + 2) % 8);
+      var calibrationDate = String(calDay).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][calMonth - 1] + " 2026";
+      var dueMonth = ((calMonth + 5) % 12) + 1;
+      var calibrationDue = String(calDay).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dueMonth - 1] + " 2026";
+      var status = i % 9 === 0 ? "Under Maintenance" : (i % 13 === 0 ? "Inactive" : "Active");
+
+      var sessionCount = 2 + (i % 3);
+      var serviceHistory = [];
+      for (var s = 0; s < sessionCount; s++) {
+        var sDay = 5 + ((i + s * 7) % 22);
+        var sMonth = 1 + ((i + s * 2) % 8);
+        serviceHistory.push({
+          id: s + 1,
+          date: String(sDay).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][sMonth - 1] + " 2026",
+          type: SERVICE_TYPES[(i + s) % SERVICE_TYPES.length],
+          technician: DRIVER_FIRST[(i + s) % DRIVER_FIRST.length] + " " + LAST_NAMES[(i + s * 3) % LAST_NAMES.length],
+          notes: SERVICE_NOTES[(i + s) % SERVICE_NOTES.length],
+          status: s === sessionCount - 1 && i % 5 === 0 ? "Pending" : "Completed"
+        });
+      }
+      serviceHistory.sort(function (a, b) { return b.id - a.id; });
+
+      return {
+        id: i + 1,
+        machineNumber: "MC-" + (1000 + i * 7),
+        machineName: model,
+        branch: LOCATIONS[i % LOCATIONS.length] + " Branch",
+        installDate: installDate,
+        status: status,
+        weighing: {
+          capacity: capacity,
+          minWeight: Math.round(capacity * 0.01),
+          maxWeight: capacity,
+          precision: precision,
+          tareWeight: tare,
+          unit: "kg",
+          calibrationDate: calibrationDate,
+          calibrationDue: calibrationDue
+        },
+        serviceHistory: serviceHistory
+      };
+    });
+  }
+
+  function getMachines() {
+    var raw = localStorage.getItem(MACHINES_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = buildSeedMachines();
+    saveMachines(seeded);
+    return seeded;
+  }
+
+  function saveMachines(machines) {
+    localStorage.setItem(MACHINES_KEY, JSON.stringify(machines));
+  }
+
+  /* ---------------- Effective permissions ----------------
+     Resolves the CRUD permissions that apply to the current
+     session for a given module, based on the profile's selected
+     group. No group selected (or a group with no saved
+     permissions yet) falls back to full access so the app stays
+     usable out of the box — restrictions only kick in once an
+     admin actually configures a group's Permissions tab and the
+     signed-in profile is assigned to that group. */
+
+  function getModulePermissions(moduleKey) {
+    var fullAccess = { create: true, read: true, update: true, delete: true };
+    var profile = getProfile();
+    if (!profile.group) return fullAccess;
+
+    var groups = getGroups();
+    var matched = groups.find(function (g) { return g.groupName === profile.group; });
+    if (!matched || !matched.permissions) return fullAccess;
+
+    var modulePerms = matched.permissions[moduleKey];
+    if (!modulePerms) return fullAccess;
+
+    return {
+      create: !!modulePerms.create,
+      read: !!modulePerms.read,
+      update: !!modulePerms.update,
+      delete: !!modulePerms.delete
+    };
+  }
+
   window.Data = {
     getUsers: getUsers,
     saveUsers: saveUsers,
@@ -544,6 +658,9 @@
     findOrganization: findOrganization,
     isUsernameTaken: isUsernameTaken,
     registerOrganization: registerOrganization,
-    authenticateOrganization: authenticateOrganization
+    authenticateOrganization: authenticateOrganization,
+    getMachines: getMachines,
+    saveMachines: saveMachines,
+    getModulePermissions: getModulePermissions
   };
 })();
