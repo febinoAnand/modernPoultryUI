@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .profile-card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 32px;
+  }
+
+  .profile-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .profile-avatar-row .big-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--gradient-brand);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .profile-avatar-row h3 {
+    margin: 0 0 3px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .profile-avatar-row p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .profile-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .profile-card { padding: 24px 20px; }
+    .profile-actions { flex-direction: column; }
+    .profile-actions .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">A</div>
+      <div class="brand-text">
+        <strong>AgriTrade</strong>
+        <span>Admin Console</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Menu</span>
+
+      <a class="nav-item" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+
+      <a class="nav-item" href="bill-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        Bill List
+      </a>
+
+      <a class="nav-item" href="sales-order.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Sales Order
+      </a>
+
+      <a class="nav-item" href="add-farm-code.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
+        Add Farm
+      </a>
+
+      <a class="nav-item" href="add-trader-code.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+        Add Trader
+      </a>
+
+      <a class="nav-item" href="branch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
+        Branch
+      </a>
+
+      <a class="nav-item" href="product.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Product
+      </a>
+
+      <a class="nav-item" href="machine-management.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+        Machine Management
+      </a>
+
+      <span class="nav-section-label">User Management</span>
+
+      <a class="nav-item" href="user-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        User
+      </a>
+
+      <a class="nav-item" href="add-group.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+        Groups
+      </a>
+
+      <span class="nav-section-label">Account</span>
+
+      <a class="nav-item active" href="profile.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Profile
+      </a>
+
+      <button class="nav-item logout-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" data-user-initial>V</div>
+      <div class="who">
+        <strong data-user-name>Vijay</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="page-title">
+          Profile
+          <span>Manage your account details</span>
+        </div>
+      </div>
+      <div class="topbar-right"></div>
+    </header>
+
+    <main class="content">
+
+      <div class="page-header-row centered">
+        <div class="header-spacer"></div>
+        <div class="header-center">
+          <div class="page-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <h2>My Profile</h2>
+          <p>View and update your account information.</p>
+        </div>
+        <div class="header-actions"></div>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar-row">
+          <div class="big-avatar" data-user-initial>V</div>
+          <div>
+            <h3 data-user-name>Vijay</h3>
+            <p>Administrator</p>
+          </div>
+        </div>
+
+        <div class="org-id-box" style="margin-top:0">
+          <div class="org-id-label">Organisation ID</div>
+          <div class="org-id-value" id="pOrgIdDisplay" style="font-size:20px">—</div>
+        </div>
+
+        <form id="profileForm" novalidate>
+          <div class="field-grid">
+            <div class="field">
+              <label for="pName">Name <span class="req">*</span></label>
+              <input type="text" id="pName" placeholder="e.g. Vijay Kumar">
+              <span class="field-error" id="errPName">Please enter your name.</span>
+            </div>
+
+            <div class="field">
+              <label for="pUsername">Username <span class="req">*</span></label>
+              <input type="text" id="pUsername" placeholder="e.g. vijay">
+              <span class="field-error" id="errPUsername">Please enter a username.</span>
+            </div>
+
+            <div class="field">
+              <label for="pEmail">Email Address <span class="req">*</span></label>
+              <input type="text" id="pEmail" placeholder="e.g. vijay@gmail">
+              <span class="field-error" id="errPEmail">Please enter a valid email address.</span>
+            </div>
+
+            <div class="field">
+              <label for="pMobile">Contact Number <span class="req">*</span></label>
+              <input type="text" id="pMobile" maxlength="10" placeholder="10-digit number">
+              <span class="field-error" id="errPMobile">Enter a valid 10-digit contact number.</span>
+            </div>
+
+            <div class="field">
+              <label for="pMachineId">Machine ID <span class="req">*</span></label>
+              <input type="text" id="pMachineId" placeholder="e.g. MC-1042">
+              <span class="field-error" id="errPMachineId">Please enter a machine ID.</span>
+            </div>
+
+            <div class="field">
+              <label for="pGroup">Select Group <span class="req">*</span></label>
+              <select id="pGroup">
+                <option value="">Select group</option>
+              </select>
+              <span class="field-error" id="errPGroup">Please select a group.</span>
+            </div>
+
+            <div class="field full">
+              <label for="pCompanyName">Company Name <span class="req">*</span></label>
+              <input type="text" id="pCompanyName" placeholder="e.g. AgriTrade Poultry Pvt Ltd">
+              <span class="field-error" id="errPCompanyName">Please enter your company name.</span>
+            </div>
+
+            <div class="field">
+              <label for="pCompanyWebsite">Company Website <span class="req">*</span></label>
+              <input type="text" id="pCompanyWebsite" placeholder="e.g. www.agritrade.com">
+              <span class="field-error" id="errPCompanyWebsite">Please enter a valid website.</span>
+            </div>
+
+            <div class="field">
+              <label for="pTeamSize">Team Size <span class="req">*</span></label>
+              <select id="pTeamSize">
+                <option value="">Select team size</option>
+                <option value="1-10">1 – 10 people</option>
+                <option value="11-50">11 – 50 people</option>
+                <option value="51-200">51 – 200 people</option>
+                <option value="201-500">201 – 500 people</option>
+                <option value="500+">500+ people</option>
+              </select>
+              <span class="field-error" id="errPTeamSize">Please select your team size.</span>
+            </div>
+          </div>
+        </form>
+
+        <div class="profile-actions">
+          <button class="btn btn-primary" id="updateProfileBtn">Update</button>
+          <button class="btn btn-outline" id="openPasswordChange">Password Change</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Password Change Modal -->
+<div class="modal-overlay" id="passwordModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Change Password</h3>
+        <p>Set a new password for your account.</p>
+      </div>
+      <button class="modal-close" id="closePasswordModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="passwordForm" novalidate>
+        <div class="field-grid">
+          <div class="field full">
+            <label for="pwNew">New Password <span class="req">*</span></label>
+            <input type="password" id="pwNew" placeholder="At least 6 characters">
+            <span class="field-error" id="errPwNew">Password must be at least 6 characters.</span>
+          </div>
+
+          <div class="field full">
+            <label for="pwConfirm">Confirm Password <span class="req">*</span></label>
+            <input type="password" id="pwConfirm" placeholder="Re-enter new password">
+            <span class="field-error" id="errPwConfirm">Passwords do not match.</span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelPasswordModal">Cancel</button>
+      <button class="btn btn-primary" id="savePasswordBtn">Save Password</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-notice" id="toastNotice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastNoticeText">Saved successfully.</span>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  App.requireAuth();
+  App.initSidebar();
+  App.initLogout();
+  App.initUserBadge();
+  /* Profile is intentionally never permission-gated — it's the one page a
+     user can always reach to review or change their own group, so a
+     newly created (default-locked-down) group can never fully lock
+     someone out of the app. */
+
+  var pName = document.getElementById("pName");
+  var pUsername = document.getElementById("pUsername");
+  var pEmail = document.getElementById("pEmail");
+  var pMobile = document.getElementById("pMobile");
+  var pMachineId = document.getElementById("pMachineId");
+  var pGroup = document.getElementById("pGroup");
+  var pCompanyName = document.getElementById("pCompanyName");
+  var pCompanyWebsite = document.getElementById("pCompanyWebsite");
+  var pTeamSize = document.getElementById("pTeamSize");
+  var pOrgIdDisplay = document.getElementById("pOrgIdDisplay");
+  var bigAvatar = document.querySelector(".big-avatar");
+  var profileNameHeading = document.querySelector(".profile-avatar-row h3");
+
+  Data.getGroups().forEach(function (g) {
+    var opt = document.createElement("option");
+    opt.value = g.groupName;
+    opt.textContent = g.groupName;
+    pGroup.appendChild(opt);
+  });
+
+  var profile = Data.getProfile();
+
+  // First login after a fresh registration: pull the organisation's
+  // details into the profile so they don't have to re-type them.
+  var sessionOrgId = App.getOrgId();
+  if (sessionOrgId && profile.orgId !== sessionOrgId) {
+    var org = Data.findOrganization(sessionOrgId);
+    if (org) {
+      profile.orgId = org.orgId;
+      profile.username = org.username;
+      profile.email = org.email;
+      profile.mobile = org.contactNumber;
+      profile.companyName = org.companyName;
+      profile.companyWebsite = org.companyWebsite;
+      profile.teamSize = org.teamSize;
+      if (!profile.name) profile.name = org.username.charAt(0).toUpperCase() + org.username.slice(1);
+      Data.saveProfile(profile);
+    }
+  }
+
+  function loadProfileIntoForm() {
+    pName.value = profile.name;
+    pUsername.value = profile.username;
+    pEmail.value = profile.email;
+    pMobile.value = profile.mobile;
+    pMachineId.value = profile.machineId;
+    pGroup.value = profile.group;
+    pCompanyName.value = profile.companyName || "";
+    pCompanyWebsite.value = profile.companyWebsite || "";
+    pTeamSize.value = profile.teamSize || "";
+    pOrgIdDisplay.textContent = profile.orgId || "—";
+  }
+  loadProfileIntoForm();
+
+  function syncIdentityDisplay() {
+    var initial = profile.name.charAt(0).toUpperCase();
+    bigAvatar.textContent = initial;
+    profileNameHeading.textContent = profile.name;
+    document.querySelectorAll("[data-user-initial]").forEach(function (el) { el.textContent = initial; });
+    document.querySelectorAll("[data-user-name]").forEach(function (el) { el.textContent = profile.name; });
+  }
+  syncIdentityDisplay();
+
+  function setFieldError(input, errorEl, hasError) {
+    input.classList.toggle("error", hasError);
+    errorEl.classList.toggle("show", hasError);
+  }
+
+  document.getElementById("updateProfileBtn").addEventListener("click", function () {
+    var valid = true;
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var mobileRe = /^[0-9]{10}$/;
+    var websiteRe = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([/?#].*)?$/;
+
+    var nameOk = pName.value.trim().length > 0;
+    setFieldError(pName, document.getElementById("errPName"), !nameOk);
+    valid = valid && nameOk;
+
+    var usernameOk = pUsername.value.trim().length > 0;
+    setFieldError(pUsername, document.getElementById("errPUsername"), !usernameOk);
+    valid = valid && usernameOk;
+
+    var emailOk = pEmail.value.trim().length > 0 && (emailRe.test(pEmail.value.trim()) || pEmail.value.trim().indexOf("@") > 0);
+    setFieldError(pEmail, document.getElementById("errPEmail"), !emailOk);
+    valid = valid && emailOk;
+
+    var mobileOk = mobileRe.test(pMobile.value.trim());
+    setFieldError(pMobile, document.getElementById("errPMobile"), !mobileOk);
+    valid = valid && mobileOk;
+
+    var machineOk = pMachineId.value.trim().length > 0;
+    setFieldError(pMachineId, document.getElementById("errPMachineId"), !machineOk);
+    valid = valid && machineOk;
+
+    var groupOk = pGroup.value !== "";
+    setFieldError(pGroup, document.getElementById("errPGroup"), !groupOk);
+    valid = valid && groupOk;
+
+    var companyNameOk = pCompanyName.value.trim().length > 0;
+    setFieldError(pCompanyName, document.getElementById("errPCompanyName"), !companyNameOk);
+    valid = valid && companyNameOk;
+
+    var websiteOk = websiteRe.test(pCompanyWebsite.value.trim());
+    setFieldError(pCompanyWebsite, document.getElementById("errPCompanyWebsite"), !websiteOk);
+    valid = valid && websiteOk;
+
+    var teamSizeOk = pTeamSize.value !== "";
+    setFieldError(pTeamSize, document.getElementById("errPTeamSize"), !teamSizeOk);
+    valid = valid && teamSizeOk;
+
+    if (!valid) return;
+
+    profile.name = pName.value.trim();
+    profile.username = pUsername.value.trim();
+    profile.email = pEmail.value.trim();
+    profile.mobile = pMobile.value.trim();
+    profile.machineId = pMachineId.value.trim();
+    profile.group = pGroup.value;
+    profile.companyName = pCompanyName.value.trim();
+    profile.companyWebsite = pCompanyWebsite.value.trim();
+    profile.teamSize = pTeamSize.value;
+    Data.saveProfile(profile);
+
+    syncIdentityDisplay();
+
+    showToast("Profile updated successfully.");
+  });
+
+  /* ---------------- Password change modal ---------------- */
+  var passwordModalOverlay = document.getElementById("passwordModalOverlay");
+  var pwNew = document.getElementById("pwNew");
+  var pwConfirm = document.getElementById("pwConfirm");
+
+  function openPasswordModal() {
+    pwNew.value = "";
+    pwConfirm.value = "";
+    document.querySelectorAll("#passwordForm .field-error").forEach(function (el) { el.classList.remove("show"); });
+    document.querySelectorAll("#passwordForm input").forEach(function (el) { el.classList.remove("error"); });
+    passwordModalOverlay.classList.add("show");
+  }
+
+  function closePasswordModal() { passwordModalOverlay.classList.remove("show"); }
+
+  document.getElementById("openPasswordChange").addEventListener("click", openPasswordModal);
+  document.getElementById("closePasswordModal").addEventListener("click", closePasswordModal);
+  document.getElementById("cancelPasswordModal").addEventListener("click", closePasswordModal);
+  passwordModalOverlay.addEventListener("click", function (e) { if (e.target === passwordModalOverlay) closePasswordModal(); });
+
+  document.getElementById("savePasswordBtn").addEventListener("click", function () {
+    var valid = true;
+
+    var lengthOk = pwNew.value.length >= 6;
+    setFieldError(pwNew, document.getElementById("errPwNew"), !lengthOk);
+    valid = valid && lengthOk;
+
+    var matchOk = lengthOk && pwNew.value === pwConfirm.value;
+    setFieldError(pwConfirm, document.getElementById("errPwConfirm"), !matchOk);
+    valid = valid && matchOk;
+
+    if (!valid) return;
+
+    closePasswordModal();
+    showToast("Password updated successfully.");
+  });
+
+  /* ---------------- Toast ---------------- */
+  var toastNotice = document.getElementById("toastNotice");
+  var toastNoticeText = document.getElementById("toastNoticeText");
+  var toastTimer = null;
+
+  function showToast(message) {
+    toastNoticeText.textContent = message;
+    toastNotice.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
+  }
+</script>
+
+</body>
+</html>

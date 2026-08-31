@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account Created</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="auth-body">
+
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<div class="bg-blob b3"></div>
+
+<div class="auth-wrap">
+  <div class="auth-card" style="text-align:center">
+    <div class="success-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h1>Account Created Successfully!</h1>
+    <p class="subtitle" style="margin-bottom:6px">Your organisation is ready. Keep the ID below safe — you'll need it every time you sign in.</p>
+
+    <div class="org-id-box">
+      <div class="org-id-label">Your Organisation ID</div>
+      <div class="org-id-value" id="orgIdValue">—</div>
+      <button type="button" class="org-id-copy" id="copyOrgId">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copyOrgIdLabel">Copy ID</span>
+      </button>
+    </div>
+
+    <button type="button" class="btn btn-primary submit-btn" id="returnToLoginBtn">Return to Login</button>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  var orgId = sessionStorage.getItem("ui_last_registered_org");
+  if (!orgId) {
+    window.location.href = "register.html";
+  }
+
+  document.getElementById("orgIdValue").textContent = orgId;
+
+  document.getElementById("copyOrgId").addEventListener("click", function () {
+    var label = document.getElementById("copyOrgIdLabel");
+    function done() {
+      label.textContent = "Copied!";
+      setTimeout(function () { label.textContent = "Copy ID"; }, 1800);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(orgId).then(done).catch(done);
+    } else {
+      done();
+    }
+  });
+
+  document.getElementById("returnToLoginBtn").addEventListener("click", function () {
+    sessionStorage.removeItem("ui_last_registered_org");
+    window.location.href = "index.html";
+  });
+</script>
+
+</body>
+</html>

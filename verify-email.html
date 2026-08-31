@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Your Email</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .verify-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(14, 165, 233, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .verify-icon svg { width: 30px; height: 30px; color: #0ea5e9; }
+  .resend-row {
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 4px 0 22px;
+  }
+  .resend-row button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--accent-2);
+    font-weight: 700;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .resend-row button:hover { text-decoration: underline; }
+  .verify-actions { display: flex; flex-direction: column; gap: 10px; }
+</style>
+</head>
+<body class="auth-body">
+
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<div class="bg-blob b3"></div>
+
+<div class="auth-wrap">
+  <div class="auth-card" style="text-align:center">
+    <div class="verify-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+    </div>
+    <h1>Check Your Inbox</h1>
+    <p class="subtitle" style="margin-bottom:6px">We've sent a verification link to the address below. Open it to finish creating your organisation.</p>
+
+    <div class="org-id-box">
+      <div class="org-id-label">Verification Sent To</div>
+      <div class="org-id-value" id="pendingEmailValue" style="font-size:18px;letter-spacing:0">&nbsp;</div>
+    </div>
+
+    <div class="resend-row">
+      Didn't get it? <button type="button" id="resendBtn">Resend email</button>
+    </div>
+
+    <div class="verify-actions">
+      <button type="button" class="btn btn-primary submit-btn" id="simulateVerifyBtn">I've Clicked the Verification Link</button>
+      <button type="button" class="btn btn-outline submit-btn" id="editEmailBtn">Edit Email Address</button>
+    </div>
+
+    <p class="auth-switch">Already have an organisation? <a href="index.html">Sign in</a></p>
+  </div>
+</div>
+
+<div class="toast-notice" id="toastNotice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastNoticeText">Verification email resent.</span>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  var raw = sessionStorage.getItem("ui_pending_registration");
+  var pending = null;
+  try { pending = raw ? JSON.parse(raw) : null; } catch (e) { pending = null; }
+
+  if (!pending || !pending.email) {
+    window.location.href = "register.html";
+  } else {
+    document.getElementById("pendingEmailValue").textContent = pending.email;
+  }
+
+  var toastNotice = document.getElementById("toastNotice");
+  var toastNoticeText = document.getElementById("toastNoticeText");
+  var toastTimer = null;
+  function showToast(message) {
+    toastNoticeText.textContent = message;
+    toastNotice.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
+  }
+
+  document.getElementById("resendBtn").addEventListener("click", function () {
+    showToast("Verification email resent to " + (pending ? pending.email : "your address") + ".");
+  });
+
+  document.getElementById("editEmailBtn").addEventListener("click", function () {
+    window.location.href = "register.html";
+  });
+
+  document.getElementById("simulateVerifyBtn").addEventListener("click", function () {
+    if (!pending) return;
+    var org = Data.registerOrganization(pending);
+    sessionStorage.removeItem("ui_pending_registration");
+    sessionStorage.setItem("ui_last_registered_org", org.orgId);
+    window.location.href = "register-success.html";
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Organisation Account</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="auth-body">
+
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<div class="bg-blob b3"></div>
+<div class="bg-blob b4"></div>
+
+<div class="auth-shell">
+  <div class="auth-side">
+    <div class="auth-side-mark">A</div>
+    <h2>Bring your whole trading floor online</h2>
+    <p class="lead">Create an organisation account and get a unique Organisation ID to sign in, manage traders, bills and weighing sessions from one console.</p>
+    <ul class="auth-feature-list">
+      <li>
+        <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        A unique, secure Organisation ID generated instantly
+      </li>
+      <li>
+        <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        Invite your team and manage bills, trades &amp; farms
+      </li>
+      <li>
+        <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        Live dashboards for every weighing session
+      </li>
+      <li>
+        <span class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        Free during your organisation's review period
+      </li>
+    </ul>
+  </div>
+
+  <div class="auth-form-panel">
+    <h1>Create your organisation</h1>
+    <p class="subtitle">Fill in the details below — it takes less than a minute.</p>
+
+    <div class="form-alert" id="formAlert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="formAlertText">Please fix the errors below.</span>
+    </div>
+
+    <form id="registerForm" novalidate>
+      <div class="field-grid">
+        <div class="field">
+          <label for="rUsername">Username <span class="req">*</span></label>
+          <input type="text" id="rUsername" placeholder="e.g. vijay">
+          <span class="field-error" id="errRUsername">Please choose a username.</span>
+        </div>
+
+        <div class="field">
+          <label for="rEmail">Email Address <span class="req">*</span></label>
+          <input type="text" id="rEmail" placeholder="e.g. vijay@company.com">
+          <span class="field-error" id="errREmail">Please enter a valid email address.</span>
+        </div>
+
+        <div class="field">
+          <label for="rPassword">Password <span class="req">*</span></label>
+          <div class="pw-field-wrap">
+            <input type="password" id="rPassword" placeholder="At least 6 characters">
+            <button type="button" class="toggle-password" id="toggleRPassword">Show</button>
+          </div>
+          <div class="pw-strength" id="pwStrengthBar"><span></span><span></span><span></span><span></span></div>
+          <span class="pw-strength-label" id="pwStrengthLabel">&nbsp;</span>
+          <span class="field-error" id="errRPassword">Password must be at least 6 characters.</span>
+        </div>
+
+        <div class="field">
+          <label for="rConfirmPassword">Confirm Password <span class="req">*</span></label>
+          <div class="pw-field-wrap">
+            <input type="password" id="rConfirmPassword" placeholder="Re-enter password">
+            <button type="button" class="toggle-password" id="toggleRConfirmPassword">Show</button>
+          </div>
+          <span class="field-error" id="errRConfirmPassword">Passwords do not match.</span>
+        </div>
+
+        <div class="field full">
+          <label for="rCompanyName">Company Name <span class="req">*</span></label>
+          <input type="text" id="rCompanyName" placeholder="e.g. AgriTrade Poultry Pvt Ltd">
+          <span class="field-error" id="errRCompanyName">Please enter your company name.</span>
+        </div>
+
+        <div class="field">
+          <label for="rCompanyWebsite">Company Website <span class="req">*</span></label>
+          <input type="text" id="rCompanyWebsite" placeholder="e.g. www.agritrade.com">
+          <span class="field-error" id="errRCompanyWebsite">Please enter a valid website.</span>
+        </div>
+
+        <div class="field">
+          <label for="rContactNumber">Contact Number <span class="req">*</span></label>
+          <input type="text" id="rContactNumber" maxlength="10" placeholder="10-digit number">
+          <span class="field-error" id="errRContactNumber">Enter a valid 10-digit contact number.</span>
+        </div>
+
+        <div class="field full">
+          <label for="rTeamSize">Team Size <span class="req">*</span></label>
+          <select id="rTeamSize">
+            <option value="">Select team size</option>
+            <option value="1-10">1 – 10 people</option>
+            <option value="11-50">11 – 50 people</option>
+            <option value="51-200">51 – 200 people</option>
+            <option value="201-500">201 – 500 people</option>
+            <option value="500+">500+ people</option>
+          </select>
+          <span class="field-error" id="errRTeamSize">Please select your team size.</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary submit-btn" style="margin-top:22px">Create Account</button>
+    </form>
+
+    <p class="auth-switch">Already have an organisation? <a href="index.html">Sign in</a></p>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  var form = document.getElementById("registerForm");
+  var rUsername = document.getElementById("rUsername");
+  var rEmail = document.getElementById("rEmail");
+  var rPassword = document.getElementById("rPassword");
+  var rConfirmPassword = document.getElementById("rConfirmPassword");
+  var rCompanyName = document.getElementById("rCompanyName");
+  var rCompanyWebsite = document.getElementById("rCompanyWebsite");
+  var rContactNumber = document.getElementById("rContactNumber");
+  var rTeamSize = document.getElementById("rTeamSize");
+  var formAlert = document.getElementById("formAlert");
+  var formAlertText = document.getElementById("formAlertText");
+
+  function wireToggle(btnId, inputEl) {
+    document.getElementById(btnId).addEventListener("click", function () {
+      var isPassword = inputEl.type === "password";
+      inputEl.type = isPassword ? "text" : "password";
+      this.textContent = isPassword ? "Hide" : "Show";
+    });
+  }
+  wireToggle("toggleRPassword", rPassword);
+  wireToggle("toggleRConfirmPassword", rConfirmPassword);
+
+  var pwStrengthBar = document.getElementById("pwStrengthBar");
+  var pwStrengthLabel = document.getElementById("pwStrengthLabel");
+  var STRENGTH_LABELS = ["Too short", "Weak", "Fair", "Good", "Strong"];
+
+  function scorePassword(value) {
+    var score = 0;
+    if (value.length >= 6) score++;
+    if (value.length >= 10) score++;
+    if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score++;
+    if (/[0-9]/.test(value) && /[^A-Za-z0-9]/.test(value)) score++;
+    return score;
+  }
+
+  rPassword.addEventListener("input", function () {
+    var value = rPassword.value;
+    pwStrengthBar.className = "pw-strength";
+    if (!value) {
+      pwStrengthLabel.textContent = " ";
+      return;
+    }
+    var score = value.length < 6 ? 0 : scorePassword(value);
+    var level = Math.max(1, Math.min(4, score || 1));
+    pwStrengthBar.classList.add("s" + level);
+    pwStrengthLabel.textContent = STRENGTH_LABELS[value.length < 6 ? 0 : level];
+  });
+
+  function setFieldError(input, errorEl, hasError) {
+    input.classList.toggle("error", hasError);
+    if (errorEl) errorEl.classList.toggle("show", hasError);
+  }
+
+  [rUsername, rEmail, rPassword, rConfirmPassword, rCompanyName, rCompanyWebsite, rContactNumber, rTeamSize].forEach(function (el) {
+    el.addEventListener("input", function () { setFieldError(el, null, false); formAlert.classList.remove("show"); });
+    el.addEventListener("change", function () { setFieldError(el, null, false); formAlert.classList.remove("show"); });
+  });
+
+  /* Coming back here to edit the email (or any other field) after
+     already submitting once — restore what was typed instead of
+     making them start over. */
+  (function prefillFromPendingRegistration() {
+    var raw = sessionStorage.getItem("ui_pending_registration");
+    if (!raw) return;
+    var pending;
+    try { pending = JSON.parse(raw); } catch (e) { return; }
+
+    rUsername.value = pending.username || "";
+    rEmail.value = pending.email || "";
+    rPassword.value = pending.password || "";
+    rConfirmPassword.value = pending.password || "";
+    rCompanyName.value = pending.companyName || "";
+    rCompanyWebsite.value = pending.companyWebsite || "";
+    rContactNumber.value = pending.contactNumber || "";
+    rTeamSize.value = pending.teamSize || "";
+    rPassword.dispatchEvent(new Event("input"));
+    rEmail.focus();
+  })();
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var websiteRe = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([/?#].*)?$/;
+    var mobileRe = /^[0-9]{10}$/;
+
+    var usernameVal = rUsername.value.trim();
+    var usernameOk = usernameVal.length >= 3;
+    setFieldError(rUsername, document.getElementById("errRUsername"), !usernameOk);
+    if (usernameOk && Data.isUsernameTaken(usernameVal)) {
+      usernameOk = false;
+      document.getElementById("errRUsername").textContent = "That username is already taken.";
+      setFieldError(rUsername, document.getElementById("errRUsername"), true);
+    } else {
+      document.getElementById("errRUsername").textContent = "Please choose a username (min 3 characters).";
+    }
+
+    var emailOk = emailRe.test(rEmail.value.trim());
+    setFieldError(rEmail, document.getElementById("errREmail"), !emailOk);
+
+    var passwordOk = rPassword.value.length >= 6;
+    setFieldError(rPassword, document.getElementById("errRPassword"), !passwordOk);
+
+    var confirmOk = passwordOk && rConfirmPassword.value === rPassword.value;
+    setFieldError(rConfirmPassword, document.getElementById("errRConfirmPassword"), !confirmOk);
+
+    var companyNameOk = rCompanyName.value.trim().length > 0;
+    setFieldError(rCompanyName, document.getElementById("errRCompanyName"), !companyNameOk);
+
+    var websiteOk = websiteRe.test(rCompanyWebsite.value.trim());
+    setFieldError(rCompanyWebsite, document.getElementById("errRCompanyWebsite"), !websiteOk);
+
+    var contactOk = mobileRe.test(rContactNumber.value.trim());
+    setFieldError(rContactNumber, document.getElementById("errRContactNumber"), !contactOk);
+
+    var teamSizeOk = rTeamSize.value !== "";
+    setFieldError(rTeamSize, document.getElementById("errRTeamSize"), !teamSizeOk);
+
+    var valid = usernameOk && emailOk && passwordOk && confirmOk && companyNameOk && websiteOk && contactOk && teamSizeOk;
+
+    if (!valid) {
+      formAlertText.textContent = "Please fix the highlighted fields.";
+      formAlert.classList.add("show");
+      return;
+    }
+
+    sessionStorage.setItem("ui_pending_registration", JSON.stringify({
+      username: usernameVal,
+      email: rEmail.value.trim(),
+      password: rPassword.value,
+      companyName: rCompanyName.value.trim(),
+      companyWebsite: rCompanyWebsite.value.trim(),
+      contactNumber: rContactNumber.value.trim(),
+      teamSize: rTeamSize.value
+    }));
+
+    window.location.href = "verify-email.html";
+  });
+</script>
+
+</body>
+</html>
