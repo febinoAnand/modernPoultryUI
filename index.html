@@ -127,6 +127,11 @@
 
     var org = Data.authenticateOrganization(orgId, username, password);
     if (org) {
+      if (org.status !== "Active") {
+        sessionStorage.setItem("ui_pending_org", org.orgId);
+        window.location.href = "awaiting-approval.html";
+        return;
+      }
       App.login(org.email, org.orgId);
       window.location.href = "dashboard.html";
     } else {

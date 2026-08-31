@@ -56,9 +56,8 @@
   });
 
   document.getElementById("returnToLoginBtn").addEventListener("click", function () {
-    sessionStorage.setItem("ui_pending_org", orgId);
     sessionStorage.removeItem("ui_last_registered_org");
-    window.location.href = "awaiting-approval.html";
+    window.location.href = "index.html";
   });
 </script>
 

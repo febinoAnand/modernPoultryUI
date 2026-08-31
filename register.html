@@ -181,6 +181,27 @@
     el.addEventListener("change", function () { setFieldError(el, null, false); formAlert.classList.remove("show"); });
   });
 
+  /* Coming back here to edit the email (or any other field) after
+     already submitting once — restore what was typed instead of
+     making them start over. */
+  (function prefillFromPendingRegistration() {
+    var raw = sessionStorage.getItem("ui_pending_registration");
+    if (!raw) return;
+    var pending;
+    try { pending = JSON.parse(raw); } catch (e) { return; }
+
+    rUsername.value = pending.username || "";
+    rEmail.value = pending.email || "";
+    rPassword.value = pending.password || "";
+    rConfirmPassword.value = pending.password || "";
+    rCompanyName.value = pending.companyName || "";
+    rCompanyWebsite.value = pending.companyWebsite || "";
+    rContactNumber.value = pending.contactNumber || "";
+    rTeamSize.value = pending.teamSize || "";
+    rPassword.dispatchEvent(new Event("input"));
+    rEmail.focus();
+  })();
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -228,7 +249,7 @@
       return;
     }
 
-    var org = Data.registerOrganization({
+    sessionStorage.setItem("ui_pending_registration", JSON.stringify({
       username: usernameVal,
       email: rEmail.value.trim(),
       password: rPassword.value,
@@ -236,10 +257,9 @@
       companyWebsite: rCompanyWebsite.value.trim(),
       contactNumber: rContactNumber.value.trim(),
       teamSize: rTeamSize.value
-    });
+    }));
 
-    sessionStorage.setItem("ui_last_registered_org", org.orgId);
-    window.location.href = "register-success.html";
+    window.location.href = "verify-email.html";
   });
 </script>
 
