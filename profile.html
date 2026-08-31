@@ -89,24 +89,14 @@
         Dashboard
       </a>
 
-      <a class="nav-item" href="bill-list.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
-        Bill List
-      </a>
-
-      <a class="nav-item" href="sales-order.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        Sales Order
-      </a>
-
       <a class="nav-item" href="add-farm-code.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
-        Add Farm
+        Farm
       </a>
 
       <a class="nav-item" href="add-trader-code.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
-        Add Trader
+        Trader
       </a>
 
       <a class="nav-item" href="branch.html">
@@ -114,14 +104,26 @@
         Branch
       </a>
 
-      <a class="nav-item" href="product.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        Product
-      </a>
-
       <a class="nav-item" href="machine-management.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
         Machine Management
+      </a>
+
+      <span class="nav-section-label">Sales</span>
+
+      <a class="nav-item" href="sales-order.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Sales Order
+      </a>
+
+      <a class="nav-item" href="bill-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        Bill List
+      </a>
+
+      <a class="nav-item" href="product.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Product
       </a>
 
       <span class="nav-section-label">User Management</span>
@@ -222,7 +224,18 @@
 
             <div class="field">
               <label for="pMobile">Contact Number <span class="req">*</span></label>
-              <input type="text" id="pMobile" maxlength="10" placeholder="10-digit number">
+              <div class="verify-field-wrap">
+                <input type="text" id="pMobile" maxlength="10" placeholder="10-digit number">
+                <button type="button" class="verify-icon-btn" id="openOtpModal" title="Verify contact number">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+                </button>
+              </div>
+              <div class="verify-badge-row">
+                <span class="verify-badge not-verified" id="mobileVerifyBadge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  Not Verified
+                </span>
+              </div>
               <span class="field-error" id="errPMobile">Enter a valid 10-digit contact number.</span>
             </div>
 
@@ -298,6 +311,44 @@
   </div>
 </div>
 
+<!-- OTP Verification Modal -->
+<div class="modal-overlay" id="otpModalOverlay">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-header">
+      <div>
+        <h3>Verify Contact Number</h3>
+        <p>Enter the 6-digit code we sent you.</p>
+      </div>
+      <button class="modal-close" id="closeOtpModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="otp-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+      </div>
+      <p class="otp-sent-text">OTP sent to <strong id="otpPhoneDisplay">—</strong></p>
+      <div class="otp-demo-hint">This is a demo — your OTP is <b id="otpDemoValue">000000</b></div>
+
+      <div class="otp-input-row" id="otpInputRow">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-idx="0">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-idx="1">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-idx="2">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-idx="3">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-idx="4">
+        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-idx="5">
+      </div>
+      <span class="field-error" id="errOtp" style="text-align:center;">Incorrect OTP. Please try again.</span>
+
+      <p class="otp-resend">Didn't get the code? <button type="button" id="resendOtpBtn">Resend OTP</button></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelOtpModal">Cancel</button>
+      <button class="btn btn-primary" id="verifyOtpBtn">Verify</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-notice" id="toastNotice">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span id="toastNoticeText">Saved successfully.</span>
@@ -358,6 +409,25 @@
   }
   loadProfileIntoForm();
 
+  /* ---------------- Contact number verification badge ---------------- */
+  var mobileVerifyBadge = document.getElementById("mobileVerifyBadge");
+
+  function isMobileCurrentlyVerified() {
+    return !!profile.mobileVerified && profile.verifiedMobileNumber === pMobile.value.trim();
+  }
+
+  function updateMobileVerifyBadge() {
+    var verified = isMobileCurrentlyVerified();
+    mobileVerifyBadge.classList.toggle("verified", verified);
+    mobileVerifyBadge.classList.toggle("not-verified", !verified);
+    mobileVerifyBadge.innerHTML = verified
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Verified'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Not Verified';
+  }
+  updateMobileVerifyBadge();
+
+  pMobile.addEventListener("input", updateMobileVerifyBadge);
+
   function syncIdentityDisplay() {
     var initial = profile.name.charAt(0).toUpperCase();
     bigAvatar.textContent = initial;
@@ -411,6 +481,9 @@
     profile.name = pName.value.trim();
     profile.username = pUsername.value.trim();
     profile.email = pEmail.value.trim();
+    if (profile.verifiedMobileNumber && pMobile.value.trim() !== profile.verifiedMobileNumber) {
+      profile.mobileVerified = false;
+    }
     profile.mobile = pMobile.value.trim();
     profile.companyName = pCompanyName.value.trim();
     profile.companyWebsite = pCompanyWebsite.value.trim();
@@ -418,6 +491,7 @@
     Data.saveProfile(profile);
 
     syncIdentityDisplay();
+    updateMobileVerifyBadge();
 
     showToast("Profile updated successfully.");
   });
@@ -457,6 +531,124 @@
 
     closePasswordModal();
     showToast("Password updated successfully.");
+  });
+
+  /* ---------------- OTP verification modal ---------------- */
+  var otpModalOverlay = document.getElementById("otpModalOverlay");
+  var otpPhoneDisplay = document.getElementById("otpPhoneDisplay");
+  var otpDemoValue = document.getElementById("otpDemoValue");
+  var otpInputRow = document.getElementById("otpInputRow");
+  var otpBoxes = Array.prototype.slice.call(document.querySelectorAll(".otp-box"));
+  var errOtp = document.getElementById("errOtp");
+  var resendOtpBtn = document.getElementById("resendOtpBtn");
+  var currentOtp = "";
+
+  function generateOtp() {
+    currentOtp = String(Math.floor(100000 + Math.random() * 900000));
+    otpDemoValue.textContent = currentOtp;
+  }
+
+  function clearOtpBoxes() {
+    otpBoxes.forEach(function (box) {
+      box.value = "";
+      box.classList.remove("error");
+    });
+    errOtp.classList.remove("show");
+    otpInputRow.classList.remove("shake");
+  }
+
+  function maskedMobile(number) {
+    if (number.length !== 10) return number;
+    return "+91 " + number.slice(0, 2) + "XXXXXX" + number.slice(8);
+  }
+
+  function openOtpModal() {
+    var mobileOk = /^[0-9]{10}$/.test(pMobile.value.trim());
+    if (!mobileOk) {
+      setFieldError(pMobile, document.getElementById("errPMobile"), true);
+      showToast("Enter a valid 10-digit contact number first.");
+      return;
+    }
+    otpPhoneDisplay.textContent = maskedMobile(pMobile.value.trim());
+    generateOtp();
+    clearOtpBoxes();
+    otpModalOverlay.classList.add("show");
+    setTimeout(function () { otpBoxes[0].focus(); }, 150);
+  }
+
+  function closeOtpModal() { otpModalOverlay.classList.remove("show"); }
+
+  document.getElementById("openOtpModal").addEventListener("click", openOtpModal);
+  document.getElementById("closeOtpModal").addEventListener("click", closeOtpModal);
+  document.getElementById("cancelOtpModal").addEventListener("click", closeOtpModal);
+  otpModalOverlay.addEventListener("click", function (e) { if (e.target === otpModalOverlay) closeOtpModal(); });
+
+  otpBoxes.forEach(function (box, idx) {
+    box.addEventListener("input", function () {
+      box.value = box.value.replace(/[^0-9]/g, "").slice(0, 1);
+      box.classList.remove("error");
+      errOtp.classList.remove("show");
+      if (box.value && idx < otpBoxes.length - 1) otpBoxes[idx + 1].focus();
+    });
+
+    box.addEventListener("keydown", function (e) {
+      if (e.key === "Backspace" && !box.value && idx > 0) {
+        otpBoxes[idx - 1].focus();
+      }
+    });
+
+    box.addEventListener("paste", function (e) {
+      var pasted = (e.clipboardData || window.clipboardData).getData("text").replace(/[^0-9]/g, "");
+      if (!pasted) return;
+      e.preventDefault();
+      pasted.slice(0, 6).split("").forEach(function (digit, i) {
+        if (otpBoxes[i]) otpBoxes[i].value = digit;
+      });
+      var nextEmpty = otpBoxes.findIndex(function (b) { return !b.value; });
+      (nextEmpty === -1 ? otpBoxes[otpBoxes.length - 1] : otpBoxes[nextEmpty]).focus();
+    });
+  });
+
+  document.getElementById("verifyOtpBtn").addEventListener("click", function () {
+    var entered = otpBoxes.map(function (b) { return b.value; }).join("");
+    if (entered.length < 6) {
+      errOtp.textContent = "Please enter all 6 digits.";
+      errOtp.classList.add("show");
+      otpBoxes.forEach(function (b) { if (!b.value) b.classList.add("error"); });
+      return;
+    }
+
+    if (entered !== currentOtp) {
+      errOtp.textContent = "Incorrect OTP. Please try again.";
+      errOtp.classList.add("show");
+      otpBoxes.forEach(function (b) { b.classList.add("error"); });
+      otpInputRow.classList.remove("shake");
+      void otpInputRow.offsetWidth;
+      otpInputRow.classList.add("shake");
+      otpBoxes.forEach(function (b) { b.value = ""; });
+      otpBoxes[0].focus();
+      return;
+    }
+
+    profile.mobile = pMobile.value.trim();
+    profile.mobileVerified = true;
+    profile.verifiedMobileNumber = pMobile.value.trim();
+    Data.saveProfile(profile);
+    updateMobileVerifyBadge();
+    closeOtpModal();
+    showToast("Contact number verified successfully.");
+  });
+
+  resendOtpBtn.addEventListener("click", function () {
+    generateOtp();
+    clearOtpBoxes();
+    otpBoxes[0].focus();
+    resendOtpBtn.disabled = true;
+    resendOtpBtn.textContent = "Sent!";
+    setTimeout(function () {
+      resendOtpBtn.disabled = false;
+      resendOtpBtn.textContent = "Resend OTP";
+    }, 2000);
   });
 
   /* ---------------- Toast ---------------- */
