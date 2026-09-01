@@ -440,7 +440,9 @@
       orgId: "AGRITRADE",
       companyName: "AgriTrade Poultry Pvt Ltd",
       companyWebsite: "www.agritrade.com",
-      teamSize: "11-50"
+      teamSize: "11-50",
+      mobileVerified: false,
+      verifiedMobileNumber: ""
     };
     saveProfile(defaultProfile);
     return defaultProfile;
