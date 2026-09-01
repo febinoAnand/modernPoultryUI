@@ -126,10 +126,10 @@
           <p>View, add, edit and manage every bill raised for a trade.</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-primary" id="openAddBill" data-perm-action="create">
+          <a class="btn btn-primary" id="openAddBill" href="bill-form.html" data-perm-action="create">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Bill
-          </button>
+          </a>
         </div>
       </div>
 
@@ -203,76 +203,6 @@
         </div>
       </div>
     </main>
-  </div>
-</div>
-
-<!-- Add / Edit Bill Modal -->
-<div class="modal-overlay" id="billModalOverlay">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div>
-        <h3 id="billModalTitle">Add Bill</h3>
-        <p id="billModalSubtitle">Fill in the details to create a new bill.</p>
-      </div>
-      <button class="modal-close" id="closeBillModal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form id="billForm" novalidate>
-        <input type="hidden" id="billId">
-        <div class="field-grid">
-          <div class="field">
-            <label for="bDate">Date <span class="req">*</span></label>
-            <div class="icon-field-wrap">
-              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <input type="date" id="bDate">
-            </div>
-            <span class="field-error" id="errBDate">Please select a date.</span>
-          </div>
-
-          <div class="field">
-            <label for="bBillNumber">Bill Number <span class="req">*</span></label>
-            <input type="text" id="bBillNumber" placeholder="e.g. BILL-30421">
-            <span class="field-error" id="errBBillNumber">Please enter a bill number.</span>
-          </div>
-
-          <div class="field full">
-            <label for="bTrader">Trader <span class="req">*</span></label>
-            <input type="text" id="bTrader" placeholder="e.g. Ramesh Kumar">
-            <span class="field-error" id="errBTrader">Please enter the trader's name.</span>
-          </div>
-
-          <div class="field full">
-            <label for="bEmail">Email ID <span class="req">*</span></label>
-            <input type="text" id="bEmail" placeholder="e.g. ramesh@example.com">
-            <span class="field-error" id="errBEmail">Please enter a valid email address.</span>
-          </div>
-
-          <div class="field">
-            <label for="bTotalBirds">Total Birds <span class="req">*</span></label>
-            <input type="text" id="bTotalBirds" placeholder="e.g. 480">
-            <span class="field-error" id="errBTotalBirds">Please enter a valid bird count.</span>
-          </div>
-
-          <div class="field">
-            <label for="bBirdsWeight">Birds Weight (kg) <span class="req">*</span></label>
-            <input type="text" id="bBirdsWeight" placeholder="e.g. 862.5">
-            <span class="field-error" id="errBBirdsWeight">Please enter a valid weight.</span>
-          </div>
-
-          <div class="field full">
-            <label for="bCompany">Company <span class="req">*</span></label>
-            <input type="text" id="bCompany" placeholder="e.g. Group A">
-            <span class="field-error" id="errBCompany">Please enter a company.</span>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" id="cancelBillModal">Cancel</button>
-      <button class="btn btn-primary" id="saveBillBtn">Save Bill</button>
-    </div>
   </div>
 </div>
 
@@ -491,7 +421,7 @@
     if (!bill) return;
 
     if (action === "view") window.location.href = "bill-view.html?id=" + bill.id;
-    else if (action === "edit") openBillModal(bill);
+    else if (action === "edit") window.location.href = "bill-form.html?id=" + bill.id;
     else if (action === "rename") openRenameModal(bill);
     else if (action === "toggle") {
       bill.status = bill.status === "Active" ? "Inactive" : "Active";
@@ -500,137 +430,6 @@
       showToast("Bill " + bill.billNumber + " has been " + (bill.status === "Active" ? "enabled" : "disabled") + ".");
     }
   }
-
-  /* ---------------- Add / Edit modal ---------------- */
-  var billModalOverlay = document.getElementById("billModalOverlay");
-  var billModalTitle = document.getElementById("billModalTitle");
-  var billModalSubtitle = document.getElementById("billModalSubtitle");
-  var fBillId = document.getElementById("billId");
-  var bDate = document.getElementById("bDate");
-  var bBillNumber = document.getElementById("bBillNumber");
-  var bTrader = document.getElementById("bTrader");
-  var bEmail = document.getElementById("bEmail");
-  var bTotalBirds = document.getElementById("bTotalBirds");
-  var bBirdsWeight = document.getElementById("bBirdsWeight");
-  var bCompany = document.getElementById("bCompany");
-
-  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
-  function displayDateToInput(display) {
-    var parts = display.split(" ");
-    if (parts.length !== 3) return "";
-    var day = parts[0];
-    var monthIdx = MONTHS.indexOf(parts[1]);
-    var year = parts[2];
-    if (monthIdx === -1) return "";
-    return year + "-" + String(monthIdx + 1).padStart(2, "0") + "-" + day;
-  }
-
-  function inputDateToDisplay(value) {
-    var parts = value.split("-");
-    if (parts.length !== 3) return value;
-    var year = parts[0], month = parts[1], day = parts[2];
-    return day + " " + MONTHS[parseInt(month, 10) - 1] + " " + year;
-  }
-
-  function openBillModal(bill) {
-    document.querySelectorAll("#billForm .field-error").forEach(function (el) { el.classList.remove("show"); });
-    document.querySelectorAll("#billForm input").forEach(function (el) { el.classList.remove("error"); });
-
-    if (bill) {
-      billModalTitle.textContent = "Edit Bill";
-      billModalSubtitle.textContent = "Update this bill's details.";
-      fBillId.value = bill.id;
-      bDate.value = displayDateToInput(bill.date);
-      bBillNumber.value = bill.billNumber;
-      bTrader.value = bill.trader;
-      bEmail.value = bill.email;
-      bTotalBirds.value = bill.totalBirds;
-      bBirdsWeight.value = bill.birdsWeight;
-      bCompany.value = bill.company;
-    } else {
-      billModalTitle.textContent = "Add Bill";
-      billModalSubtitle.textContent = "Fill in the details to create a new bill.";
-      fBillId.value = "";
-      bDate.value = "";
-      bBillNumber.value = "";
-      bTrader.value = "";
-      bEmail.value = "";
-      bTotalBirds.value = "";
-      bBirdsWeight.value = "";
-      bCompany.value = "";
-    }
-    billModalOverlay.classList.add("show");
-  }
-
-  function closeBillModal() { billModalOverlay.classList.remove("show"); }
-
-  document.getElementById("openAddBill").addEventListener("click", function () { openBillModal(null); });
-  document.getElementById("closeBillModal").addEventListener("click", closeBillModal);
-  document.getElementById("cancelBillModal").addEventListener("click", closeBillModal);
-  billModalOverlay.addEventListener("click", function (e) { if (e.target === billModalOverlay) closeBillModal(); });
-
-  function setFieldError(input, errorEl, hasError) {
-    input.classList.toggle("error", hasError);
-    errorEl.classList.toggle("show", hasError);
-  }
-
-  document.getElementById("saveBillBtn").addEventListener("click", function () {
-    var valid = true;
-    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    var numberRe = /^[0-9]+(\.[0-9]+)?$/;
-
-    var checks = [
-      [bDate, "errBDate", bDate.value !== ""],
-      [bBillNumber, "errBBillNumber", bBillNumber.value.trim().length > 0],
-      [bTrader, "errBTrader", bTrader.value.trim().length > 0],
-      [bEmail, "errBEmail", emailRe.test(bEmail.value.trim())],
-      [bTotalBirds, "errBTotalBirds", numberRe.test(bTotalBirds.value.trim())],
-      [bBirdsWeight, "errBBirdsWeight", numberRe.test(bBirdsWeight.value.trim())],
-      [bCompany, "errBCompany", bCompany.value.trim().length > 0]
-    ];
-
-    checks.forEach(function (c) {
-      setFieldError(c[0], document.getElementById(c[1]), !c[2]);
-      valid = valid && c[2];
-    });
-
-    if (!valid) return;
-
-    var displayDate = inputDateToDisplay(bDate.value);
-
-    if (fBillId.value) {
-      var bill = bills.find(function (b) { return b.id === parseInt(fBillId.value, 10); });
-      bill.date = displayDate;
-      bill.billNumber = bBillNumber.value.trim();
-      bill.trader = bTrader.value.trim();
-      bill.email = bEmail.value.trim();
-      bill.totalBirds = Number(bTotalBirds.value.trim());
-      bill.birdsWeight = Number(bBirdsWeight.value.trim());
-      bill.company = bCompany.value.trim();
-      showToast("Bill updated successfully.");
-    } else {
-      bills.unshift({
-        id: nextId++,
-        date: displayDate,
-        billNumber: bBillNumber.value.trim(),
-        trader: bTrader.value.trim(),
-        email: bEmail.value.trim(),
-        totalBirds: Number(bTotalBirds.value.trim()),
-        birdsWeight: Number(bBirdsWeight.value.trim()),
-        company: bCompany.value.trim(),
-        status: "Active"
-      });
-      state.search = "";
-      searchInput.value = "";
-      state.page = 1;
-      showToast("Bill added successfully.");
-    }
-
-    persist();
-    closeBillModal();
-    render();
-  });
 
   /* ---------------- Rename modal ---------------- */
   var renameModalOverlay = document.getElementById("renameModalOverlay");

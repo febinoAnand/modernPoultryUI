@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill Form</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">A</div>
+      <div class="brand-text">
+        <strong>AgriTrade</strong>
+        <span>Admin Console</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Menu</span>
+
+      <a class="nav-item" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+
+      <a class="nav-item" href="add-farm-code.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
+        Farm
+      </a>
+
+      <a class="nav-item" href="add-trader-code.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+        Trader
+      </a>
+
+      <a class="nav-item" href="branch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
+        Branch
+      </a>
+
+      <a class="nav-item" href="machine-management.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+        Machine Management
+      </a>
+
+      <span class="nav-section-label">Sales</span>
+
+      <a class="nav-item" href="sales-order.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Sales Order
+      </a>
+
+      <a class="nav-item active" href="bill-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        Bill List
+      </a>
+
+      <a class="nav-item" href="product.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        Product
+      </a>
+
+      <span class="nav-section-label">User Management</span>
+
+      <a class="nav-item" href="user-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        User
+      </a>
+
+      <a class="nav-item" href="add-group.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+        Groups
+      </a>
+
+      <span class="nav-section-label">Account</span>
+
+      <a class="nav-item" href="profile.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Profile
+      </a>
+
+      <button class="nav-item logout-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" data-user-initial>V</div>
+      <div class="who">
+        <strong data-user-name>Vijay</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="page-title">
+          Bill Form
+          <span id="pageSubtitle">Create a new bill</span>
+        </div>
+      </div>
+      <div class="topbar-right"></div>
+    </header>
+
+    <main class="content">
+
+      <div class="page-header-row centered">
+        <div class="header-spacer"></div>
+        <div class="header-center">
+          <div class="page-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+          </div>
+          <h2 id="pageHeading">Add Bill</h2>
+          <p id="pageDesc">Fill in the registration and weighing details to create a new bill.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" id="backBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </button>
+        </div>
+      </div>
+
+      <div class="form-alert" id="formAlert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Please fix the highlighted fields before saving.</span>
+      </div>
+
+      <form id="billForm" novalidate>
+        <input type="hidden" id="billId">
+
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="detail-card-header">Registration</div>
+            <div style="padding:20px">
+              <div class="field-grid">
+                <div class="field">
+                  <label for="bBillNumber">Bill Number <span class="req">*</span></label>
+                  <input type="text" id="bBillNumber" placeholder="e.g. BILL-30421">
+                  <span class="field-error" id="errBBillNumber">Please enter a bill number.</span>
+                </div>
+
+                <div class="field">
+                  <label for="bDate">Date <span class="req">*</span></label>
+                  <div class="icon-field-wrap">
+                    <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <input type="date" id="bDate">
+                  </div>
+                  <span class="field-error" id="errBDate">Please select a date.</span>
+                </div>
+
+                <div class="field">
+                  <label for="bTrader">Trader <span class="req">*</span></label>
+                  <input type="text" id="bTrader" placeholder="e.g. Ramesh Kumar">
+                  <span class="field-error" id="errBTrader">Please enter the trader's name.</span>
+                </div>
+
+                <div class="field">
+                  <label for="bEmail">Email ID <span class="req">*</span></label>
+                  <input type="text" id="bEmail" placeholder="e.g. ramesh@example.com">
+                  <span class="field-error" id="errBEmail">Please enter a valid email address.</span>
+                </div>
+
+                <div class="field">
+                  <label for="bCompany">Company <span class="req">*</span></label>
+                  <input type="text" id="bCompany" placeholder="e.g. Group A">
+                  <span class="field-error" id="errBCompany">Please enter a company.</span>
+                </div>
+
+                <div class="field">
+                  <label for="bMachine">Weighing Machine</label>
+                  <select id="bMachine">
+                    <option value="">Select machine</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="bSupervisor">Supervisor</label>
+                  <select id="bSupervisor">
+                    <option value="">Select supervisor</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="bDriver">Driver</label>
+                  <input type="text" id="bDriver" placeholder="e.g. Murugan Kumar">
+                </div>
+
+                <div class="field">
+                  <label for="bVehicleNo">Vehicle No</label>
+                  <input type="text" id="bVehicleNo" placeholder="e.g. TN10 AB1234">
+                </div>
+
+                <div class="field">
+                  <label for="bFarmer">Farmer</label>
+                  <select id="bFarmer">
+                    <option value="">Select farmer</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="bMobileNo">Mobile No</label>
+                  <input type="text" id="bMobileNo" maxlength="10" placeholder="10-digit number">
+                </div>
+
+                <div class="field">
+                  <label for="bFarmCode">Farm Code</label>
+                  <input type="text" id="bFarmCode" placeholder="e.g. FC-4021">
+                </div>
+
+                <div class="field">
+                  <label for="bAge">Age (Days)</label>
+                  <input type="text" id="bAge" placeholder="e.g. 35">
+                </div>
+
+                <div class="field">
+                  <label for="bBalanceStock">Balance Stock</label>
+                  <input type="text" id="bBalanceStock" placeholder="e.g. 320">
+                </div>
+
+                <div class="field">
+                  <label for="bBirdType">Bird Type</label>
+                  <select id="bBirdType">
+                    <option value="">Select bird type</option>
+                    <option>Broiler</option>
+                    <option>Country Chicken</option>
+                    <option>Layer</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="bStartTime">Start Time</label>
+                  <input type="text" id="bStartTime" placeholder="e.g. 09:15 AM">
+                </div>
+
+                <div class="field">
+                  <label for="bEndTime">End Time</label>
+                  <input type="text" id="bEndTime" placeholder="e.g. 09:42 AM">
+                </div>
+
+                <div class="field">
+                  <label for="bLoadingTime">Loading Time</label>
+                  <input type="text" id="bLoadingTime" placeholder="e.g. 14Min 20Sec">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-header" style="display:flex; align-items:center; justify-content:space-between">
+              <span>Weighing Details</span>
+              <span class="panel-tag">Auto-calculated</span>
+            </div>
+            <div style="padding:20px">
+              <p class="section-subheading" style="margin:0 0 14px">These update automatically as you edit the Weighing Sessions and Bird Type Breakdown below.</p>
+              <div class="weighing-spec-grid" id="weighingSpecGrid"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="section-heading">Weighing Sessions</div>
+      <div class="table-card">
+        <div class="inline-add-form">
+          <div class="field">
+            <label for="sNoOfBox">No.of Box</label>
+            <input type="text" id="sNoOfBox" placeholder="e.g. 5">
+          </div>
+          <div class="field">
+            <label for="sFilledBox">Filled Box</label>
+            <input type="text" id="sFilledBox" placeholder="e.g. 5">
+          </div>
+          <div class="field">
+            <label for="sEmptyWeight">Empty Weight</label>
+            <input type="text" id="sEmptyWeight" placeholder="e.g. 40">
+          </div>
+          <div class="field">
+            <label for="sGrossWeight">Gross Weight</label>
+            <input type="text" id="sGrossWeight" placeholder="e.g. 340">
+          </div>
+          <div class="field">
+            <label for="sTime">Time</label>
+            <input type="text" id="sTime" placeholder="e.g. 09:20 AM">
+          </div>
+          <button type="button" class="btn btn-outline" id="addSessionBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Session
+          </button>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>No.of Box</th>
+                <th>Filled Box</th>
+                <th>Empty Weight</th>
+                <th>Gross Weight</th>
+                <th>Net Weight</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="sessionsBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="sessionsEmpty" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>
+          <p>No weighing sessions added yet.</p>
+        </div>
+      </div>
+
+      <div class="section-heading">Bird Type Breakdown</div>
+      <div class="table-card">
+        <div class="inline-add-form">
+          <div class="field">
+            <label for="tBirdsType">Birds Type</label>
+            <select id="tBirdsType">
+              <option value="">Select type</option>
+              <option>Broiler</option>
+              <option>Country Chicken</option>
+              <option>Layer</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tBox">Box</label>
+            <input type="text" id="tBox" placeholder="e.g. 3">
+          </div>
+          <div class="field">
+            <label for="tCount">Count</label>
+            <input type="text" id="tCount" placeholder="e.g. 300">
+          </div>
+          <div class="field">
+            <label for="tTotal">Total (kg)</label>
+            <input type="text" id="tTotal" placeholder="e.g. 540">
+          </div>
+          <button type="button" class="btn btn-outline" id="addBirdTypeBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Row
+          </button>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sl.No</th>
+                <th>Birds Type</th>
+                <th>Box</th>
+                <th>Count</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="birdTypeBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="birdTypeEmpty" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg>
+          <p>No bird type rows added yet.</p>
+        </div>
+      </div>
+
+      <div class="download-bar" style="gap:12px">
+        <button class="btn btn-outline" id="cancelFormBtn">Cancel</button>
+        <button class="btn btn-primary btn-lg" id="saveBillBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save Bill
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toast-notice" id="toastNotice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastNoticeText">Saved successfully.</span>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  App.requireAuth();
+  App.initSidebar();
+  App.initLogout();
+  App.initUserBadge();
+  App.enforcePermissions("billList");
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function round2(n) { return Math.round((Number(n) || 0) * 100) / 100; }
+
+  var params = new URLSearchParams(window.location.search);
+  var billId = params.has("id") ? parseInt(params.get("id"), 10) : null;
+
+  var bills = Data.getBills();
+  var existingBill = billId !== null ? bills.find(function (b) { return b.id === billId; }) : null;
+  var nextId = bills.reduce(function (m, b) { return Math.max(m, b.id); }, 0) + 1;
+
+  var isEdit = !!existingBill;
+  document.getElementById("pageHeading").textContent = isEdit ? "Edit Bill" : "Add Bill";
+  document.getElementById("pageDesc").textContent = isEdit
+    ? "Update this bill's registration and weighing details."
+    : "Fill in the registration and weighing details to create a new bill.";
+  document.getElementById("pageSubtitle").textContent = isEdit ? "Editing " + existingBill.billNumber : "Create a new bill";
+
+  document.getElementById("backBtn").addEventListener("click", goBack);
+  document.getElementById("cancelFormBtn").addEventListener("click", goBack);
+  function goBack() {
+    window.location.href = isEdit ? "bill-view.html?id=" + existingBill.id : "bill-list.html";
+  }
+
+  /* ---------------- Field references ---------------- */
+  var fBillId = document.getElementById("billId");
+  var bBillNumber = document.getElementById("bBillNumber");
+  var bDate = document.getElementById("bDate");
+  var bTrader = document.getElementById("bTrader");
+  var bEmail = document.getElementById("bEmail");
+  var bCompany = document.getElementById("bCompany");
+  var bMachine = document.getElementById("bMachine");
+  var bSupervisor = document.getElementById("bSupervisor");
+  var bDriver = document.getElementById("bDriver");
+  var bVehicleNo = document.getElementById("bVehicleNo");
+  var bFarmer = document.getElementById("bFarmer");
+  var bMobileNo = document.getElementById("bMobileNo");
+  var bFarmCode = document.getElementById("bFarmCode");
+  var bAge = document.getElementById("bAge");
+  var bBalanceStock = document.getElementById("bBalanceStock");
+  var bBirdType = document.getElementById("bBirdType");
+  var bStartTime = document.getElementById("bStartTime");
+  var bEndTime = document.getElementById("bEndTime");
+  var bLoadingTime = document.getElementById("bLoadingTime");
+  var formAlert = document.getElementById("formAlert");
+
+  /* ---------------- Dropdown data sources ---------------- */
+  var machines = Data.getMachines().filter(function (m) { return m.status !== "Inactive"; });
+  machines.forEach(function (m) {
+    var opt = document.createElement("option");
+    opt.value = m.machineNumber;
+    opt.textContent = m.machineNumber + " — " + m.machineName;
+    bMachine.appendChild(opt);
+  });
+
+  function uniqueSorted(values) {
+    return Array.from(new Set(values.filter(function (v) { return v && String(v).trim(); }))).sort();
+  }
+
+  uniqueSorted(bills.map(function (b) { return b.supervisor; })).forEach(function (name) {
+    var opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    bSupervisor.appendChild(opt);
+  });
+
+  uniqueSorted(bills.map(function (b) { return b.farmer; })).forEach(function (name) {
+    var opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    bFarmer.appendChild(opt);
+  });
+
+  /* ---------------- Weighing sessions & bird type breakdown (working copies) ---------------- */
+  var activeSessions = [];
+  var activeBirdTypes = [];
+  var sessionNextId = 1;
+  var birdTypeNextId = 1;
+
+  function renderSessionsTable() {
+    var tbody = document.getElementById("sessionsBody");
+    var empty = document.getElementById("sessionsEmpty");
+    if (!activeSessions.length) {
+      tbody.innerHTML = "";
+      empty.style.display = "block";
+    } else {
+      empty.style.display = "none";
+      tbody.innerHTML = activeSessions.map(function (s) {
+        return '<tr>' +
+          '<td>' + s.noOfBox + '</td>' +
+          '<td>' + s.filledBox + '</td>' +
+          '<td>' + s.emptyWeight + '</td>' +
+          '<td>' + s.grossWeight + '</td>' +
+          '<td>' + s.netWeight + '</td>' +
+          '<td>' + escapeHtml(s.time || "—") + '</td>' +
+          '<td><button type="button" class="modal-close" style="width:26px;height:26px" data-remove-session="' + s._id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>' +
+          '</tr>';
+      }).join("");
+    }
+  }
+
+  function renderBirdTypeTable() {
+    var tbody = document.getElementById("birdTypeBody");
+    var empty = document.getElementById("birdTypeEmpty");
+    if (!activeBirdTypes.length) {
+      tbody.innerHTML = "";
+      empty.style.display = "block";
+    } else {
+      empty.style.display = "none";
+      tbody.innerHTML = activeBirdTypes.map(function (b, idx) {
+        return '<tr>' +
+          '<td>' + (idx + 1) + '</td>' +
+          '<td>' + escapeHtml(b.birdsType) + '</td>' +
+          '<td>' + b.box + '</td>' +
+          '<td>' + b.count + '</td>' +
+          '<td>' + b.total + '</td>' +
+          '<td><button type="button" class="modal-close" style="width:26px;height:26px" data-remove-birdtype="' + b._id + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></td>' +
+          '</tr>';
+      }).join("");
+    }
+  }
+
+  function recalcWeighingDetails() {
+    var totalBox = 0, filledBox = 0, grossWeight = 0, emptyWeight = 0, netWeight = 0;
+    activeSessions.forEach(function (s) {
+      totalBox += Number(s.noOfBox) || 0;
+      filledBox += Number(s.filledBox) || 0;
+      grossWeight += Number(s.grossWeight) || 0;
+      emptyWeight += Number(s.emptyWeight) || 0;
+      netWeight += Number(s.netWeight) || 0;
+    });
+    var emptyBox = Math.max(0, totalBox - filledBox);
+    var totalBirds = activeBirdTypes.reduce(function (sum, b) { return sum + (Number(b.count) || 0); }, 0);
+    var avgWeight = totalBirds > 0 ? round2(netWeight / totalBirds) : 0;
+
+    var tiles = [
+      ["Filled Box", filledBox],
+      ["Empty Box", emptyBox],
+      ["Total Box", totalBox],
+      ["No. Of Birds", totalBirds],
+      ["Load Weight", round2(grossWeight) + " kg"],
+      ["Empty Weight", round2(emptyWeight) + " kg"],
+      ["Net Weight", round2(netWeight) + " kg"],
+      ["Avg Weight", avgWeight + " kg"]
+    ];
+    document.getElementById("weighingSpecGrid").innerHTML = tiles.map(function (t) {
+      return '<div class="weighing-spec-tile"><div class="spec-label">' + t[0] + '</div><div class="spec-value">' + t[1] + '</div></div>';
+    }).join("");
+
+    return { totalBox: totalBox, filledBox: filledBox, emptyBox: emptyBox, totalBirds: totalBirds,
+      loadWeight: round2(grossWeight), emptyWeight: round2(emptyWeight), netWeight: round2(netWeight), avgWeight: avgWeight };
+  }
+
+  document.getElementById("addSessionBtn").addEventListener("click", function () {
+    var noOfBox = document.getElementById("sNoOfBox").value.trim();
+    var filledBoxVal = document.getElementById("sFilledBox").value.trim();
+    var emptyWeightVal = document.getElementById("sEmptyWeight").value.trim();
+    var grossWeightVal = document.getElementById("sGrossWeight").value.trim();
+    var timeVal = document.getElementById("sTime").value.trim();
+    var numberRe = /^[0-9]+(\.[0-9]+)?$/;
+
+    if (!numberRe.test(noOfBox) || !numberRe.test(filledBoxVal) || !numberRe.test(emptyWeightVal) || !numberRe.test(grossWeightVal)) {
+      showToast("Enter valid numbers for box counts and weights.");
+      return;
+    }
+
+    var netWeight = round2(Number(grossWeightVal) - Number(emptyWeightVal));
+    activeSessions.push({
+      _id: sessionNextId++,
+      noOfBox: Number(noOfBox),
+      filledBox: Number(filledBoxVal),
+      emptyWeight: round2(Number(emptyWeightVal)),
+      grossWeight: round2(Number(grossWeightVal)),
+      netWeight: netWeight,
+      time: timeVal
+    });
+
+    ["sNoOfBox", "sFilledBox", "sEmptyWeight", "sGrossWeight", "sTime"].forEach(function (id) {
+      document.getElementById(id).value = "";
+    });
+
+    renderSessionsTable();
+    recalcWeighingDetails();
+  });
+
+  document.getElementById("sessionsBody").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-remove-session]");
+    if (!btn) return;
+    var id = parseInt(btn.getAttribute("data-remove-session"), 10);
+    activeSessions = activeSessions.filter(function (s) { return s._id !== id; });
+    renderSessionsTable();
+    recalcWeighingDetails();
+  });
+
+  document.getElementById("addBirdTypeBtn").addEventListener("click", function () {
+    var birdsType = document.getElementById("tBirdsType").value;
+    var box = document.getElementById("tBox").value.trim();
+    var count = document.getElementById("tCount").value.trim();
+    var total = document.getElementById("tTotal").value.trim();
+    var numberRe = /^[0-9]+(\.[0-9]+)?$/;
+
+    if (!birdsType || !numberRe.test(box) || !numberRe.test(count) || !numberRe.test(total)) {
+      showToast("Select a bird type and enter valid numbers.");
+      return;
+    }
+
+    activeBirdTypes.push({
+      _id: birdTypeNextId++,
+      birdsType: birdsType,
+      box: Number(box),
+      count: Number(count),
+      total: round2(Number(total))
+    });
+
+    document.getElementById("tBirdsType").value = "";
+    ["tBox", "tCount", "tTotal"].forEach(function (id) { document.getElementById(id).value = ""; });
+
+    renderBirdTypeTable();
+    recalcWeighingDetails();
+  });
+
+  document.getElementById("birdTypeBody").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-remove-birdtype]");
+    if (!btn) return;
+    var id = parseInt(btn.getAttribute("data-remove-birdtype"), 10);
+    activeBirdTypes = activeBirdTypes.filter(function (b) { return b._id !== id; });
+    renderBirdTypeTable();
+    recalcWeighingDetails();
+  });
+
+  /* ---------------- Date helpers ---------------- */
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  function displayDateToInput(display) {
+    if (!display) return "";
+    var parts = display.split(" ");
+    if (parts.length !== 3) return "";
+    var monthIdx = MONTHS.indexOf(parts[1]);
+    if (monthIdx === -1) return "";
+    return parts[2] + "-" + String(monthIdx + 1).padStart(2, "0") + "-" + parts[0];
+  }
+
+  function inputDateToDisplay(value) {
+    if (!value) return "";
+    var parts = value.split("-");
+    if (parts.length !== 3) return value;
+    return parts[2] + " " + MONTHS[parseInt(parts[1], 10) - 1] + " " + parts[0];
+  }
+
+  /* ---------------- Load existing bill (edit mode) ---------------- */
+  if (existingBill) {
+    fBillId.value = existingBill.id;
+    bBillNumber.value = existingBill.billNumber || "";
+    bDate.value = displayDateToInput(existingBill.date);
+    bTrader.value = existingBill.trader || "";
+    bEmail.value = existingBill.email || "";
+    bCompany.value = existingBill.company || "";
+    bMachine.value = existingBill.machineNumber || "";
+    bSupervisor.value = existingBill.supervisor || "";
+    bDriver.value = existingBill.driver || "";
+    bVehicleNo.value = existingBill.vehicleNo || "";
+    bFarmer.value = existingBill.farmer || "";
+    bMobileNo.value = existingBill.mobileNo || "";
+    bFarmCode.value = existingBill.farmCode || "";
+    bAge.value = existingBill.age !== undefined ? existingBill.age : "";
+    bBalanceStock.value = existingBill.balanceStock !== undefined ? existingBill.balanceStock : "";
+    bBirdType.value = existingBill.birdType || "";
+    bStartTime.value = existingBill.startTime || "";
+    bEndTime.value = existingBill.endTime || "";
+    bLoadingTime.value = existingBill.loadingTime || "";
+
+    activeSessions = (existingBill.weighingSessions || []).map(function (s) {
+      return Object.assign({ _id: sessionNextId++ }, s);
+    });
+    activeBirdTypes = (existingBill.birdTypeBreakdown || []).map(function (b) {
+      return Object.assign({ _id: birdTypeNextId++ }, b);
+    });
+  }
+
+  renderSessionsTable();
+  renderBirdTypeTable();
+  recalcWeighingDetails();
+
+  /* ---------------- Save ---------------- */
+  function setFieldError(input, errorEl, hasError) {
+    input.classList.toggle("error", hasError);
+    errorEl.classList.toggle("show", hasError);
+  }
+
+  document.getElementById("saveBillBtn").addEventListener("click", function () {
+    var valid = true;
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    var checks = [
+      [bBillNumber, "errBBillNumber", bBillNumber.value.trim().length > 0],
+      [bDate, "errBDate", bDate.value !== ""],
+      [bTrader, "errBTrader", bTrader.value.trim().length > 0],
+      [bEmail, "errBEmail", emailRe.test(bEmail.value.trim())],
+      [bCompany, "errBCompany", bCompany.value.trim().length > 0]
+    ];
+
+    checks.forEach(function (c) {
+      setFieldError(c[0], document.getElementById(c[1]), !c[2]);
+      valid = valid && c[2];
+    });
+
+    formAlert.classList.toggle("show", !valid);
+    if (!valid) return;
+
+    var computed = recalcWeighingDetails();
+    var displayDate = inputDateToDisplay(bDate.value);
+
+    var sessionsToSave = activeSessions.map(function (s) {
+      return { noOfBox: s.noOfBox, filledBox: s.filledBox, emptyWeight: s.emptyWeight, grossWeight: s.grossWeight, netWeight: s.netWeight, time: s.time };
+    });
+    var birdTypesToSave = activeBirdTypes.map(function (b, idx) {
+      return { slNo: idx + 1, birdsType: b.birdsType, box: b.box, count: b.count, total: b.total };
+    });
+
+    var payload = {
+      date: displayDate,
+      billNumber: bBillNumber.value.trim(),
+      trader: bTrader.value.trim(),
+      email: bEmail.value.trim(),
+      company: bCompany.value.trim(),
+      machineNumber: bMachine.value,
+      supervisor: bSupervisor.value,
+      driver: bDriver.value.trim(),
+      vehicleNo: bVehicleNo.value.trim(),
+      farmer: bFarmer.value,
+      mobileNo: bMobileNo.value.trim(),
+      farmCode: bFarmCode.value.trim(),
+      age: bAge.value.trim() === "" ? "" : Number(bAge.value.trim()),
+      balanceStock: bBalanceStock.value.trim() === "" ? "" : Number(bBalanceStock.value.trim()),
+      birdType: bBirdType.value,
+      startTime: bStartTime.value.trim(),
+      endTime: bEndTime.value.trim(),
+      loadingTime: bLoadingTime.value.trim(),
+      totalBirds: computed.totalBirds,
+      birdsWeight: computed.netWeight,
+      filledBox: computed.filledBox,
+      emptyBox: computed.emptyBox,
+      totalBox: computed.totalBox,
+      loadWeight: computed.loadWeight,
+      emptyWeight: computed.emptyWeight,
+      netWeight: computed.netWeight,
+      avgWeight: computed.avgWeight,
+      weighingSessions: sessionsToSave,
+      birdTypeBreakdown: birdTypesToSave
+    };
+
+    if (existingBill) {
+      Object.assign(existingBill, payload);
+      Data.saveBills(bills);
+      window.location.href = "bill-view.html?id=" + existingBill.id;
+    } else {
+      payload.id = nextId;
+      payload.status = "Active";
+      bills.unshift(payload);
+      Data.saveBills(bills);
+      window.location.href = "bill-view.html?id=" + payload.id;
+    }
+  });
+
+  /* ---------------- Toast ---------------- */
+  var toastNotice = document.getElementById("toastNotice");
+  var toastNoticeText = document.getElementById("toastNoticeText");
+  var toastTimer = null;
+
+  function showToast(message) {
+    toastNoticeText.textContent = message;
+    toastNotice.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
+  }
+</script>
+
+</body>
+</html>
