@@ -46,7 +46,7 @@
 
       <a class="nav-item" href="machine-management.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
-        Machine Management
+        Machine
       </a>
 
       <span class="nav-section-label">Sales</span>
@@ -141,11 +141,18 @@
       <form id="billForm" novalidate>
         <input type="hidden" id="billId">
 
-        <div class="detail-grid">
-          <div class="detail-card">
-            <div class="detail-card-header">Registration</div>
+        <div class="detail-card">
+            <div class="detail-card-header">
+              <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span>
+              Registration
+            </div>
             <div style="padding:20px">
-              <div class="field-grid">
+              <div class="field-grid cols-3">
+                <div class="field-group-divider">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+                  Trade &amp; Billing
+                </div>
+
                 <div class="field">
                   <label for="bBillNumber">Bill Number <span class="req">*</span></label>
                   <input type="text" id="bBillNumber" placeholder="e.g. BILL-30421">
@@ -186,6 +193,11 @@
                   </select>
                 </div>
 
+                <div class="field-group-divider">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                  Logistics &amp; Farm Contact
+                </div>
+
                 <div class="field">
                   <label for="bSupervisor">Supervisor</label>
                   <select id="bSupervisor">
@@ -218,6 +230,11 @@
                 <div class="field">
                   <label for="bFarmCode">Farm Code</label>
                   <input type="text" id="bFarmCode" placeholder="e.g. FC-4021">
+                </div>
+
+                <div class="field-group-divider">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg>
+                  Flock &amp; Timing
                 </div>
 
                 <div class="field">
@@ -258,21 +275,26 @@
             </div>
           </div>
 
-          <div class="detail-card">
-            <div class="detail-card-header" style="display:flex; align-items:center; justify-content:space-between">
-              <span>Weighing Details</span>
+          <div class="detail-card weighing-summary-card">
+            <div class="detail-card-header" style="justify-content:space-between">
+              <span style="display:flex; align-items:center">
+                <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg></span>
+                Weighing Details
+              </span>
               <span class="panel-tag">Auto-calculated</span>
             </div>
             <div style="padding:20px">
               <p class="section-subheading" style="margin:0 0 14px">These update automatically as you edit the Weighing Sessions and Bird Type Breakdown below.</p>
-              <div class="weighing-spec-grid" id="weighingSpecGrid"></div>
+              <div class="weighing-spec-grid cols-auto" id="weighingSpecGrid"></div>
             </div>
           </div>
-        </div>
       </form>
 
-      <div class="section-heading">Weighing Sessions</div>
-      <div class="table-card">
+      <div class="table-card" style="margin-top:24px; margin-bottom:24px">
+        <div class="detail-card-header">
+          <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg></span>
+          Weighing Sessions
+        </div>
         <div class="inline-add-form">
           <div class="field">
             <label for="sNoOfBox">No.of Box</label>
@@ -315,14 +337,17 @@
             <tbody id="sessionsBody"></tbody>
           </table>
         </div>
-        <div class="empty-state" id="sessionsEmpty" style="display:none">
+        <div class="empty-state compact" id="sessionsEmpty" style="display:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>
           <p>No weighing sessions added yet.</p>
         </div>
       </div>
 
-      <div class="section-heading">Bird Type Breakdown</div>
       <div class="table-card">
+        <div class="detail-card-header">
+          <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg></span>
+          Bird Type Breakdown
+        </div>
         <div class="inline-add-form">
           <div class="field">
             <label for="tBirdsType">Birds Type</label>
@@ -347,7 +372,7 @@
           </div>
           <button type="button" class="btn btn-outline" id="addBirdTypeBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Row
+            Add Session
           </button>
         </div>
         <div class="table-scroll">
@@ -365,8 +390,8 @@
             <tbody id="birdTypeBody"></tbody>
           </table>
         </div>
-        <div class="empty-state" id="birdTypeEmpty" style="display:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg>
+        <div class="empty-state compact" id="birdTypeEmpty" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg>
           <p>No bird type rows added yet.</p>
         </div>
       </div>
@@ -539,14 +564,14 @@
       ["Filled Box", filledBox],
       ["Empty Box", emptyBox],
       ["Total Box", totalBox],
-      ["No. Of Birds", totalBirds],
+      ["No. Of Birds", totalBirds, true],
       ["Load Weight", round2(grossWeight) + " kg"],
       ["Empty Weight", round2(emptyWeight) + " kg"],
-      ["Net Weight", round2(netWeight) + " kg"],
+      ["Net Weight", round2(netWeight) + " kg", true],
       ["Avg Weight", avgWeight + " kg"]
     ];
     document.getElementById("weighingSpecGrid").innerHTML = tiles.map(function (t) {
-      return '<div class="weighing-spec-tile"><div class="spec-label">' + t[0] + '</div><div class="spec-value">' + t[1] + '</div></div>';
+      return '<div class="weighing-spec-tile' + (t[2] ? ' highlight' : '') + '"><div class="spec-label">' + t[0] + '</div><div class="spec-value">' + t[1] + '</div></div>';
     }).join("");
 
     return { totalBox: totalBox, filledBox: filledBox, emptyBox: emptyBox, totalBirds: totalBirds,
