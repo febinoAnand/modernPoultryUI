@@ -61,11 +61,6 @@
         Bill List
       </a>
 
-      <a class="nav-item" href="product.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        Product
-      </a>
-
       <span class="nav-section-label">User Management</span>
 
       <a class="nav-item" href="user-list.html">
@@ -176,11 +171,11 @@
         <div class="table-scroll">
           <table class="data-table">
             <thead>
-              <tr>
+              <tr id="tableHeadRow">
                 <th>S.No</th>
-                <th>Branch Name</th>
-                <th>Branch Code</th>
-                <th>Address</th>
+                <th data-sort="branchName">Branch Name</th>
+                <th data-sort="branchCode">Branch Code</th>
+                <th data-sort="address">Address</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -326,10 +321,11 @@
   function persist() { Data.saveBranches(branches); }
 
   /* ---------------- State ---------------- */
-  var state = { search: "", page: 1, pageSize: 10, openMenuId: null };
+  var state = { search: "", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
 
   /* ---------------- Elements ---------------- */
   var tableBody = document.getElementById("tableBody");
+  var tableHeadRow = document.getElementById("tableHeadRow");
   var searchInput = document.getElementById("searchInput");
   var toolbarMeta = document.getElementById("toolbarMeta");
   var paginationInfo = document.getElementById("paginationInfo");
@@ -357,8 +353,14 @@
     });
   }
 
+  function getSortValue(b, key) {
+    return b[key];
+  }
+
   function render() {
     var filtered = getFiltered();
+    filtered = App.sortRows(filtered, state.sortKey, state.sortDir, getSortValue);
+    App.updateSortIndicators(tableHeadRow, state);
     var totalPages = Math.max(1, Math.ceil(filtered.length / state.pageSize));
     if (state.page > totalPages) state.page = totalPages;
 
@@ -681,6 +683,7 @@
   }
 
   /* ---------------- Init ---------------- */
+  App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });
   render();
 </script>
 

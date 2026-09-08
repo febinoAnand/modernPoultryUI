@@ -292,6 +292,72 @@
     denialToastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
   }
 
+  /* ---------------- Sortable table headers ----------------
+     Reusable across every list page: any <th data-sort="key"> in the
+     given <thead> row becomes clickable, toggling state.sortKey /
+     state.sortDir (asc -> desc -> asc) and firing onSortChange so the
+     page can re-render. updateSortIndicators paints the active arrow;
+     sortRows does the actual comparison via a page-supplied accessor. */
+
+  var SORT_ARROW_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+  function initSortableTable(theadRow, state, onSortChange) {
+    if (!theadRow) return;
+    var ths = theadRow.querySelectorAll("th[data-sort]");
+    ths.forEach(function (th) {
+      th.classList.add("sortable");
+      if (!th.querySelector(".sort-arrow")) {
+        th.insertAdjacentHTML("beforeend", '<span class="sort-arrow">' + SORT_ARROW_SVG + '</span>');
+      }
+      th.addEventListener("click", function () {
+        var key = th.getAttribute("data-sort");
+        if (state.sortKey === key) {
+          state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+        } else {
+          state.sortKey = key;
+          state.sortDir = "asc";
+        }
+        onSortChange();
+      });
+    });
+  }
+
+  function updateSortIndicators(theadRow, state) {
+    if (!theadRow) return;
+    theadRow.querySelectorAll("th[data-sort]").forEach(function (th) {
+      var key = th.getAttribute("data-sort");
+      th.classList.remove("sorted-asc", "sorted-desc");
+      if (state.sortKey === key) th.classList.add(state.sortDir === "asc" ? "sorted-asc" : "sorted-desc");
+    });
+  }
+
+  var DISPLAY_DATE_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function parseDisplayDate(str) {
+    if (!str) return 0;
+    var parts = String(str).trim().split(" ");
+    if (parts.length !== 3) return 0;
+    var day = parseInt(parts[0], 10);
+    var month = DISPLAY_DATE_MONTHS.indexOf(parts[1]);
+    var year = parseInt(parts[2], 10);
+    if (isNaN(day) || month === -1 || isNaN(year)) return 0;
+    return new Date(year, month, day).getTime();
+  }
+
+  function sortRows(rows, sortKey, sortDir, accessor) {
+    if (!sortKey) return rows;
+    var sorted = rows.slice().sort(function (a, b) {
+      var va = accessor(a, sortKey);
+      var vb = accessor(b, sortKey);
+      if (va == null) va = "";
+      if (vb == null) vb = "";
+      if (typeof va === "number" && typeof vb === "number") return va - vb;
+      return String(va).localeCompare(String(vb), undefined, { numeric: true, sensitivity: "base" });
+    });
+    if (sortDir === "desc") sorted.reverse();
+    return sorted;
+  }
+
   window.App = {
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
@@ -303,6 +369,10 @@
     initUserBadge: initUserBadge,
     positionActionMenu: positionActionMenu,
     initCombobox: initCombobox,
-    enforcePermissions: enforcePermissions
+    enforcePermissions: enforcePermissions,
+    initSortableTable: initSortableTable,
+    updateSortIndicators: updateSortIndicators,
+    sortRows: sortRows,
+    parseDisplayDate: parseDisplayDate
   };
 })();
