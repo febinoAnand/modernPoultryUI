@@ -14,9 +14,9 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark">P</div>
       <div class="brand-text">
-        <strong>AgriTrade</strong>
+        <strong>Poultry</strong>
         <span>Admin Console</span>
       </div>
     </div>
@@ -80,6 +80,11 @@
         Profile
       </a>
 
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
       <button class="nav-item logout-item" data-logout>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Logout
@@ -121,6 +126,10 @@
           <p>View, add, edit and manage every sales order.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openDownloadModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
           <button class="btn btn-primary" id="openAddOrder" data-perm-action="create">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Order
@@ -163,8 +172,14 @@
         <div class="table-toolbar">
           <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" placeholder="Search by order number, customer or product...">
+            <input type="text" id="searchInput" placeholder="Search by order number, trader or product...">
           </div>
+          <select id="filterStatus" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Delivered">Delivered</option>
+          </select>
           <div class="toolbar-meta" id="toolbarMeta">0 orders</div>
         </div>
 
@@ -173,14 +188,16 @@
             <thead>
               <tr id="tableHeadRow">
                 <th>S.No</th>
-                <th data-sort="orderNumber">Order Number</th>
-                <th data-sort="customerName">Customer Name</th>
-                <th data-sort="product">Product</th>
-                <th data-sort="quantity">Quantity</th>
-                <th data-sort="rate">Rate</th>
-                <th data-sort="totalAmount">Total Amount</th>
-                <th data-sort="orderDate">Order Date</th>
-                <th data-sort="orderStatus">Status</th>
+                <th data-sort="orderNumber" class="field-col-orderNumber">Order Number</th>
+                <th data-sort="trader">Trader</th>
+                <th data-sort="branch" class="field-col-branch">Branch</th>
+                <th data-sort="supervisor" class="field-col-supervisor">Supervisor</th>
+                <th data-sort="product" class="field-col-product">Product</th>
+                <th data-sort="quantity" class="field-col-quantity">Quantity</th>
+                <th data-sort="rate" class="field-col-rate">Rate</th>
+                <th data-sort="totalAmount" class="field-col-totalAmount">Total Amount</th>
+                <th data-sort="orderDate" class="field-col-orderDate">Order Date</th>
+                <th data-sort="orderStatus" class="field-col-orderStatus">Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -218,13 +235,13 @@
       <form id="orderForm" novalidate>
         <input type="hidden" id="orderId">
         <div class="field-grid">
-          <div class="field">
+          <div class="field field-col-orderNumber">
             <label for="oOrderNumber">Order Number <span class="req">*</span></label>
             <input type="text" id="oOrderNumber" placeholder="e.g. SO-5041">
             <span class="field-error" id="errOOrderNumber">Please enter an order number.</span>
           </div>
 
-          <div class="field">
+          <div class="field field-col-orderDate">
             <label for="oOrderDate">Order Date <span class="req">*</span></label>
             <div class="icon-field-wrap">
               <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -234,18 +251,32 @@
           </div>
 
           <div class="field full">
-            <label for="oCustomerName">Customer Name <span class="req">*</span></label>
-            <div class="combo-wrap" id="customerComboWrap">
+            <label for="oTrader">Trader <span class="req">*</span></label>
+            <div class="combo-wrap" id="traderComboWrap">
               <div class="icon-field-wrap">
                 <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <input type="text" id="oCustomerName" placeholder="Search a trader by name or code..." autocomplete="off">
+                <input type="text" id="oTrader" placeholder="Search a trader by name or code..." autocomplete="off">
               </div>
-              <div class="combo-panel" id="customerComboPanel"></div>
+              <div class="combo-panel" id="traderComboPanel"></div>
             </div>
-            <span class="field-error" id="errOCustomerName">Please select a trader from the list.</span>
+            <span class="field-error" id="errOTrader">Please select a trader from the list.</span>
           </div>
 
-          <div class="field full">
+          <div class="field field-col-branch">
+            <label for="oBranch">Branch</label>
+            <select id="oBranch">
+              <option value="">Select branch</option>
+            </select>
+          </div>
+
+          <div class="field field-col-supervisor">
+            <label for="oSupervisor">Supervisor</label>
+            <select id="oSupervisor">
+              <option value="">Select supervisor</option>
+            </select>
+          </div>
+
+          <div class="field full field-col-product">
             <label for="oProduct">Product <span class="req">*</span></label>
             <div class="combo-wrap" id="productComboWrap">
               <div class="icon-field-wrap">
@@ -257,24 +288,24 @@
             <span class="field-error" id="errOProduct">Please select a product from the list.</span>
           </div>
 
-          <div class="field">
+          <div class="field field-col-quantity">
             <label for="oQuantity">Quantity <span class="req">*</span></label>
             <input type="text" id="oQuantity" placeholder="e.g. 250">
             <span class="field-error" id="errOQuantity">Please enter a valid quantity.</span>
           </div>
 
-          <div class="field">
+          <div class="field field-col-rate">
             <label for="oRate">Rate (₹) <span class="req">*</span></label>
             <input type="text" id="oRate" placeholder="e.g. 185.50">
             <span class="field-error" id="errORate">Please enter a valid rate.</span>
           </div>
 
-          <div class="field">
+          <div class="field field-col-totalAmount">
             <label>Total Amount</label>
             <input type="text" id="oTotalAmount" disabled value="₹0.00">
           </div>
 
-          <div class="field">
+          <div class="field field-col-orderStatus">
             <label for="oStatus">Status</label>
             <select id="oStatus">
               <option value="Pending">Pending</option>
@@ -297,8 +328,8 @@
   <div class="modal-box" style="max-width:420px">
     <div class="modal-header">
       <div>
-        <h3>Rename Customer</h3>
-        <p>Update the customer name on this order.</p>
+        <h3>Rename Trader</h3>
+        <p>Update the trader name on this order.</p>
       </div>
       <button class="modal-close" id="closeRenameModal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -307,7 +338,7 @@
     <div class="modal-body">
       <input type="hidden" id="renameOrderId">
       <div class="field">
-        <label for="renameInput">Customer Name <span class="req">*</span></label>
+        <label for="renameInput">Trader <span class="req">*</span></label>
         <input type="text" id="renameInput" placeholder="Enter new name">
         <span class="field-error" id="errRename">Please enter a name.</span>
       </div>
@@ -333,6 +364,8 @@
     </div>
     <div class="modal-body">
       <div class="view-detail-grid" id="viewDetailGrid"></div>
+      <div class="section-heading" style="margin-top:20px">Activity Log</div>
+      <div class="activity-list" id="viewActivityLogList" style="max-height:220px; overflow-y:auto; margin-top:10px"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" id="viewEditBtn">
@@ -352,11 +385,75 @@
   </div>
 </div>
 
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Download Sales Orders</h3>
+        <p>Export sales orders as a file, optionally within a date range.</p>
+      </div>
+      <button class="modal-close" id="closeDownloadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full">
+        <label>File Format</label>
+        <div class="format-toggle-group">
+          <label>
+            <input type="radio" name="downloadFormat" value="csv" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>CSV</span>
+          </label>
+          <label>
+            <input type="radio" name="downloadFormat" value="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="downloadDuration">Duration</label>
+        <select id="downloadDuration">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+
+      <div class="duration-custom-range" id="customRangeFields" style="display:none">
+        <div class="field">
+          <label for="downloadFrom">From</label>
+          <input type="date" id="downloadFrom">
+        </div>
+        <div class="field">
+          <label for="downloadTo">To</label>
+          <input type="date" id="downloadTo">
+        </div>
+      </div>
+      <span class="field-error" id="errDownloadRange">Please select both a from and to date.</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelDownloadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-notice" id="toastNotice">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span id="toastNoticeText">Saved successfully.</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -364,7 +461,48 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
-  App.enforcePermissions("salesOrder");
+  App.initSessionTimeout();
+  var currentPerms = App.enforcePermissions("salesOrder");
+
+  /* ---------------- Field-level permissions (see Roles & Permissions) ---------------- */
+  var FIELD_KEYS = ["orderNumber", "branch", "supervisor", "product", "quantity", "rate", "totalAmount", "orderDate", "orderStatus"];
+  var FIELD_INPUT_SELECTORS = {
+    orderNumber: "#oOrderNumber",
+    branch: "#oBranch",
+    supervisor: "#oSupervisor",
+    product: "#oProduct",
+    quantity: "#oQuantity",
+    rate: "#oRate",
+    totalAmount: "#oTotalAmount",
+    orderDate: "#oOrderDate",
+    orderStatus: "#oStatus"
+  };
+
+  function fieldVisible(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].view !== false;
+  }
+
+  function fieldEditable(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].edit !== false;
+  }
+
+  (function applyFieldPermissions() {
+    var hiddenRules = FIELD_KEYS.filter(function (key) { return !fieldVisible(key); })
+      .map(function (key) { return ".field-col-" + key + " { display: none !important; }"; })
+      .join("\n");
+    if (hiddenRules) {
+      var styleEl = document.createElement("style");
+      styleEl.textContent = hiddenRules;
+      document.head.appendChild(styleEl);
+    }
+    FIELD_KEYS.forEach(function (key) {
+      if (fieldVisible(key) && !fieldEditable(key)) {
+        document.querySelectorAll(FIELD_INPUT_SELECTORS[key]).forEach(function (el) { el.disabled = true; });
+      }
+    });
+  })();
 
   /* ---------------- Data (persisted, shared with dashboard) ---------------- */
   var orders = Data.getSalesOrders();
@@ -372,16 +510,19 @@
 
   var traderPool = Data.getTraderCodes().filter(function (t) { return t.status !== "Inactive"; });
   var productPool = Data.getProducts().filter(function (p) { return p.status !== "Inactive"; });
+  var branchPool = Data.getBranches().filter(function (b) { return b.status !== "Inactive"; });
+  var supervisorPool = Array.from(new Set(Data.getBills().map(function (b) { return b.supervisor; }).filter(function (v) { return v && String(v).trim(); }))).sort();
 
   function persist() { Data.saveSalesOrders(orders); }
 
   /* ---------------- State ---------------- */
-  var state = { search: "", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
+  var state = { search: "", filterStatus: "all", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
 
   /* ---------------- Elements ---------------- */
   var tableBody = document.getElementById("tableBody");
   var tableHeadRow = document.getElementById("tableHeadRow");
   var searchInput = document.getElementById("searchInput");
+  var filterStatus = document.getElementById("filterStatus");
   var toolbarMeta = document.getElementById("toolbarMeta");
   var paginationInfo = document.getElementById("paginationInfo");
   var paginationControls = document.getElementById("paginationControls");
@@ -404,10 +545,13 @@
 
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return orders;
     return orders.filter(function (o) {
+      if (state.filterStatus !== "all" && o.orderStatus !== state.filterStatus) return false;
+      if (!term) return true;
       return o.orderNumber.toLowerCase().indexOf(term) !== -1 ||
-        o.customerName.toLowerCase().indexOf(term) !== -1 ||
+        o.trader.toLowerCase().indexOf(term) !== -1 ||
+        (o.branch || "").toLowerCase().indexOf(term) !== -1 ||
+        (o.supervisor || "").toLowerCase().indexOf(term) !== -1 ||
         o.product.toLowerCase().indexOf(term) !== -1;
     });
   }
@@ -442,14 +586,16 @@
         return (
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
-            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(o.orderNumber) + '</span></td>' +
-            '<td><div class="cell-user"><div class="cell-avatar">' + initials(o.customerName) + '</div><span class="cell-user-name">' + escapeHtml(o.customerName) + '</span>' + disabledBadge + '</div></td>' +
-            '<td><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/></svg>' + escapeHtml(o.product) + '</span></td>' +
-            '<td>' + o.quantity + '</td>' +
-            '<td><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.5-.5-1.3-.8-2.5-.8-2 0-3 .8-3 1.8s1 1.3 3 1.7c2 .4 3 .8 3 1.8s-1 1.8-3 1.8c-1.2 0-2-.3-2.5-.8"/></svg>' + formatCurrency(o.rate) + '</span></td>' +
-            '<td><span class="total-amount">' + formatCurrency(o.totalAmount) + '</span></td>' +
-            '<td>' + escapeHtml(o.orderDate) + '</td>' +
-            '<td><span class="status-pill ' + statusClass + '">' + o.orderStatus + '</span></td>' +
+            '<td class="field-col-orderNumber"><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(o.orderNumber) + '</span></td>' +
+            '<td><div class="cell-user"><div class="cell-avatar">' + initials(o.trader) + '</div><span class="cell-user-name">' + escapeHtml(o.trader) + '</span>' + disabledBadge + '</div></td>' +
+            '<td class="field-col-branch">' + escapeHtml(o.branch || "—") + '</td>' +
+            '<td class="field-col-supervisor">' + escapeHtml(o.supervisor || "—") + '</td>' +
+            '<td class="field-col-product"><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/></svg>' + escapeHtml(o.product) + '</span></td>' +
+            '<td class="field-col-quantity">' + o.quantity + '</td>' +
+            '<td class="field-col-rate"><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.5 8.5c-.5-.5-1.3-.8-2.5-.8-2 0-3 .8-3 1.8s1 1.3 3 1.7c2 .4 3 .8 3 1.8s-1 1.8-3 1.8c-1.2 0-2-.3-2.5-.8"/></svg>' + formatCurrency(o.rate) + '</span></td>' +
+            '<td class="field-col-totalAmount"><span class="total-amount">' + formatCurrency(o.totalAmount) + '</span></td>' +
+            '<td class="field-col-orderDate">' + escapeHtml(o.orderDate) + '</td>' +
+            '<td class="field-col-orderStatus"><span class="status-pill ' + statusClass + '">' + o.orderStatus + '</span></td>' +
             '<td>' +
               '<div class="row-actions">' +
                 '<button class="action-trigger" data-menu-toggle="' + o.id + '" aria-label="Actions">' +
@@ -502,6 +648,12 @@
   /* ---------------- Search ---------------- */
   searchInput.addEventListener("input", function () {
     state.search = searchInput.value;
+    state.page = 1;
+    render();
+  });
+
+  filterStatus.addEventListener("change", function () {
+    state.filterStatus = filterStatus.value;
     state.page = 1;
     render();
   });
@@ -559,6 +711,7 @@
     else if (action === "rename") openRenameModal(order);
     else if (action === "toggle") {
       order.status = order.status === "Active" ? "Inactive" : "Active";
+      App.logActivity(order, "Status changed", "Status changed to " + order.status + ".");
       persist();
       render();
       showToast(order.orderNumber + " has been " + (order.status === "Active" ? "enabled" : "disabled") + ".");
@@ -572,17 +725,33 @@
   var fOrderId = document.getElementById("orderId");
   var oOrderNumber = document.getElementById("oOrderNumber");
   var oOrderDate = document.getElementById("oOrderDate");
-  var oCustomerName = document.getElementById("oCustomerName");
+  var oTrader = document.getElementById("oTrader");
+  var oBranch = document.getElementById("oBranch");
+  var oSupervisor = document.getElementById("oSupervisor");
   var oProduct = document.getElementById("oProduct");
   var oQuantity = document.getElementById("oQuantity");
   var oRate = document.getElementById("oRate");
   var oTotalAmount = document.getElementById("oTotalAmount");
   var oStatus = document.getElementById("oStatus");
 
-  var customerCombo = App.initCombobox({
-    input: oCustomerName,
-    panel: document.getElementById("customerComboPanel"),
-    wrap: document.getElementById("customerComboWrap"),
+  branchPool.forEach(function (b) {
+    var opt = document.createElement("option");
+    opt.value = b.branchName;
+    opt.textContent = b.branchName;
+    oBranch.appendChild(opt);
+  });
+
+  supervisorPool.forEach(function (name) {
+    var opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    oSupervisor.appendChild(opt);
+  });
+
+  var traderCombo = App.initCombobox({
+    input: oTrader,
+    panel: document.getElementById("traderComboPanel"),
+    wrap: document.getElementById("traderComboWrap"),
     items: traderPool,
     getInitial: function (t) { return initials(t.traderName); },
     getLabel: function (t) { return escapeHtml(t.traderName); },
@@ -592,8 +761,8 @@
       return t.traderName.toLowerCase().indexOf(term) !== -1 || t.traderCode.toLowerCase().indexOf(term) !== -1;
     },
     onSelect: function (t) {
-      oCustomerName.value = t.traderName;
-      setFieldError(oCustomerName, document.getElementById("errOCustomerName"), false);
+      oTrader.value = t.traderName;
+      setFieldError(oTrader, document.getElementById("errOTrader"), false);
     }
   });
 
@@ -652,7 +821,9 @@
       fOrderId.value = order.id;
       oOrderNumber.value = order.orderNumber;
       oOrderDate.value = displayDateToInput(order.orderDate);
-      oCustomerName.value = order.customerName;
+      oTrader.value = order.trader;
+      oBranch.value = order.branch || "";
+      oSupervisor.value = order.supervisor || "";
       oProduct.value = order.product;
       oQuantity.value = order.quantity;
       oRate.value = order.rate;
@@ -663,7 +834,7 @@
       fOrderId.value = "";
       oOrderNumber.value = "";
       oOrderDate.value = "";
-      oCustomerName.value = "";
+      oTrader.value = "";
       oProduct.value = "";
       oQuantity.value = "";
       oRate.value = "";
@@ -690,15 +861,16 @@
     var numberRe = /^[0-9]+(\.[0-9]+)?$/;
 
     var checks = [
-      [oOrderNumber, "errOOrderNumber", oOrderNumber.value.trim().length > 0],
-      [oOrderDate, "errOOrderDate", oOrderDate.value !== ""],
-      [oCustomerName, "errOCustomerName", oCustomerName.value.trim().length > 0],
-      [oProduct, "errOProduct", oProduct.value.trim().length > 0],
-      [oQuantity, "errOQuantity", numberRe.test(oQuantity.value.trim())],
-      [oRate, "errORate", numberRe.test(oRate.value.trim())]
+      [oOrderNumber, "errOOrderNumber", oOrderNumber.value.trim().length > 0, "orderNumber"],
+      [oOrderDate, "errOOrderDate", oOrderDate.value !== "", "orderDate"],
+      [oTrader, "errOTrader", oTrader.value.trim().length > 0, null],
+      [oProduct, "errOProduct", oProduct.value.trim().length > 0, "product"],
+      [oQuantity, "errOQuantity", numberRe.test(oQuantity.value.trim()), "quantity"],
+      [oRate, "errORate", numberRe.test(oRate.value.trim()), "rate"]
     ];
 
     checks.forEach(function (c) {
+      if (c[3] && !fieldEditable(c[3])) return;
       setFieldError(c[0], document.getElementById(c[1]), !c[2]);
       valid = valid && c[2];
     });
@@ -713,26 +885,33 @@
       var order = orders.find(function (o) { return o.id === parseInt(fOrderId.value, 10); });
       order.orderNumber = oOrderNumber.value.trim();
       order.orderDate = displayDate;
-      order.customerName = oCustomerName.value.trim();
+      order.trader = oTrader.value.trim();
+      order.branch = oBranch.value;
+      order.supervisor = oSupervisor.value;
       order.product = oProduct.value.trim();
       order.quantity = qty;
       order.rate = rate;
       order.totalAmount = qty * rate;
       order.orderStatus = oStatus.value;
+      App.logActivity(order, "Updated", "Order details were updated.");
       showToast("Order updated successfully.");
     } else {
-      orders.unshift({
+      var newOrder = {
         id: nextId++,
         orderNumber: oOrderNumber.value.trim(),
         orderDate: displayDate,
-        customerName: oCustomerName.value.trim(),
+        trader: oTrader.value.trim(),
+        branch: oBranch.value,
+        supervisor: oSupervisor.value,
         product: oProduct.value.trim(),
         quantity: qty,
         rate: rate,
         totalAmount: qty * rate,
         orderStatus: oStatus.value,
         status: "Active"
-      });
+      };
+      App.logActivity(newOrder, "Created", "Order " + newOrder.orderNumber + " was created.");
+      orders.unshift(newOrder);
       state.search = "";
       searchInput.value = "";
       state.page = 1;
@@ -752,7 +931,7 @@
 
   function openRenameModal(order) {
     renameOrderId.value = order.id;
-    renameInput.value = order.customerName;
+    renameInput.value = order.trader;
     renameInput.classList.remove("error");
     errRename.classList.remove("show");
     renameModalOverlay.classList.add("show");
@@ -771,11 +950,13 @@
       return;
     }
     var order = orders.find(function (o) { return o.id === parseInt(renameOrderId.value, 10); });
-    order.customerName = renameInput.value.trim();
+    var oldOrderTrader = order.trader;
+    order.trader = renameInput.value.trim();
+    App.logActivity(order, "Renamed", "Trader renamed from \"" + oldOrderTrader + "\" to \"" + order.trader + "\".");
     persist();
     closeRenameModal();
     render();
-    showToast("Customer renamed successfully.");
+    showToast("Trader renamed successfully.");
   });
 
   /* ---------------- View modal ---------------- */
@@ -788,18 +969,30 @@
   function openViewModal(order) {
     currentViewOrder = order;
     var fields = [
-      ["Order Number", order.orderNumber],
-      ["Customer Name", order.customerName],
-      ["Product", order.product],
-      ["Quantity", order.quantity],
-      ["Rate", formatCurrency(order.rate)],
-      ["Total Amount", formatCurrency(order.totalAmount)],
-      ["Order Date", order.orderDate],
-      ["Order Status", order.orderStatus]
-    ];
+      ["Order Number", order.orderNumber, "orderNumber"],
+      ["Trader", order.trader, null],
+      ["Branch", order.branch, "branch"],
+      ["Supervisor", order.supervisor, "supervisor"],
+      ["Product", order.product, "product"],
+      ["Quantity", order.quantity, "quantity"],
+      ["Rate", formatCurrency(order.rate), "rate"],
+      ["Total Amount", formatCurrency(order.totalAmount), "totalAmount"],
+      ["Order Date", order.orderDate, "orderDate"],
+      ["Order Status", order.orderStatus, "orderStatus"]
+    ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
+
+    var activityLog = order.activityLog || [];
+    document.getElementById("viewActivityLogList").innerHTML = activityLog.length
+      ? activityLog.map(function (entry) {
+          return '<div class="activity-item"><span class="activity-dot"></span><p>' +
+            '<strong>' + escapeHtml(entry.action) + '</strong>' + (entry.detail ? " — " + escapeHtml(entry.detail) : "") +
+            '<br><span>' + escapeHtml(entry.actor) + ' · ' + escapeHtml(entry.timestamp) + '</span></p></div>';
+        }).join("")
+      : '<p style="font-size:13px; color:var(--muted); margin:0">No activity recorded yet.</p>';
+
     viewToggleLabel.textContent = order.status === "Active" ? "Disable" : "Enable";
     viewToggleBtn.classList.toggle("danger", order.status === "Active");
     viewModalOverlay.classList.add("show");
@@ -826,6 +1019,7 @@
   viewToggleBtn.addEventListener("click", function () {
     var order = currentViewOrder;
     order.status = order.status === "Active" ? "Inactive" : "Active";
+    App.logActivity(order, "Status changed", "Status changed to " + order.status + ".");
     persist();
     render();
     closeViewModal();
@@ -843,6 +1037,54 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Download modal ---------------- */
+  var downloadModalOverlay = document.getElementById("downloadModalOverlay");
+  var downloadDuration = document.getElementById("downloadDuration");
+  var customRangeFields = document.getElementById("customRangeFields");
+  var downloadFrom = document.getElementById("downloadFrom");
+  var downloadTo = document.getElementById("downloadTo");
+  var errDownloadRange = document.getElementById("errDownloadRange");
+
+  document.getElementById("openDownloadModal").addEventListener("click", function () {
+    downloadModalOverlay.classList.add("show");
+  });
+
+  function closeDownloadModal() { downloadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeDownloadModal").addEventListener("click", closeDownloadModal);
+  document.getElementById("cancelDownloadModal").addEventListener("click", closeDownloadModal);
+  downloadModalOverlay.addEventListener("click", function (e) { if (e.target === downloadModalOverlay) closeDownloadModal(); });
+
+  downloadDuration.addEventListener("change", function () {
+    customRangeFields.style.display = downloadDuration.value === "custom" ? "grid" : "none";
+    errDownloadRange.classList.remove("show");
+  });
+
+  document.getElementById("confirmDownloadBtn").addEventListener("click", function () {
+    var duration = downloadDuration.value;
+
+    if (duration === "custom" && (!downloadFrom.value || !downloadTo.value)) {
+      errDownloadRange.classList.add("show");
+      return;
+    }
+    errDownloadRange.classList.remove("show");
+
+    var format = document.querySelector('input[name="downloadFormat"]:checked').value;
+    var data = App.filterByDuration(getFiltered(), function (o) { return App.parseDisplayDate(o.orderDate); }, duration, downloadFrom.value, downloadTo.value);
+
+    var headers = ["Order Number", "Trader", "Branch", "Supervisor", "Product", "Quantity", "Rate", "Total Amount", "Order Date", "Status"];
+    var rows = data.map(function (o) {
+      return [o.orderNumber, o.trader, o.branch, o.supervisor, o.product, o.quantity, formatCurrency(o.rate), formatCurrency(o.totalAmount), o.orderDate, o.orderStatus];
+    });
+
+    if (format === "csv") {
+      App.downloadCSV("sales-orders.csv", headers, rows);
+    } else {
+      App.downloadPDF("sales-orders.pdf", "Sales Orders", headers, rows);
+    }
+    closeDownloadModal();
+    showToast("Sales orders downloaded as " + format.toUpperCase() + ".");
+  });
 
   /* ---------------- Init ---------------- */
   App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });

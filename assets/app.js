@@ -36,6 +36,39 @@
     window.location.href = "index.html";
   }
 
+  /* ---------------- Session timeout ----------------
+     Reads sessionTimeoutMinutes from the Settings page (0 = never,
+     the default, so nothing changes until an admin sets one). Any
+     mouse/keyboard/touch activity resets the inactivity clock; once
+     it lapses with zero activity, the session is cleared and the
+     user is sent back to the login page with a message. */
+  function initSessionTimeout() {
+    var settings = window.Data ? window.Data.getAppSettings() : null;
+    var minutes = settings ? Number(settings.sessionTimeoutMinutes) || 0 : 0;
+    if (minutes <= 0) return;
+
+    var timeoutMs = minutes * 60 * 1000;
+    var timer = null;
+
+    function expire() {
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem("ui_user_email");
+      sessionStorage.removeItem("ui_org_id");
+      window.location.href = "index.html?sessionExpired=1";
+    }
+
+    function resetTimer() {
+      clearTimeout(timer);
+      timer = setTimeout(expire, timeoutMs);
+    }
+
+    ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach(function (evt) {
+      document.addEventListener(evt, resetTimer, { passive: true });
+    });
+
+    resetTimer();
+  }
+
   function initSidebar() {
     var sidebar = document.querySelector(".sidebar");
     var backdrop = document.querySelector(".sidebar-backdrop");
@@ -111,6 +144,15 @@
   function initCombobox(opts) {
     var filtered = [];
     var activeIndex = -1;
+
+    // The panel is position:fixed so it can float above everything, but a
+    // filter/backdrop-filter/transform on any ancestor (e.g. the auth
+    // card's glass blur) creates a new containing block that breaks fixed
+    // positioning. Reparenting to <body> guarantees it's always positioned
+    // relative to the real viewport.
+    if (opts.panel.parentNode !== document.body) {
+      document.body.appendChild(opts.panel);
+    }
 
     function position() {
       var rect = opts.wrap.getBoundingClientRect();
@@ -358,6 +400,123 @@
     return sorted;
   }
 
+  /* ---------------- CSV / PDF export ----------------
+     Reusable across every "Download" modal: downloadCSV builds an
+     escaped CSV blob and triggers a save; downloadPDF renders a
+     titled table via jsPDF + autoTable (both must already be loaded
+     via CDN <script> tags on the page). filterByDuration narrows a
+     list to a date window ("7"/"30"/"month"/"custom"/"all") using a
+     page-supplied accessor that returns each row's date as a
+     millisecond timestamp (e.g. App.parseDisplayDate(item.date)). */
+
+  function csvEscape(value) {
+    var str = value === null || value === undefined ? "" : String(value);
+    if (/[",\n]/.test(str)) {
+      str = '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  }
+
+  function triggerBlobDownload(blob, filename) {
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function downloadCSV(filename, headers, rows) {
+    var lines = [headers.map(csvEscape).join(",")];
+    rows.forEach(function (row) {
+      lines.push(row.map(csvEscape).join(","));
+    });
+    var blob = new Blob([lines.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+    triggerBlobDownload(blob, filename);
+  }
+
+  function downloadPDF(filename, title, headers, rows) {
+    var jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+    if (!jsPDFCtor) {
+      alert("PDF export isn't available right now — please check your internet connection and try again.");
+      return;
+    }
+    var doc = new jsPDFCtor({ orientation: headers.length > 6 ? "landscape" : "portrait" });
+    doc.setFontSize(14);
+    doc.text(title, 14, 16);
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text("Generated " + new Date().toLocaleString(), 14, 22);
+    doc.autoTable({
+      head: [headers],
+      body: rows,
+      startY: 27,
+      styles: { fontSize: 8.5, cellPadding: 4 },
+      headStyles: { fillColor: [79, 70, 229] },
+      alternateRowStyles: { fillColor: [247, 247, 251] }
+    });
+    doc.save(filename);
+  }
+
+  function filterByDuration(items, dateAccessor, duration, fromStr, toStr) {
+    if (!duration || duration === "all") return items;
+
+    var now = new Date();
+    var startTs, endTs;
+
+    if (duration === "7" || duration === "30") {
+      var days = parseInt(duration, 10);
+      var start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (days - 1));
+      startTs = start.getTime();
+      endTs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999).getTime();
+    } else if (duration === "month") {
+      startTs = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      endTs = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).getTime();
+    } else if (duration === "custom") {
+      if (!fromStr || !toStr) return items;
+      startTs = new Date(fromStr + "T00:00:00").getTime();
+      endTs = new Date(toStr + "T23:59:59").getTime();
+    } else {
+      return items;
+    }
+
+    return items.filter(function (item) {
+      var ts = dateAccessor(item);
+      return ts >= startTs && ts <= endTs;
+    });
+  }
+
+  /* ---------------- Per-record activity log ----------------
+     Reusable across any entity (bills, sales orders, ...): logActivity
+     pushes a timestamped, most-recent-first entry onto record.activityLog.
+     The caller still owns persisting the parent array (Data.saveBills(),
+     etc.) — this only mutates the in-memory record. */
+
+  var LOG_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function formatLogTimestamp(date) {
+    var d = date || new Date();
+    var hours = d.getHours();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    var h12 = hours % 12 || 12;
+    var mins = String(d.getMinutes()).padStart(2, "0");
+    return String(d.getDate()).padStart(2, "0") + " " + LOG_MONTHS[d.getMonth()] + " " + d.getFullYear() + ", " + h12 + ":" + mins + " " + ampm;
+  }
+
+  function logActivity(record, action, detail) {
+    if (!record.activityLog) record.activityLog = [];
+    var profile = window.Data ? window.Data.getProfile() : null;
+    var actor = profile && profile.name ? profile.name : "System";
+    record.activityLog.unshift({
+      action: action,
+      detail: detail || "",
+      actor: actor,
+      timestamp: formatLogTimestamp(new Date())
+    });
+  }
+
   window.App = {
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
@@ -373,6 +532,12 @@
     initSortableTable: initSortableTable,
     updateSortIndicators: updateSortIndicators,
     sortRows: sortRows,
-    parseDisplayDate: parseDisplayDate
+    parseDisplayDate: parseDisplayDate,
+    downloadCSV: downloadCSV,
+    downloadPDF: downloadPDF,
+    filterByDuration: filterByDuration,
+    initSessionTimeout: initSessionTimeout,
+    logActivity: logActivity,
+    formatLogTimestamp: formatLogTimestamp
   };
 })();

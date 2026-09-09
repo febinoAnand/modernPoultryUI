@@ -14,9 +14,9 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark">P</div>
       <div class="brand-text">
-        <strong>AgriTrade</strong>
+        <strong>Poultry</strong>
         <span>Admin Console</span>
       </div>
     </div>
@@ -80,6 +80,11 @@
         Profile
       </a>
 
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
       <button class="nav-item logout-item" data-logout>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Logout
@@ -121,6 +126,10 @@
           <p>View, add, edit and manage every product in the catalog.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openDownloadModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
           <button class="btn btn-primary" id="openAddProduct" data-perm-action="create">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Product
@@ -165,6 +174,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="searchInput" placeholder="Search by product name or code...">
           </div>
+          <select id="filterStatus" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
           <div class="toolbar-meta" id="toolbarMeta">0 products</div>
         </div>
 
@@ -174,8 +188,8 @@
               <tr id="tableHeadRow">
                 <th>S.No</th>
                 <th data-sort="productName">Product Name</th>
-                <th data-sort="productCode">Product Code</th>
-                <th data-sort="status">Status</th>
+                <th data-sort="productCode" class="field-col-productCode">Product Code</th>
+                <th data-sort="status" class="field-col-status">Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -219,7 +233,7 @@
             <span class="field-error" id="errPName">Please enter a product name.</span>
           </div>
 
-          <div class="field full">
+          <div class="field full field-col-productCode">
             <label for="pCode">Product Code <span class="req">*</span></label>
             <input type="text" id="pCode" placeholder="e.g. PRD-1021">
             <span class="field-error" id="errPCode">Please enter a product code.</span>
@@ -294,11 +308,75 @@
   </div>
 </div>
 
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Download Products</h3>
+        <p>Export products as a file, optionally within a date range.</p>
+      </div>
+      <button class="modal-close" id="closeDownloadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full">
+        <label>File Format</label>
+        <div class="format-toggle-group">
+          <label>
+            <input type="radio" name="downloadFormat" value="csv" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>CSV</span>
+          </label>
+          <label>
+            <input type="radio" name="downloadFormat" value="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="downloadDuration">Duration</label>
+        <select id="downloadDuration">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+
+      <div class="duration-custom-range" id="customRangeFields" style="display:none">
+        <div class="field">
+          <label for="downloadFrom">From</label>
+          <input type="date" id="downloadFrom">
+        </div>
+        <div class="field">
+          <label for="downloadTo">To</label>
+          <input type="date" id="downloadTo">
+        </div>
+      </div>
+      <span class="field-error" id="errDownloadRange">Please select both a from and to date.</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelDownloadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-notice" id="toastNotice">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span id="toastNoticeText">Saved successfully.</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -306,7 +384,40 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
-  App.enforcePermissions("product");
+  App.initSessionTimeout();
+  var currentPerms = App.enforcePermissions("product");
+
+  /* ---------------- Field-level permissions (see Roles & Permissions) ---------------- */
+  var FIELD_KEYS = ["productCode", "status"];
+  var FIELD_INPUT_SELECTORS = {
+    productCode: "#pCode"
+  };
+
+  function fieldVisible(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].view !== false;
+  }
+
+  function fieldEditable(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].edit !== false;
+  }
+
+  (function applyFieldPermissions() {
+    var hiddenRules = FIELD_KEYS.filter(function (key) { return !fieldVisible(key); })
+      .map(function (key) { return ".field-col-" + key + " { display: none !important; }"; })
+      .join("\n");
+    if (hiddenRules) {
+      var styleEl = document.createElement("style");
+      styleEl.textContent = hiddenRules;
+      document.head.appendChild(styleEl);
+    }
+    FIELD_KEYS.forEach(function (key) {
+      if (FIELD_INPUT_SELECTORS[key] && fieldVisible(key) && !fieldEditable(key)) {
+        document.querySelectorAll(FIELD_INPUT_SELECTORS[key]).forEach(function (el) { el.disabled = true; });
+      }
+    });
+  })();
 
   /* ---------------- Data (persisted, shared with dashboard) ---------------- */
   var products = Data.getProducts();
@@ -315,12 +426,13 @@
   function persist() { Data.saveProducts(products); }
 
   /* ---------------- State ---------------- */
-  var state = { search: "", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
+  var state = { search: "", filterStatus: "all", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
 
   /* ---------------- Elements ---------------- */
   var tableBody = document.getElementById("tableBody");
   var tableHeadRow = document.getElementById("tableHeadRow");
   var searchInput = document.getElementById("searchInput");
+  var filterStatus = document.getElementById("filterStatus");
   var toolbarMeta = document.getElementById("toolbarMeta");
   var paginationInfo = document.getElementById("paginationInfo");
   var paginationControls = document.getElementById("paginationControls");
@@ -336,8 +448,9 @@
 
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return products;
     return products.filter(function (p) {
+      if (state.filterStatus !== "all" && p.status !== state.filterStatus) return false;
+      if (!term) return true;
       return p.productName.toLowerCase().indexOf(term) !== -1 ||
         p.productCode.toLowerCase().indexOf(term) !== -1;
     });
@@ -372,8 +485,8 @@
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
             '<td><div class="cell-user"><div class="cell-avatar">' + PRODUCT_ICON.replace(/width="\d+" height="\d+"/, "") + '</div><span class="cell-user-name">' + escapeHtml(p.productName) + '</span></div></td>' +
-            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(p.productCode) + '</span></td>' +
-            '<td><span class="status-pill ' + statusClass + '">' + p.status + '</span></td>' +
+            '<td class="field-col-productCode"><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(p.productCode) + '</span></td>' +
+            '<td class="field-col-status"><span class="status-pill ' + statusClass + '">' + p.status + '</span></td>' +
             '<td>' +
               '<div class="row-actions">' +
                 '<button class="action-trigger" data-menu-toggle="' + p.id + '" aria-label="Actions">' +
@@ -426,6 +539,12 @@
   /* ---------------- Search ---------------- */
   searchInput.addEventListener("input", function () {
     state.search = searchInput.value;
+    state.page = 1;
+    render();
+  });
+
+  filterStatus.addEventListener("change", function () {
+    state.filterStatus = filterStatus.value;
     state.page = 1;
     render();
   });
@@ -533,11 +652,12 @@
     var valid = true;
 
     var checks = [
-      [pName, "errPName", pName.value.trim().length > 0],
-      [pCode, "errPCode", pCode.value.trim().length > 0]
+      [pName, "errPName", pName.value.trim().length > 0, null],
+      [pCode, "errPCode", pCode.value.trim().length > 0, "productCode"]
     ];
 
     checks.forEach(function (c) {
+      if (c[3] && !fieldEditable(c[3])) return;
       setFieldError(c[0], document.getElementById(c[1]), !c[2]);
       valid = valid && c[2];
     });
@@ -612,10 +732,10 @@
   function openViewModal(product) {
     currentViewProduct = product;
     var fields = [
-      ["Product Name", product.productName],
-      ["Product Code", product.productCode],
-      ["Status", product.status]
-    ];
+      ["Product Name", product.productName, null],
+      ["Product Code", product.productCode, "productCode"],
+      ["Status", product.status, "status"]
+    ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
@@ -662,6 +782,51 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Download modal ---------------- */
+  var downloadModalOverlay = document.getElementById("downloadModalOverlay");
+  var downloadDuration = document.getElementById("downloadDuration");
+  var customRangeFields = document.getElementById("customRangeFields");
+  var downloadFrom = document.getElementById("downloadFrom");
+  var downloadTo = document.getElementById("downloadTo");
+  var errDownloadRange = document.getElementById("errDownloadRange");
+
+  document.getElementById("openDownloadModal").addEventListener("click", function () {
+    downloadModalOverlay.classList.add("show");
+  });
+
+  function closeDownloadModal() { downloadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeDownloadModal").addEventListener("click", closeDownloadModal);
+  document.getElementById("cancelDownloadModal").addEventListener("click", closeDownloadModal);
+  downloadModalOverlay.addEventListener("click", function (e) { if (e.target === downloadModalOverlay) closeDownloadModal(); });
+
+  downloadDuration.addEventListener("change", function () {
+    customRangeFields.style.display = downloadDuration.value === "custom" ? "grid" : "none";
+    errDownloadRange.classList.remove("show");
+  });
+
+  document.getElementById("confirmDownloadBtn").addEventListener("click", function () {
+    var duration = downloadDuration.value;
+
+    if (duration === "custom" && (!downloadFrom.value || !downloadTo.value)) {
+      errDownloadRange.classList.add("show");
+      return;
+    }
+    errDownloadRange.classList.remove("show");
+
+    var format = document.querySelector('input[name="downloadFormat"]:checked').value;
+    var data = App.filterByDuration(getFiltered(), function (p) { return App.parseDisplayDate(p.createdDate); }, duration, downloadFrom.value, downloadTo.value);
+    var headers = ["Product Name", "Product Code", "Created Date", "Status"];
+    var rows = data.map(function (p) { return [p.productName, p.productCode, p.createdDate, p.status]; });
+
+    if (format === "csv") {
+      App.downloadCSV("products.csv", headers, rows);
+    } else {
+      App.downloadPDF("products.pdf", "Products", headers, rows);
+    }
+    closeDownloadModal();
+    showToast("Products downloaded as " + format.toUpperCase() + ".");
+  });
 
   /* ---------------- Init ---------------- */
   App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });

@@ -995,6 +995,26 @@ button {
   white-space: nowrap;
 }
 
+.filter-select {
+  padding: 10px 30px 10px 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>') no-repeat right 9px center / 14px 14px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filter-select:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.13);
+}
+
 .table-scroll {
   overflow-x: auto;
 }
@@ -1475,6 +1495,51 @@ button {
   color: var(--danger);
 }
 
+/* ---------- Download modal ---------- */
+
+.format-toggle-group {
+  display: flex;
+  gap: 10px;
+}
+
+.format-toggle-group label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s ease;
+}
+
+.format-toggle-group label svg {
+  width: 18px;
+  height: 18px;
+}
+
+.format-toggle-group input {
+  display: none;
+}
+
+.format-toggle-group label:has(input:checked) {
+  border-color: var(--accent-2);
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--accent-2);
+}
+
+.duration-custom-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
 .modal-footer {
   display: flex;
   align-items: center;
@@ -1792,6 +1857,11 @@ button {
 
 .demo-hint {
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
   text-align: center;
   font-size: 12px;
   color: var(--muted);
@@ -1802,6 +1872,26 @@ button {
 }
 
 .demo-hint b { color: var(--text); }
+
+.demo-autofill-btn {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent-2);
+  background: var(--surface);
+  border: 1px solid var(--accent-2);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.demo-autofill-btn:hover {
+  background: var(--accent-2);
+  color: #fff;
+}
 
 .auth-switch {
   margin-top: 22px;
@@ -2566,6 +2656,104 @@ button {
 }
 
 .perm-row:last-child { border-bottom: none; }
+
+/* ---------- Field-level permissions (per-page View / Edit picker) ---------- */
+
+.field-perms-section {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.field-perms-select-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 14px;
+}
+
+.field-perms-select-row label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.field-perms-select-row select {
+  flex: 1;
+  max-width: 280px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.field-perms-select-row select:focus { outline: none; border-color: var(--accent-2); }
+
+.field-perms-head {
+  display: grid;
+  grid-template-columns: 1fr 64px 64px;
+  padding: 9px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.field-perms-head span:not(:first-child) { text-align: center; }
+
+.field-perms-panel {
+  border: 1px solid var(--border);
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+}
+
+.field-perm-row {
+  display: grid;
+  grid-template-columns: 1fr 64px 64px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.field-perm-row:last-child { border-bottom: none; }
+
+.field-perm-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.field-perm-row input {
+  width: 16px;
+  height: 16px;
+  margin: 0 auto;
+  display: block;
+  accent-color: var(--accent-2);
+  cursor: pointer;
+}
+
+.field-perm-row input:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.field-perms-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+@media (max-width: 480px) {
+  .field-perms-head, .field-perm-row { grid-template-columns: 1fr 48px 48px; }
+}
 
 .perm-module {
   display: flex;
