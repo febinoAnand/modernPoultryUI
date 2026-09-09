@@ -19,6 +19,7 @@
   var PRODUCTS_KEY = "ui_products_v1";
   var ORGANIZATIONS_KEY = "ui_organizations_v1";
   var MACHINES_KEY = "ui_machines_v1";
+  var APP_SETTINGS_KEY = "ui_app_settings_v1";
 
   var GROUP_OPTIONS = [
     "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
@@ -162,6 +163,7 @@
         totalBirds: totalBirds,
         birdsWeight: weight,
         company: GROUPS[i % GROUPS.length],
+        branch: LOCATIONS[i % LOCATIONS.length] + " Branch",
         status: i % 6 === 0 ? "Inactive" : "Active",
 
         startTime: startTime,
@@ -239,6 +241,12 @@
     "Wholesale chicken trader", "Verified vendor", "High volume dealer", "New partnership"
   ];
 
+  function seedCreatedDate(i) {
+    var day = 3 + (i % 24);
+    var month = 1 + (i % 8);
+    return String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026";
+  }
+
   function buildSeedGroups() {
     return GROUP_OPTIONS.map(function (name, i) {
       var m = i % 10;
@@ -248,7 +256,8 @@
         groupName: name,
         mobile: "96" + String(40000000 + i * 151).slice(0, 8),
         description: GROUP_DESCRIPTIONS[i % GROUP_DESCRIPTIONS.length],
-        status: status
+        status: status,
+        createdDate: seedCreatedDate(i)
       };
     });
   }
@@ -280,7 +289,8 @@
         batchNumber: "BATCH-" + (100 + i * 4),
         mobile: "95" + String(40000000 + i * 163).slice(0, 8),
         location: LOCATIONS[i % LOCATIONS.length],
-        status: i % 6 === 0 ? "Inactive" : "Active"
+        status: i % 6 === 0 ? "Inactive" : "Active",
+        createdDate: seedCreatedDate(i)
       };
     });
   }
@@ -309,7 +319,8 @@
         traderName: name,
         mobile: "94" + String(40000000 + i * 173).slice(0, 8),
         city: LOCATIONS[i % LOCATIONS.length],
-        status: i % 6 === 0 ? "Inactive" : "Active"
+        status: i % 6 === 0 ? "Inactive" : "Active",
+        createdDate: seedCreatedDate(i)
       };
     });
   }
@@ -342,7 +353,9 @@
       return {
         id: i + 1,
         orderNumber: "SO-" + (5000 + i * 11),
-        customerName: name,
+        trader: name,
+        branch: LOCATIONS[i % LOCATIONS.length] + " Branch",
+        supervisor: DRIVER_FIRST[i % DRIVER_FIRST.length] + " " + LAST_NAMES[(i + 2) % LAST_NAMES.length],
         product: PRODUCTS[i % PRODUCTS.length],
         quantity: qty,
         rate: rate,
@@ -376,7 +389,8 @@
         branchName: city + " Branch" + suffix,
         branchCode: "BR-" + (1000 + i * 7),
         address: (100 + i * 13) + " Main Road, " + city,
-        status: i % 7 === 0 ? "Inactive" : "Active"
+        status: i % 7 === 0 ? "Inactive" : "Active",
+        createdDate: seedCreatedDate(i)
       };
     });
   }
@@ -404,7 +418,8 @@
         productName: name,
         productCode: "PRD-" + (1000 + i * 7),
         category: PRODUCT_CATEGORIES[i % PRODUCT_CATEGORIES.length],
-        status: i % 5 === 0 ? "Inactive" : "Active"
+        status: i % 5 === 0 ? "Inactive" : "Active",
+        createdDate: seedCreatedDate(i)
       };
     });
   }
@@ -437,9 +452,9 @@
       mobile: "",
       machineId: "",
       group: "",
-      orgId: "AGRITRADE",
-      companyName: "AgriTrade Poultry Pvt Ltd",
-      companyWebsite: "www.agritrade.com",
+      orgId: "POULTRY",
+      companyName: "Poultry Pvt Ltd",
+      companyWebsite: "www.poultry.com",
       teamSize: "11-50",
       mobileVerified: false,
       verifiedMobileNumber: ""
@@ -614,7 +629,7 @@
      signed-in profile is assigned to that group. */
 
   function getModulePermissions(moduleKey) {
-    var fullAccess = { create: true, read: true, update: true, delete: true };
+    var fullAccess = { create: true, read: true, update: true, delete: true, fields: null };
     var profile = getProfile();
     if (!profile.group) return fullAccess;
 
@@ -629,8 +644,25 @@
       create: !!modulePerms.create,
       read: !!modulePerms.read,
       update: !!modulePerms.update,
-      delete: !!modulePerms.delete
+      delete: !!modulePerms.delete,
+      fields: modulePerms.fields || null
     };
+  }
+
+  /* ---------------- App-wide settings (Settings page) ----------------
+     sessionTimeoutMinutes: 0 means "never" (no auto-logout). Shared by
+     every signed-in session — this is an org-wide setting, not per-user. */
+
+  function getAppSettings() {
+    var raw = localStorage.getItem(APP_SETTINGS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through to default */ }
+    }
+    return { sessionTimeoutMinutes: 0 };
+  }
+
+  function saveAppSettings(settings) {
+    localStorage.setItem(APP_SETTINGS_KEY, JSON.stringify(settings));
   }
 
   window.Data = {
@@ -663,6 +695,8 @@
     authenticateOrganization: authenticateOrganization,
     getMachines: getMachines,
     saveMachines: saveMachines,
-    getModulePermissions: getModulePermissions
+    getModulePermissions: getModulePermissions,
+    getAppSettings: getAppSettings,
+    saveAppSettings: saveAppSettings
   };
 })();

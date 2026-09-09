@@ -14,9 +14,9 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark">P</div>
       <div class="brand-text">
-        <strong>AgriTrade</strong>
+        <strong>Poultry</strong>
         <span>Admin Console</span>
       </div>
     </div>
@@ -80,6 +80,11 @@
         Profile
       </a>
 
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
       <button class="nav-item logout-item" data-logout>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Logout
@@ -120,7 +125,12 @@
           <h2>Machine</h2>
           <p>Track every weighing machine, its parameters and full service history.</p>
         </div>
-        <div class="header-spacer"></div>
+        <div class="header-actions">
+          <button class="btn btn-outline" id="openDownloadModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+        </div>
       </div>
 
       <div class="stat-grid stat-grid-tight">
@@ -160,6 +170,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="searchInput" placeholder="Search by machine number or model...">
           </div>
+          <select id="filterStatus" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Under Maintenance">Under Maintenance</option>
+            <option value="Inactive">Inactive</option>
+          </select>
           <div class="toolbar-meta" id="toolbarMeta">0 machines</div>
         </div>
 
@@ -168,11 +184,11 @@
             <thead>
               <tr id="tableHeadRow">
                 <th>S.No</th>
-                <th data-sort="machineNumber">Machine Number</th>
+                <th data-sort="machineNumber" class="field-col-machineNumber">Machine Number</th>
                 <th data-sort="machineName">Model</th>
-                <th data-sort="capacity">Capacity</th>
-                <th data-sort="calibrationDue">Calibration Due</th>
-                <th data-sort="status">Status</th>
+                <th data-sort="capacity" class="field-col-capacity">Capacity</th>
+                <th data-sort="calibrationDue" class="field-col-calibrationDue">Calibration Due</th>
+                <th data-sort="status" class="field-col-status">Status</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -222,6 +238,75 @@
   </div>
 </div>
 
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Download Machines</h3>
+        <p>Export machines as a file, optionally within a date range.</p>
+      </div>
+      <button class="modal-close" id="closeDownloadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full">
+        <label>File Format</label>
+        <div class="format-toggle-group">
+          <label>
+            <input type="radio" name="downloadFormat" value="csv" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>CSV</span>
+          </label>
+          <label>
+            <input type="radio" name="downloadFormat" value="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="downloadDuration">Duration</label>
+        <select id="downloadDuration">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+
+      <div class="duration-custom-range" id="customRangeFields" style="display:none">
+        <div class="field">
+          <label for="downloadFrom">From</label>
+          <input type="date" id="downloadFrom">
+        </div>
+        <div class="field">
+          <label for="downloadTo">To</label>
+          <input type="date" id="downloadTo">
+        </div>
+      </div>
+      <span class="field-error" id="errDownloadRange">Please select both a from and to date.</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelDownloadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-notice" id="toastNotice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastNoticeText">Saved successfully.</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -229,18 +314,40 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
-  App.enforcePermissions("machineManagement");
+  App.initSessionTimeout();
+  var currentPerms = App.enforcePermissions("machineManagement");
+
+  /* ---------------- Field-level visibility (see Roles & Permissions) ----------
+     Machine has no Add/Edit form (view-only module), so only the View
+     gate applies here — table columns and the View popup. */
+  var FIELD_KEYS = ["machineNumber", "capacity", "calibrationDue", "status"];
+
+  function fieldVisible(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].view !== false;
+  }
+
+  (function applyFieldVisibility() {
+    var hiddenRules = FIELD_KEYS.filter(function (key) { return !fieldVisible(key); })
+      .map(function (key) { return ".field-col-" + key + " { display: none !important; }"; })
+      .join("\n");
+    if (!hiddenRules) return;
+    var styleEl = document.createElement("style");
+    styleEl.textContent = hiddenRules;
+    document.head.appendChild(styleEl);
+  })();
 
   /* ---------------- Data ---------------- */
   var machines = Data.getMachines();
 
   /* ---------------- State ---------------- */
-  var state = { search: "", page: 1, pageSize: 10, sortKey: null, sortDir: "asc" };
+  var state = { search: "", filterStatus: "all", page: 1, pageSize: 10, sortKey: null, sortDir: "asc" };
 
   /* ---------------- Elements ---------------- */
   var tableBody = document.getElementById("tableBody");
   var tableHeadRow = document.getElementById("tableHeadRow");
   var searchInput = document.getElementById("searchInput");
+  var filterStatus = document.getElementById("filterStatus");
   var toolbarMeta = document.getElementById("toolbarMeta");
   var paginationInfo = document.getElementById("paginationInfo");
   var paginationControls = document.getElementById("paginationControls");
@@ -260,8 +367,9 @@
 
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return machines;
     return machines.filter(function (m) {
+      if (state.filterStatus !== "all" && m.status !== state.filterStatus) return false;
+      if (!term) return true;
       return m.machineNumber.toLowerCase().indexOf(term) !== -1 ||
         m.machineName.toLowerCase().indexOf(term) !== -1;
     });
@@ -295,11 +403,11 @@
         return (
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
-            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/></svg>' + escapeHtml(m.machineNumber) + '</span></td>' +
+            '<td class="field-col-machineNumber"><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/></svg>' + escapeHtml(m.machineNumber) + '</span></td>' +
             '<td><div class="cell-user"><div class="cell-avatar">' + escapeHtml(m.machineName.charAt(0)) + '</div><span class="cell-user-name">' + escapeHtml(m.machineName) + '</span></div></td>' +
-            '<td><span class="chip chip-blue">' + m.weighing.capacity + ' ' + m.weighing.unit + '</span></td>' +
-            '<td>' + escapeHtml(m.weighing.calibrationDue || "—") + '</td>' +
-            '<td><span class="machine-status-pill ' + statusClass(m.status) + '">' + m.status + '</span></td>' +
+            '<td class="field-col-capacity"><span class="chip chip-blue">' + m.weighing.capacity + ' ' + m.weighing.unit + '</span></td>' +
+            '<td class="field-col-calibrationDue">' + escapeHtml(m.weighing.calibrationDue || "—") + '</td>' +
+            '<td class="field-col-status"><span class="machine-status-pill ' + statusClass(m.status) + '">' + m.status + '</span></td>' +
             '<td>' +
               '<button class="action-trigger" data-view-machine="' + m.id + '" aria-label="View machine" title="View machine">' +
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
@@ -339,6 +447,12 @@
   /* ---------------- Search ---------------- */
   searchInput.addEventListener("input", function () {
     state.search = searchInput.value;
+    state.page = 1;
+    render();
+  });
+
+  filterStatus.addEventListener("change", function () {
+    state.filterStatus = filterStatus.value;
     state.page = 1;
     render();
   });
@@ -403,20 +517,20 @@
     document.getElementById("viewMachineTitle").textContent = machine.machineNumber + " — " + machine.machineName;
 
     var fields = [
-      ["Machine Number", machine.machineNumber],
-      ["Machine Name / Model", machine.machineName],
-      ["Installation Date", machine.installDate || "—"],
-      ["Status", machine.status]
-    ];
+      ["Machine Number", machine.machineNumber, "machineNumber"],
+      ["Machine Name / Model", machine.machineName, null],
+      ["Installation Date", machine.installDate || "—", null],
+      ["Status", machine.status, "status"]
+    ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
 
     var w = machine.weighing;
     var specs = [
-      ["Capacity", w.capacity + " " + w.unit],
-      ["Precision", "± " + w.precision + " " + w.unit]
-    ];
+      ["Capacity", w.capacity + " " + w.unit, "capacity"],
+      ["Precision", "± " + w.precision + " " + w.unit, null]
+    ].filter(function (s) { return !s[2] || fieldVisible(s[2]); });
     viewSpecGrid.innerHTML = specs.map(function (s) {
       return '<div class="weighing-spec-tile"><div class="spec-label">' + s[0] + '</div><div class="spec-value">' + s[1] + '</div></div>';
     }).join("");
@@ -435,6 +549,63 @@
   document.getElementById("closeViewModal").addEventListener("click", closeViewModal);
   document.getElementById("closeViewModalBtn").addEventListener("click", closeViewModal);
   viewModalOverlay.addEventListener("click", function (e) { if (e.target === viewModalOverlay) closeViewModal(); });
+
+  /* ---------------- Download modal ---------------- */
+  var downloadModalOverlay = document.getElementById("downloadModalOverlay");
+  var downloadDuration = document.getElementById("downloadDuration");
+  var customRangeFields = document.getElementById("customRangeFields");
+  var downloadFrom = document.getElementById("downloadFrom");
+  var downloadTo = document.getElementById("downloadTo");
+  var errDownloadRange = document.getElementById("errDownloadRange");
+  var toastNotice = document.getElementById("toastNotice");
+  var toastNoticeText = document.getElementById("toastNoticeText");
+  var toastTimer = null;
+
+  function showToast(message) {
+    toastNoticeText.textContent = message;
+    toastNotice.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
+  }
+
+  document.getElementById("openDownloadModal").addEventListener("click", function () {
+    downloadModalOverlay.classList.add("show");
+  });
+
+  function closeDownloadModal() { downloadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeDownloadModal").addEventListener("click", closeDownloadModal);
+  document.getElementById("cancelDownloadModal").addEventListener("click", closeDownloadModal);
+  downloadModalOverlay.addEventListener("click", function (e) { if (e.target === downloadModalOverlay) closeDownloadModal(); });
+
+  downloadDuration.addEventListener("change", function () {
+    customRangeFields.style.display = downloadDuration.value === "custom" ? "grid" : "none";
+    errDownloadRange.classList.remove("show");
+  });
+
+  document.getElementById("confirmDownloadBtn").addEventListener("click", function () {
+    var duration = downloadDuration.value;
+
+    if (duration === "custom" && (!downloadFrom.value || !downloadTo.value)) {
+      errDownloadRange.classList.add("show");
+      return;
+    }
+    errDownloadRange.classList.remove("show");
+
+    var format = document.querySelector('input[name="downloadFormat"]:checked').value;
+    var data = App.filterByDuration(getFiltered(), function (m) { return App.parseDisplayDate(m.installDate); }, duration, downloadFrom.value, downloadTo.value);
+    var headers = ["Machine Number", "Model", "Branch", "Capacity", "Calibration Due", "Install Date", "Status"];
+    var rows = data.map(function (m) {
+      return [m.machineNumber, m.machineName, m.branch, m.weighing.capacity + " " + m.weighing.unit, m.weighing.calibrationDue, m.installDate, m.status];
+    });
+
+    if (format === "csv") {
+      App.downloadCSV("machines.csv", headers, rows);
+    } else {
+      App.downloadPDF("machines.pdf", "Machines", headers, rows);
+    }
+    closeDownloadModal();
+    showToast("Machines downloaded as " + format.toUpperCase() + ".");
+  });
 
   /* ---------------- Init ---------------- */
   App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });

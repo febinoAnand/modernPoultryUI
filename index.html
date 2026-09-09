@@ -14,7 +14,7 @@
 
 <div class="auth-wrap">
   <div class="auth-card">
-    <div class="auth-logo">A</div>
+    <div class="auth-logo">P</div>
     <h1>Welcome back</h1>
     <p class="subtitle">Sign in to your organisation's dashboard</p>
 
@@ -28,7 +28,7 @@
         <label for="orgId">Organisation ID</label>
         <div class="input-wrapper">
           <svg class="leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/><line x1="3" y1="13" x2="21" y2="13"/></svg>
-          <input type="text" id="orgId" name="orgId" placeholder="e.g. AGRITRADE" autocomplete="organization" required>
+          <input type="text" id="orgId" name="orgId" placeholder="e.g. POULTRY" autocomplete="organization" required>
         </div>
       </div>
 
@@ -60,7 +60,10 @@
       <button type="submit" class="btn btn-primary submit-btn">Sign In</button>
     </form>
 
-    <div class="demo-hint">Demo login &mdash; Org <b>AGRITRADE</b>, user <b>vijay</b> / <b>Vijay1304</b></div>
+    <div class="demo-hint">
+      <span>Demo login &mdash; Org <b>POULTRY</b>, user <b>vijay</b> / <b>Vijay1304</b></span>
+      <button type="button" class="demo-autofill-btn" id="autofillDemoBtn">Autofill</button>
+    </div>
 
     <p class="auth-switch">New organisation? <a href="register.html">Create an account</a></p>
     <p class="auth-switch" style="margin-top:8px">Curious about pending accounts? <a href="login-approval.html">Preview the Awaiting Approval screen</a></p>
@@ -70,7 +73,7 @@
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
-  var DEMO_ORG = "AGRITRADE";
+  var DEMO_ORG = "POULTRY";
   var DEMO_USERNAME = "vijay";
   var DEMO_PASSWORD = "Vijay1304";
   var DEMO_EMAIL = "vijay@gmail";
@@ -87,6 +90,13 @@
     var isPassword = passwordInput.type === "password";
     passwordInput.type = isPassword ? "text" : "password";
     togglePassword.textContent = isPassword ? "Hide" : "Show";
+  });
+
+  document.getElementById("autofillDemoBtn").addEventListener("click", function () {
+    orgIdInput.value = DEMO_ORG;
+    usernameInput.value = DEMO_USERNAME;
+    passwordInput.value = DEMO_PASSWORD;
+    clearErrors();
   });
 
   function clearErrors() {
@@ -143,6 +153,12 @@
   // If already logged in, skip straight to dashboard.
   if (App.isLoggedIn()) {
     window.location.href = "dashboard.html";
+  }
+
+  // Redirected here after an inactivity-based session timeout (Settings page).
+  if (new URLSearchParams(window.location.search).get("sessionExpired") === "1") {
+    formAlertText.textContent = "You were signed out due to inactivity. Please sign in again.";
+    formAlert.classList.add("show");
   }
 </script>
 

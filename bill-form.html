@@ -14,9 +14,9 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark">P</div>
       <div class="brand-text">
-        <strong>AgriTrade</strong>
+        <strong>Poultry</strong>
         <span>Admin Console</span>
       </div>
     </div>
@@ -78,6 +78,11 @@
       <a class="nav-item" href="profile.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
         Profile
+      </a>
+
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
       </a>
 
       <button class="nav-item logout-item" data-logout>
@@ -155,6 +160,13 @@
                 </div>
 
                 <div class="field">
+                  <label for="bSalesOrder">Sale Order Number</label>
+                  <select id="bSalesOrder">
+                    <option value="">Select sale order</option>
+                  </select>
+                </div>
+
+                <div class="field">
                   <label for="bDate">Date <span class="req">*</span></label>
                   <div class="icon-field-wrap">
                     <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -179,6 +191,13 @@
                   <label for="bCompany">Company <span class="req">*</span></label>
                   <input type="text" id="bCompany" placeholder="e.g. Group A">
                   <span class="field-error" id="errBCompany">Please enter a company.</span>
+                </div>
+
+                <div class="field">
+                  <label for="bBranch">Branch</label>
+                  <select id="bBranch">
+                    <option value="">Select branch</option>
+                  </select>
                 </div>
 
                 <div class="field">
@@ -414,6 +433,7 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
+  App.initSessionTimeout();
   App.enforcePermissions("billList");
 
   function escapeHtml(str) {
@@ -447,10 +467,12 @@
   /* ---------------- Field references ---------------- */
   var fBillId = document.getElementById("billId");
   var bBillNumber = document.getElementById("bBillNumber");
+  var bSalesOrder = document.getElementById("bSalesOrder");
   var bDate = document.getElementById("bDate");
   var bTrader = document.getElementById("bTrader");
   var bEmail = document.getElementById("bEmail");
   var bCompany = document.getElementById("bCompany");
+  var bBranch = document.getElementById("bBranch");
   var bMachine = document.getElementById("bMachine");
   var bSupervisor = document.getElementById("bSupervisor");
   var bDriver = document.getElementById("bDriver");
@@ -467,6 +489,22 @@
   var formAlert = document.getElementById("formAlert");
 
   /* ---------------- Dropdown data sources ---------------- */
+  var salesOrders = Data.getSalesOrders();
+  salesOrders.forEach(function (o) {
+    var opt = document.createElement("option");
+    opt.value = o.orderNumber;
+    opt.textContent = o.orderNumber + " — " + o.customerName;
+    bSalesOrder.appendChild(opt);
+  });
+
+  var branches = Data.getBranches().filter(function (b) { return b.status !== "Inactive"; });
+  branches.forEach(function (b) {
+    var opt = document.createElement("option");
+    opt.value = b.branchName;
+    opt.textContent = b.branchName;
+    bBranch.appendChild(opt);
+  });
+
   var machines = Data.getMachines().filter(function (m) { return m.status !== "Inactive"; });
   machines.forEach(function (m) {
     var opt = document.createElement("option");
@@ -673,10 +711,12 @@
   if (existingBill) {
     fBillId.value = existingBill.id;
     bBillNumber.value = existingBill.billNumber || "";
+    bSalesOrder.value = existingBill.salesOrderNumber || "";
     bDate.value = displayDateToInput(existingBill.date);
     bTrader.value = existingBill.trader || "";
     bEmail.value = existingBill.email || "";
     bCompany.value = existingBill.company || "";
+    bBranch.value = existingBill.branch || "";
     bMachine.value = existingBill.machineNumber || "";
     bSupervisor.value = existingBill.supervisor || "";
     bDriver.value = existingBill.driver || "";
@@ -742,9 +782,11 @@
     var payload = {
       date: displayDate,
       billNumber: bBillNumber.value.trim(),
+      salesOrderNumber: bSalesOrder.value,
       trader: bTrader.value.trim(),
       email: bEmail.value.trim(),
       company: bCompany.value.trim(),
+      branch: bBranch.value,
       machineNumber: bMachine.value,
       supervisor: bSupervisor.value,
       driver: bDriver.value.trim(),
@@ -773,11 +815,13 @@
 
     if (existingBill) {
       Object.assign(existingBill, payload);
+      App.logActivity(existingBill, "Updated", "Bill details were updated.");
       Data.saveBills(bills);
       window.location.href = "bill-view.html?id=" + existingBill.id;
     } else {
       payload.id = nextId;
       payload.status = "Active";
+      App.logActivity(payload, "Created", "Bill " + payload.billNumber + " was created.");
       bills.unshift(payload);
       Data.saveBills(bills);
       window.location.href = "bill-view.html?id=" + payload.id;

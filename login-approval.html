@@ -39,7 +39,7 @@
         Preview Only
       </span>
     </div>
-    <div class="auth-logo">A</div>
+    <div class="auth-logo">P</div>
     <h1>Approval Preview Login</h1>
     <p class="subtitle">This page always leads to the Awaiting Approval screen — use it to preview that experience without editing any data.</p>
 
@@ -81,7 +81,10 @@
       <button type="submit" class="btn btn-primary submit-btn">Sign In</button>
     </form>
 
-    <div class="demo-hint">Preview login &mdash; Org <b>PENDINGDEMO</b>, user <b>reviewer</b> / <b>Preview123</b></div>
+    <div class="demo-hint">
+      <span>Preview login &mdash; Org <b>PENDINGDEMO</b>, user <b>reviewer</b> / <b>Preview123</b></span>
+      <button type="button" class="demo-autofill-btn" id="autofillDemoBtn">Autofill</button>
+    </div>
 
     <p class="auth-switch">Not what you're after? <a href="index.html">Back to the real login</a></p>
   </div>
@@ -105,6 +108,13 @@
     var isPassword = passwordInput.type === "password";
     passwordInput.type = isPassword ? "text" : "password";
     togglePassword.textContent = isPassword ? "Hide" : "Show";
+  });
+
+  document.getElementById("autofillDemoBtn").addEventListener("click", function () {
+    orgIdInput.value = PREVIEW_ORG;
+    usernameInput.value = PREVIEW_USERNAME;
+    passwordInput.value = PREVIEW_PASSWORD;
+    clearErrors();
   });
 
   function clearErrors() {

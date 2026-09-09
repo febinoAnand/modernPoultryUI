@@ -14,9 +14,9 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark">P</div>
       <div class="brand-text">
-        <strong>AgriTrade</strong>
+        <strong>Poultry</strong>
         <span>Admin Console</span>
       </div>
     </div>
@@ -80,6 +80,11 @@
         Profile
       </a>
 
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
       <button class="nav-item logout-item" data-logout>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Logout
@@ -121,6 +126,10 @@
           <p>View, add, edit and manage every bill raised for a trade.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openDownloadModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
           <a class="btn btn-primary" id="openAddBill" href="bill-form.html" data-perm-action="create">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Bill
@@ -163,8 +172,13 @@
         <div class="table-toolbar">
           <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" placeholder="Search by trader, bill number, email or company...">
+            <input type="text" id="searchInput" placeholder="Search by trader, bill number, email, company or branch...">
           </div>
+          <select id="filterStatus" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
           <div class="toolbar-meta" id="toolbarMeta">0 bills</div>
         </div>
 
@@ -173,13 +187,15 @@
             <thead>
               <tr id="tableHeadRow">
                 <th>S.No</th>
-                <th data-sort="date">Date</th>
-                <th data-sort="billNumber">Bill Number</th>
+                <th data-sort="date" class="field-col-date">Date</th>
+                <th data-sort="billNumber" class="field-col-billNumber">Bill Number</th>
+                <th data-sort="salesOrderNumber" class="field-col-salesOrderNumber">Sale Order No</th>
                 <th data-sort="trader">Trader</th>
-                <th data-sort="email">Email ID</th>
-                <th data-sort="totalBirds">Total Birds</th>
-                <th data-sort="birdsWeight">Birds Weight</th>
-                <th data-sort="company">Company</th>
+                <th data-sort="email" class="field-col-email">Email ID</th>
+                <th data-sort="totalBirds" class="field-col-totalBirds">Total Birds</th>
+                <th data-sort="birdsWeight" class="field-col-birdsWeight">Birds Weight</th>
+                <th data-sort="company" class="field-col-company">Company</th>
+                <th data-sort="branch" class="field-col-branch">Branch</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -228,12 +244,75 @@
   </div>
 </div>
 
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Download Bills</h3>
+        <p>Export bills as a file, optionally within a date range.</p>
+      </div>
+      <button class="modal-close" id="closeDownloadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full">
+        <label>File Format</label>
+        <div class="format-toggle-group">
+          <label>
+            <input type="radio" name="downloadFormat" value="csv" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>CSV</span>
+          </label>
+          <label>
+            <input type="radio" name="downloadFormat" value="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="downloadDuration">Duration</label>
+        <select id="downloadDuration">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+
+      <div class="duration-custom-range" id="customRangeFields" style="display:none">
+        <div class="field">
+          <label for="downloadFrom">From</label>
+          <input type="date" id="downloadFrom">
+        </div>
+        <div class="field">
+          <label for="downloadTo">To</label>
+          <input type="date" id="downloadTo">
+        </div>
+      </div>
+      <span class="field-error" id="errDownloadRange">Please select both a from and to date.</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelDownloadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
 
 <div class="toast-notice" id="toastNotice">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span id="toastNoticeText">Saved successfully.</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -241,7 +320,29 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
-  App.enforcePermissions("billList");
+  App.initSessionTimeout();
+  var currentPerms = App.enforcePermissions("billList");
+
+  /* ---------------- Field-level visibility (see Roles & Permissions) ----------
+     Bill List's own Add/Edit is the full bill-form.html page, not a modal
+     here, so this page only needs the View gate (table columns) — there's
+     no local form input to make read-only. */
+  var FIELD_KEYS = ["date", "billNumber", "salesOrderNumber", "email", "totalBirds", "birdsWeight", "company", "branch"];
+
+  function fieldVisible(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].view !== false;
+  }
+
+  (function applyFieldVisibility() {
+    var hiddenRules = FIELD_KEYS.filter(function (key) { return !fieldVisible(key); })
+      .map(function (key) { return ".field-col-" + key + " { display: none !important; }"; })
+      .join("\n");
+    if (!hiddenRules) return;
+    var styleEl = document.createElement("style");
+    styleEl.textContent = hiddenRules;
+    document.head.appendChild(styleEl);
+  })();
 
   /* ---------------- Data (persisted, shared with dashboard) ---------------- */
   var bills = Data.getBills();
@@ -250,12 +351,13 @@
   function persist() { Data.saveBills(bills); }
 
   /* ---------------- State ---------------- */
-  var state = { search: "", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
+  var state = { search: "", filterStatus: "all", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
 
   /* ---------------- Elements ---------------- */
   var tableBody = document.getElementById("tableBody");
   var tableHeadRow = document.getElementById("tableHeadRow");
   var searchInput = document.getElementById("searchInput");
+  var filterStatus = document.getElementById("filterStatus");
   var toolbarMeta = document.getElementById("toolbarMeta");
   var paginationInfo = document.getElementById("paginationInfo");
   var paginationControls = document.getElementById("paginationControls");
@@ -274,12 +376,15 @@
 
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return bills;
     return bills.filter(function (b) {
+      if (state.filterStatus !== "all" && b.status !== state.filterStatus) return false;
+      if (!term) return true;
       return b.trader.toLowerCase().indexOf(term) !== -1 ||
         b.billNumber.toLowerCase().indexOf(term) !== -1 ||
         b.email.toLowerCase().indexOf(term) !== -1 ||
-        b.company.toLowerCase().indexOf(term) !== -1;
+        b.company.toLowerCase().indexOf(term) !== -1 ||
+        (b.branch || "").toLowerCase().indexOf(term) !== -1 ||
+        (b.salesOrderNumber || "").toLowerCase().indexOf(term) !== -1;
     });
   }
 
@@ -312,13 +417,15 @@
         return (
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
-            '<td>' + escapeHtml(b.date) + '</td>' +
-            '<td><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>' + escapeHtml(b.billNumber) + '</span></td>' +
+            '<td class="field-col-date">' + escapeHtml(b.date) + '</td>' +
+            '<td class="field-col-billNumber"><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>' + escapeHtml(b.billNumber) + '</span></td>' +
+            '<td class="field-col-salesOrderNumber">' + escapeHtml(b.salesOrderNumber || "—") + '</td>' +
             '<td><div class="cell-user"><div class="cell-avatar sm">' + initials(b.trader) + '</div><span class="cell-user-name">' + escapeHtml(b.trader) + '</span>' + disabledBadge + '</div></td>' +
-            '<td><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(b.email) + '</span></td>' +
-            '<td><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg>' + b.totalBirds + '</span></td>' +
-            '<td><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>' + b.birdsWeight + ' kg</span></td>' +
-            '<td>' + escapeHtml(b.company) + '</td>' +
+            '<td class="field-col-email"><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(b.email) + '</span></td>' +
+            '<td class="field-col-totalBirds"><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg>' + b.totalBirds + '</span></td>' +
+            '<td class="field-col-birdsWeight"><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0z"/></svg>' + b.birdsWeight + ' kg</span></td>' +
+            '<td class="field-col-company">' + escapeHtml(b.company) + '</td>' +
+            '<td class="field-col-branch">' + escapeHtml(b.branch) + '</td>' +
             '<td>' +
               '<div class="row-actions">' +
                 '<button class="action-trigger" data-menu-toggle="' + b.id + '" aria-label="Actions">' +
@@ -371,6 +478,12 @@
   /* ---------------- Search ---------------- */
   searchInput.addEventListener("input", function () {
     state.search = searchInput.value;
+    state.page = 1;
+    render();
+  });
+
+  filterStatus.addEventListener("change", function () {
+    state.filterStatus = filterStatus.value;
     state.page = 1;
     render();
   });
@@ -428,6 +541,7 @@
     else if (action === "rename") openRenameModal(bill);
     else if (action === "toggle") {
       bill.status = bill.status === "Active" ? "Inactive" : "Active";
+      App.logActivity(bill, "Status changed", "Status changed to " + bill.status + ".");
       persist();
       render();
       showToast("Bill " + bill.billNumber + " has been " + (bill.status === "Active" ? "enabled" : "disabled") + ".");
@@ -461,7 +575,9 @@
       return;
     }
     var bill = bills.find(function (b) { return b.id === parseInt(renameBillId.value, 10); });
+    var oldTrader = bill.trader;
     bill.trader = renameInput.value.trim();
+    App.logActivity(bill, "Renamed", "Trader renamed from \"" + oldTrader + "\" to \"" + bill.trader + "\".");
     persist();
     closeRenameModal();
     render();
@@ -479,6 +595,54 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Download modal ---------------- */
+  var downloadModalOverlay = document.getElementById("downloadModalOverlay");
+  var downloadDuration = document.getElementById("downloadDuration");
+  var customRangeFields = document.getElementById("customRangeFields");
+  var downloadFrom = document.getElementById("downloadFrom");
+  var downloadTo = document.getElementById("downloadTo");
+  var errDownloadRange = document.getElementById("errDownloadRange");
+
+  document.getElementById("openDownloadModal").addEventListener("click", function () {
+    downloadModalOverlay.classList.add("show");
+  });
+
+  function closeDownloadModal() { downloadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeDownloadModal").addEventListener("click", closeDownloadModal);
+  document.getElementById("cancelDownloadModal").addEventListener("click", closeDownloadModal);
+  downloadModalOverlay.addEventListener("click", function (e) { if (e.target === downloadModalOverlay) closeDownloadModal(); });
+
+  downloadDuration.addEventListener("change", function () {
+    customRangeFields.style.display = downloadDuration.value === "custom" ? "grid" : "none";
+    errDownloadRange.classList.remove("show");
+  });
+
+  document.getElementById("confirmDownloadBtn").addEventListener("click", function () {
+    var duration = downloadDuration.value;
+
+    if (duration === "custom" && (!downloadFrom.value || !downloadTo.value)) {
+      errDownloadRange.classList.add("show");
+      return;
+    }
+    errDownloadRange.classList.remove("show");
+
+    var format = document.querySelector('input[name="downloadFormat"]:checked').value;
+    var data = App.filterByDuration(getFiltered(), function (b) { return App.parseDisplayDate(b.date); }, duration, downloadFrom.value, downloadTo.value);
+
+    var headers = ["Date", "Bill Number", "Sale Order No", "Trader", "Email ID", "Total Birds", "Birds Weight", "Company", "Branch", "Status"];
+    var rows = data.map(function (b) {
+      return [b.date, b.billNumber, b.salesOrderNumber, b.trader, b.email, b.totalBirds, b.birdsWeight + " kg", b.company, b.branch, b.status];
+    });
+
+    if (format === "csv") {
+      App.downloadCSV("bills.csv", headers, rows);
+    } else {
+      App.downloadPDF("bills.pdf", "Bills", headers, rows);
+    }
+    closeDownloadModal();
+    showToast("Bills downloaded as " + format.toUpperCase() + ".");
+  });
 
   /* ---------------- Init ---------------- */
   App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });

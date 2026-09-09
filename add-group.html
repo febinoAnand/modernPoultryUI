@@ -14,9 +14,9 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark">A</div>
+      <div class="brand-mark">P</div>
       <div class="brand-text">
-        <strong>AgriTrade</strong>
+        <strong>Poultry</strong>
         <span>Admin Console</span>
       </div>
     </div>
@@ -80,6 +80,11 @@
         Profile
       </a>
 
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
       <button class="nav-item logout-item" data-logout>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Logout
@@ -121,6 +126,10 @@
           <p>View, add, edit and manage every company group.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openDownloadModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
           <button class="btn btn-primary" id="openAddGroup" data-perm-action="create">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Group
@@ -165,6 +174,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="searchInput" placeholder="Search by group name, mobile or description...">
           </div>
+          <select id="filterStatus" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Pending Approval">Pending Approval</option>
+          </select>
           <div class="toolbar-meta" id="toolbarMeta">0 groups</div>
         </div>
 
@@ -174,7 +189,7 @@
               <tr id="tableHeadRow">
                 <th>S.No</th>
                 <th data-sort="groupName">Group Name</th>
-                <th data-sort="description">Description</th>
+                <th data-sort="description" class="field-col-description">Description</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -240,7 +255,7 @@
               <span class="field-error" id="errGName">Please enter a group name.</span>
             </div>
 
-            <div class="field full">
+            <div class="field full field-col-description">
               <label for="gDescription">Description</label>
               <textarea id="gDescription" placeholder="Short note about this group (optional)"></textarea>
             </div>
@@ -279,6 +294,21 @@
           </div>
 
           <div class="perm-table" id="permTable"></div>
+
+          <div class="field-perms-section">
+            <p class="section-heading">Field-Level Permissions</p>
+            <p class="section-subheading">Pick a page to choose which of its fields this role can view and edit.</p>
+            <div class="field-perms-select-row">
+              <label for="fieldPermsModuleSelect">Page</label>
+              <select id="fieldPermsModuleSelect"></select>
+            </div>
+            <div class="field-perms-head">
+              <span>Field</span>
+              <span>View</span>
+              <span>Edit</span>
+            </div>
+            <div class="field-perms-panel" id="fieldPermsPanel"></div>
+          </div>
         </div>
       </form>
     </div>
@@ -353,11 +383,75 @@
   </div>
 </div>
 
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Download Groups</h3>
+        <p>Export groups as a file, optionally within a date range.</p>
+      </div>
+      <button class="modal-close" id="closeDownloadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full">
+        <label>File Format</label>
+        <div class="format-toggle-group">
+          <label>
+            <input type="radio" name="downloadFormat" value="csv" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>CSV</span>
+          </label>
+          <label>
+            <input type="radio" name="downloadFormat" value="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="downloadDuration">Duration</label>
+        <select id="downloadDuration">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+
+      <div class="duration-custom-range" id="customRangeFields" style="display:none">
+        <div class="field">
+          <label for="downloadFrom">From</label>
+          <input type="date" id="downloadFrom">
+        </div>
+        <div class="field">
+          <label for="downloadTo">To</label>
+          <input type="date" id="downloadTo">
+        </div>
+      </div>
+      <span class="field-error" id="errDownloadRange">Please select both a from and to date.</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelDownloadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-notice" id="toastNotice">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span id="toastNoticeText">Saved successfully.</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -365,7 +459,42 @@
   App.initSidebar();
   App.initLogout();
   App.initUserBadge();
-  App.enforcePermissions("groups");
+  App.initSessionTimeout();
+  var currentPerms = App.enforcePermissions("groups");
+
+  /* ---------------- Field-level permissions for THIS page's own module ----------
+     Distinct from the Roles & Permissions editor above (which configures
+     field access for every module, including this one) — this block is
+     what actually enforces the logged-in user's own "groups" field
+     permissions on this page's table/form/view. */
+  var OWN_FIELD_KEYS = ["description"];
+  var OWN_FIELD_INPUT_SELECTORS = { description: "#gDescription" };
+
+  function fieldVisible(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].view !== false;
+  }
+
+  function fieldEditable(key) {
+    var f = currentPerms.fields;
+    return !f || !f[key] || f[key].edit !== false;
+  }
+
+  (function applyFieldPermissions() {
+    var hiddenRules = OWN_FIELD_KEYS.filter(function (key) { return !fieldVisible(key); })
+      .map(function (key) { return ".field-col-" + key + " { display: none !important; }"; })
+      .join("\n");
+    if (hiddenRules) {
+      var styleEl = document.createElement("style");
+      styleEl.textContent = hiddenRules;
+      document.head.appendChild(styleEl);
+    }
+    OWN_FIELD_KEYS.forEach(function (key) {
+      if (fieldVisible(key) && !fieldEditable(key)) {
+        document.querySelectorAll(OWN_FIELD_INPUT_SELECTORS[key]).forEach(function (el) { el.disabled = true; });
+      }
+    });
+  })();
 
   /* ---------------- Data (persisted, shared with dashboard/profile) ---------------- */
   var groups = Data.getGroups();
@@ -374,12 +503,13 @@
   function persist() { Data.saveGroups(groups); }
 
   /* ---------------- State ---------------- */
-  var state = { search: "", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
+  var state = { search: "", filterStatus: "all", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
 
   /* ---------------- Elements ---------------- */
   var tableBody = document.getElementById("tableBody");
   var tableHeadRow = document.getElementById("tableHeadRow");
   var searchInput = document.getElementById("searchInput");
+  var filterStatus = document.getElementById("filterStatus");
   var toolbarMeta = document.getElementById("toolbarMeta");
   var paginationInfo = document.getElementById("paginationInfo");
   var paginationControls = document.getElementById("paginationControls");
@@ -398,8 +528,9 @@
 
   function getFiltered() {
     var term = state.search.trim().toLowerCase();
-    if (!term) return groups;
     return groups.filter(function (g) {
+      if (state.filterStatus !== "all" && g.status !== state.filterStatus) return false;
+      if (!term) return true;
       return g.groupName.toLowerCase().indexOf(term) !== -1 ||
         (g.description || "").toLowerCase().indexOf(term) !== -1;
     });
@@ -450,7 +581,7 @@
           '<tr class="' + rowClass + '">' +
             '<td>' + (start + idx + 1) + '</td>' +
             '<td><div class="cell-user"><div class="cell-avatar">' + initials(g.groupName) + '</div><span class="cell-user-name">' + escapeHtml(g.groupName) + '</span>' + statusBadge + '</div></td>' +
-            '<td><span class="desc-cell" title="' + escapeHtml(g.description || "") + '">' + desc + '</span></td>' +
+            '<td class="field-col-description"><span class="desc-cell" title="' + escapeHtml(g.description || "") + '">' + desc + '</span></td>' +
             '<td>' +
               '<div class="row-actions">' +
                 '<button class="action-trigger" data-menu-toggle="' + g.id + '" aria-label="Actions">' +
@@ -500,6 +631,12 @@
   /* ---------------- Search ---------------- */
   searchInput.addEventListener("input", function () {
     state.search = searchInput.value;
+    state.page = 1;
+    render();
+  });
+
+  filterStatus.addEventListener("change", function () {
+    state.filterStatus = filterStatus.value;
     state.page = 1;
     render();
   });
@@ -580,23 +717,81 @@
 
   var PERMISSION_MODULES = [
     { key: "dashboard", label: "Dashboard", desc: "Overview widgets and analytics", icon: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>', readOnlyModule: true },
-    { key: "billList", label: "Bill List", desc: "Weighing bills and trade records", icon: '<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/>' },
-    { key: "salesOrder", label: "Sales Order", desc: "Sales order management", icon: '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>' },
-    { key: "addFarm", label: "Farm", desc: "Farm code registry", icon: '<path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/>' },
-    { key: "addTrader", label: "Trader", desc: "Trader code registry", icon: '<path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/>' },
-    { key: "branch", label: "Branch", desc: "Branch locations", icon: '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/>' },
-    { key: "product", label: "Product", desc: "Product catalog", icon: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>' },
-    { key: "machineManagement", label: "Machine", desc: "Weighing machines, parameters & service history", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/>', singleToggle: true },
-    { key: "user", label: "User", desc: "User accounts and access", icon: '<path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-    { key: "groups", label: "Groups", desc: "Group and permission management", icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/>' }
+    { key: "billList", label: "Bill List", desc: "Weighing bills and trade records", icon: '<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/>', fieldList: [
+      { key: "date", label: "Date" },
+      { key: "billNumber", label: "Bill Number" },
+      { key: "salesOrderNumber", label: "Sale Order No" },
+      { key: "email", label: "Email ID" },
+      { key: "totalBirds", label: "Total Birds" },
+      { key: "birdsWeight", label: "Birds Weight" },
+      { key: "company", label: "Company" },
+      { key: "branch", label: "Branch" }
+    ] },
+    { key: "salesOrder", label: "Sales Order", desc: "Sales order management", icon: '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>', fieldList: [
+      { key: "orderNumber", label: "Order Number" },
+      { key: "branch", label: "Branch" },
+      { key: "supervisor", label: "Supervisor" },
+      { key: "product", label: "Product" },
+      { key: "quantity", label: "Quantity" },
+      { key: "rate", label: "Rate" },
+      { key: "totalAmount", label: "Total Amount" },
+      { key: "orderDate", label: "Order Date" },
+      { key: "orderStatus", label: "Status" }
+    ] },
+    { key: "addFarm", label: "Farm", desc: "Farm code registry", icon: '<path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/>', fieldList: [
+      { key: "farmCode", label: "Farm Code" },
+      { key: "batchNumber", label: "Batch Number" },
+      { key: "mobile", label: "Mobile" },
+      { key: "location", label: "Location" }
+    ] },
+    { key: "addTrader", label: "Trader", desc: "Trader code registry", icon: '<path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/>', fieldList: [
+      { key: "traderCode", label: "Trader Code" },
+      { key: "mobile", label: "Mobile" },
+      { key: "city", label: "City" }
+    ] },
+    { key: "branch", label: "Branch", desc: "Branch locations", icon: '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/>', fieldList: [
+      { key: "branchCode", label: "Branch Code" },
+      { key: "address", label: "Address" }
+    ] },
+    { key: "product", label: "Product", desc: "Product catalog", icon: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>', fieldList: [
+      { key: "productCode", label: "Product Code" },
+      { key: "status", label: "Status" }
+    ] },
+    { key: "machineManagement", label: "Machine", desc: "Weighing machines, parameters & service history", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/>', singleToggle: true, fieldList: [
+      { key: "machineNumber", label: "Machine Number" },
+      { key: "capacity", label: "Capacity" },
+      { key: "calibrationDue", label: "Calibration Due" },
+      { key: "status", label: "Status" }
+    ] },
+    { key: "user", label: "User", desc: "User accounts and access", icon: '<path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', fieldList: [
+      { key: "email", label: "Email Address" },
+      { key: "group", label: "Company Group" },
+      { key: "mobile", label: "Mobile" },
+      { key: "status", label: "Status" },
+      { key: "machineId", label: "Machine ID" },
+      { key: "createdDate", label: "Created Date" }
+    ] },
+    { key: "groups", label: "Groups", desc: "Group and permission management", icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/>', fieldList: [
+      { key: "description", label: "Description" }
+    ] }
   ];
 
   var PERM_ACTIONS = ["create", "read", "update", "delete"];
+
+  /* Each field's permission is { view, edit } — edit implies view, and
+     turning view off forces edit off too (enforced wherever these are
+     mutated, not just here). Both default to true (full access). */
+  function defaultFieldPermissions(m) {
+    var fields = {};
+    (m.fieldList || []).forEach(function (f) { fields[f.key] = { view: true, edit: true }; });
+    return fields;
+  }
 
   function defaultPermissions() {
     var perms = {};
     PERMISSION_MODULES.forEach(function (m) {
       perms[m.key] = { create: false, read: false, update: false, delete: false };
+      if (m.fieldList) perms[m.key].fields = defaultFieldPermissions(m);
     });
     return perms;
   }
@@ -614,6 +809,7 @@
 
   var activeMembers = [];
   var activePermissions = defaultPermissions();
+  var selectedFieldPermsModule = null;
 
   /* ---------------- Modal tabs ---------------- */
   var modalTabs = document.querySelectorAll(".modal-tab");
@@ -776,6 +972,7 @@
       var lockNote = m.readOnlyModule
         ? '<div class="perm-module-lock-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Read only — no create/edit/delete for this page</div>'
         : "";
+
       return (
         '<div class="' + rowClass + '">' +
           '<div class="perm-module">' +
@@ -790,12 +987,67 @@
     permTable.innerHTML = head + rows;
   }
 
+  /* ---------------- Field-level permissions (per-page View / Edit picker) ---------------- */
+  var FIELD_LIST_MODULES = PERMISSION_MODULES.filter(function (m) { return m.fieldList; });
+  var fieldPermsModuleSelect = document.getElementById("fieldPermsModuleSelect");
+  var fieldPermsPanel = document.getElementById("fieldPermsPanel");
+
+  fieldPermsModuleSelect.innerHTML = FIELD_LIST_MODULES.map(function (m) {
+    return '<option value="' + m.key + '">' + m.label + '</option>';
+  }).join("");
+
+  function renderFieldPermsPanel() {
+    var m = FIELD_LIST_MODULES.find(function (x) { return x.key === selectedFieldPermsModule; });
+    if (!m) {
+      fieldPermsPanel.innerHTML = '<div class="field-perms-empty">No fields to configure.</div>';
+      return;
+    }
+    var fieldState = activePermissions[m.key].fields || defaultFieldPermissions(m);
+    fieldPermsPanel.innerHTML = m.fieldList.map(function (f) {
+      var perm = fieldState[f.key] || { view: true, edit: true };
+      var viewOn = perm.view !== false;
+      var editOn = perm.edit !== false;
+      return (
+        '<div class="field-perm-row">' +
+          '<span class="field-perm-name">' + f.label + '</span>' +
+          '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="view" ' + (viewOn ? "checked" : "") + ' title="View ' + f.label + '">' +
+          '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="edit" ' + (editOn ? "checked" : "") + (viewOn ? "" : " disabled") + ' title="Edit ' + f.label + '">' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  fieldPermsModuleSelect.addEventListener("change", function () {
+    selectedFieldPermsModule = fieldPermsModuleSelect.value;
+    renderFieldPermsPanel();
+  });
+
+  fieldPermsPanel.addEventListener("change", function (e) {
+    var input = e.target;
+    if (input.tagName !== "INPUT") return;
+    var moduleKey = input.getAttribute("data-fp-module");
+    var fieldKey = input.getAttribute("data-fp-key");
+    var type = input.getAttribute("data-fp-type");
+    var fieldObj = activePermissions[moduleKey].fields[fieldKey];
+    if (type === "view") {
+      fieldObj.view = input.checked;
+      if (!input.checked) fieldObj.edit = false;
+    } else {
+      fieldObj.edit = input.checked;
+      if (input.checked) fieldObj.view = true;
+    }
+    renderFieldPermsPanel();
+  });
+
   permTable.addEventListener("change", function (e) {
     var input = e.target;
     if (input.tagName !== "INPUT") return;
+
     var moduleKey = input.getAttribute("data-module");
     if (input.getAttribute("data-single") === "true") {
+      var existingFields = activePermissions[moduleKey].fields;
       activePermissions[moduleKey] = { create: input.checked, read: input.checked, update: input.checked, delete: input.checked };
+      if (existingFields) activePermissions[moduleKey].fields = existingFields;
     } else {
       activePermissions[moduleKey][input.getAttribute("data-action")] = input.checked;
     }
@@ -809,18 +1061,29 @@
     var allOn = PERMISSION_MODULES.every(function (m) { return activePermissions[m.key][action]; });
     var next = !allOn;
     PERMISSION_MODULES.forEach(function (m) {
-      if (m.singleToggle) activePermissions[m.key] = { create: next, read: next, update: next, delete: next };
-      else activePermissions[m.key][action] = next;
+      if (m.singleToggle) {
+        var existingFields = activePermissions[m.key].fields;
+        activePermissions[m.key] = { create: next, read: next, update: next, delete: next };
+        if (existingFields) activePermissions[m.key].fields = existingFields;
+      } else {
+        activePermissions[m.key][action] = next;
+      }
     });
     renderPermTable();
   });
 
   document.getElementById("permEnableAll").addEventListener("click", function () {
-    PERMISSION_MODULES.forEach(function (m) { PERM_ACTIONS.forEach(function (a) { activePermissions[m.key][a] = true; }); });
+    PERMISSION_MODULES.forEach(function (m) {
+      PERM_ACTIONS.forEach(function (a) { activePermissions[m.key][a] = true; });
+      if (m.fieldList) activePermissions[m.key].fields = defaultFieldPermissions(m);
+    });
     renderPermTable();
   });
   document.getElementById("permReadOnly").addEventListener("click", function () {
-    PERMISSION_MODULES.forEach(function (m) { activePermissions[m.key] = { create: false, read: true, update: false, delete: false }; });
+    PERMISSION_MODULES.forEach(function (m) {
+      activePermissions[m.key] = { create: false, read: true, update: false, delete: false };
+      if (m.fieldList) activePermissions[m.key].fields = defaultFieldPermissions(m);
+    });
     renderPermTable();
   });
   document.getElementById("permClearAll").addEventListener("click", function () {
@@ -869,6 +1132,11 @@
     renderMemberChips();
     renderMemberList();
     renderPermTable();
+
+    selectedFieldPermsModule = FIELD_LIST_MODULES.length ? FIELD_LIST_MODULES[0].key : null;
+    fieldPermsModuleSelect.value = selectedFieldPermsModule || "";
+    renderFieldPermsPanel();
+
     switchToTab("info");
 
     groupModalOverlay.classList.add("show");
@@ -971,12 +1239,12 @@
   function openViewModal(group) {
     currentViewGroup = group;
     var fields = [
-      ["Group Name", group.groupName],
-      ["Description", group.description || "—"],
-      ["Members", (group.members && group.members.length) ? group.members.length + " member(s)" : "No members yet"],
-      ["Permissions granted", countGroupPermissions(group) + " of " + (PERMISSION_MODULES.length * PERM_ACTIONS.length)],
-      ["Status", group.status]
-    ];
+      ["Group Name", group.groupName, null],
+      ["Description", group.description || "—", "description"],
+      ["Members", (group.members && group.members.length) ? group.members.length + " member(s)" : "No members yet", null],
+      ["Permissions granted", countGroupPermissions(group) + " of " + (PERMISSION_MODULES.length * PERM_ACTIONS.length), null],
+      ["Status", group.status, null]
+    ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
@@ -1053,6 +1321,51 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Download modal ---------------- */
+  var downloadModalOverlay = document.getElementById("downloadModalOverlay");
+  var downloadDuration = document.getElementById("downloadDuration");
+  var customRangeFields = document.getElementById("customRangeFields");
+  var downloadFrom = document.getElementById("downloadFrom");
+  var downloadTo = document.getElementById("downloadTo");
+  var errDownloadRange = document.getElementById("errDownloadRange");
+
+  document.getElementById("openDownloadModal").addEventListener("click", function () {
+    downloadModalOverlay.classList.add("show");
+  });
+
+  function closeDownloadModal() { downloadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeDownloadModal").addEventListener("click", closeDownloadModal);
+  document.getElementById("cancelDownloadModal").addEventListener("click", closeDownloadModal);
+  downloadModalOverlay.addEventListener("click", function (e) { if (e.target === downloadModalOverlay) closeDownloadModal(); });
+
+  downloadDuration.addEventListener("change", function () {
+    customRangeFields.style.display = downloadDuration.value === "custom" ? "grid" : "none";
+    errDownloadRange.classList.remove("show");
+  });
+
+  document.getElementById("confirmDownloadBtn").addEventListener("click", function () {
+    var duration = downloadDuration.value;
+
+    if (duration === "custom" && (!downloadFrom.value || !downloadTo.value)) {
+      errDownloadRange.classList.add("show");
+      return;
+    }
+    errDownloadRange.classList.remove("show");
+
+    var format = document.querySelector('input[name="downloadFormat"]:checked').value;
+    var data = App.filterByDuration(getFiltered(), function (g) { return App.parseDisplayDate(g.createdDate); }, duration, downloadFrom.value, downloadTo.value);
+    var headers = ["Group Name", "Description", "Created Date", "Status"];
+    var rows = data.map(function (g) { return [g.groupName, g.description || "", g.createdDate, g.status]; });
+
+    if (format === "csv") {
+      App.downloadCSV("groups.csv", headers, rows);
+    } else {
+      App.downloadPDF("groups.pdf", "Groups", headers, rows);
+    }
+    closeDownloadModal();
+    showToast("Groups downloaded as " + format.toUpperCase() + ".");
+  });
 
   /* ---------------- Init ---------------- */
   App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });
