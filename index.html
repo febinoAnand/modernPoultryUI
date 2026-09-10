@@ -132,7 +132,7 @@
 
     if (orgId.toUpperCase() === DEMO_ORG && username.toLowerCase() === DEMO_USERNAME && password === DEMO_PASSWORD) {
       App.login(DEMO_EMAIL, DEMO_ORG);
-      window.location.href = "dashboard.html";
+      window.location.href = App.consumePostLoginRedirect();
       return;
     }
 
@@ -144,15 +144,15 @@
         return;
       }
       App.login(org.email, org.orgId);
-      window.location.href = "dashboard.html";
+      window.location.href = App.consumePostLoginRedirect();
     } else {
       showAlert("Invalid organisation ID, username or password.");
     }
   });
 
-  // If already logged in, skip straight to dashboard.
+  // If already logged in, skip straight to dashboard (or wherever requireAuth() bounced them from).
   if (App.isLoggedIn()) {
-    window.location.href = "dashboard.html";
+    window.location.href = App.consumePostLoginRedirect();
   }
 
   // Redirected here after an inactivity-based session timeout (Settings page).

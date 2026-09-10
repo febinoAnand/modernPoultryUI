@@ -7,6 +7,7 @@
   "use strict";
 
   var SESSION_KEY = "ui_session";
+  var POST_LOGIN_REDIRECT_KEY = "ui_post_login_redirect";
 
   function isLoggedIn() {
     return sessionStorage.getItem(SESSION_KEY) === "true";
@@ -14,6 +15,10 @@
 
   function requireAuth() {
     if (!isLoggedIn()) {
+      var here = window.location.pathname.split("/").pop() + window.location.search;
+      if (here && here !== "index.html") {
+        sessionStorage.setItem(POST_LOGIN_REDIRECT_KEY, here);
+      }
       window.location.href = "index.html";
     }
   }
@@ -27,6 +32,15 @@
 
   function getOrgId() {
     return sessionStorage.getItem("ui_org_id") || "";
+  }
+
+  /* Consumes (reads + clears) the page requireAuth() bounced the user
+     away from, so the login page can send them back there instead of
+     always landing on dashboard.html. */
+  function consumePostLoginRedirect() {
+    var target = sessionStorage.getItem(POST_LOGIN_REDIRECT_KEY);
+    sessionStorage.removeItem(POST_LOGIN_REDIRECT_KEY);
+    return target || "dashboard.html";
   }
 
   function logout() {
@@ -517,11 +531,202 @@
     });
   }
 
+  /* ---------------- CSV / Excel upload parsing ----------------
+     parseUploadFile reads a .csv/.xlsx/.xls File and hands back an array
+     of row objects keyed by the file's header row (trimmed). Excel parsing
+     needs the SheetJS (XLSX) library loaded on the page; CSV parsing is
+     handled with no external dependency. */
+
+  function splitCSVLine(line) {
+    var result = [];
+    var cur = "";
+    var inQuotes = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (line[i + 1] === '"') { cur += '"'; i++; }
+          else inQuotes = false;
+        } else {
+          cur += ch;
+        }
+      } else if (ch === '"') {
+        inQuotes = true;
+      } else if (ch === ",") {
+        result.push(cur);
+        cur = "";
+      } else {
+        cur += ch;
+      }
+    }
+    result.push(cur);
+    return result;
+  }
+
+  function parseCSVText(text) {
+    var lines = text.split(/\r\n|\n|\r/).filter(function (l) { return l.trim().length > 0; });
+    if (!lines.length) return [];
+    var headers = splitCSVLine(lines[0]).map(function (h) { return h.trim(); });
+    return lines.slice(1).map(function (line) {
+      var cells = splitCSVLine(line);
+      var obj = {};
+      headers.forEach(function (h, i) { obj[h] = (cells[i] || "").trim(); });
+      return obj;
+    });
+  }
+
+  function parseUploadFile(file, onRows, onError) {
+    var name = file.name.toLowerCase();
+    var reader = new FileReader();
+    reader.onerror = function () { onError(new Error("Could not read the file.")); };
+
+    if (name.endsWith(".csv")) {
+      reader.onload = function (e) {
+        try { onRows(parseCSVText(e.target.result)); }
+        catch (err) { onError(err); }
+      };
+      reader.readAsText(file);
+    } else if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
+      if (!window.XLSX) { onError(new Error("Excel parser failed to load. Please check your connection and try again.")); return; }
+      reader.onload = function (e) {
+        try {
+          var data = new Uint8Array(e.target.result);
+          var workbook = XLSX.read(data, { type: "array" });
+          var sheet = workbook.Sheets[workbook.SheetNames[0]];
+          var rawRows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+          var rows = rawRows.map(function (r) {
+            var obj = {};
+            Object.keys(r).forEach(function (k) { obj[k.trim()] = String(r[k]).trim(); });
+            return obj;
+          });
+          onRows(rows);
+        } catch (err) { onError(err); }
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      onError(new Error("Unsupported file type. Please upload a .csv, .xlsx or .xls file."));
+    }
+  }
+
+  /* Maps a row's raw headers (any case/spacing) to known field keys using
+     a { "label": "fieldKey" } map, returning { fieldKey: value }. */
+  function mapUploadRow(row, headerMap) {
+    var mapped = {};
+    Object.keys(row).forEach(function (rawHeader) {
+      var key = headerMap[rawHeader.trim().toLowerCase()];
+      if (key) mapped[key] = String(row[rawHeader]).trim();
+    });
+    return mapped;
+  }
+
+  /* ---------------- Image upload (signatures, vehicle photos, etc.) ----------
+     Reads an image File, downscales it to maxDim on its longer side and
+     re-encodes as JPEG so a photo from a phone camera doesn't blow past
+     localStorage's quota. callback(dataUrl) — dataUrl is null on failure
+     or when no file was given. */
+
+  function readImageAsDataUrl(file, maxDim, callback) {
+    if (!file) { callback(null); return; }
+    var reader = new FileReader();
+    reader.onerror = function () { callback(null); };
+    reader.onload = function (e) {
+      var img = new Image();
+      img.onerror = function () { callback(null); };
+      img.onload = function () {
+        var scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        var w = Math.max(1, Math.round(img.width * scale));
+        var h = Math.max(1, Math.round(img.height * scale));
+        var canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        callback(canvas.toDataURL("image/jpeg", 0.75));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* ---------------- Open-ended Role select ----------------
+     Roles aren't a fixed 3-value enum — any page can grow the shared
+     list (Data.getUserRoles/saveUserRoles) by typing a new one. The
+     select always ends with a sentinel "+ Add new role…" option; picking
+     it reveals the given add-row (text input + confirm/cancel buttons)
+     instead of committing a real value. Confirming persists the new role
+     (or reuses a case-insensitive match) so it appears in every Role
+     dropdown — user-list and tenant-profiles alike — from then on. */
+
+  var ROLE_ADD_NEW = "__add_new_role__";
+
+  function initRoleSelect(selectEl, addRowEl, inputEl, confirmBtn, cancelBtn) {
+    var lastRealValue = null;
+
+    function escAttr(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function populate(selected) {
+      var roles = window.Data.getUserRoles();
+      if (selected && roles.indexOf(selected) === -1) roles = roles.concat([selected]);
+      selectEl.innerHTML = roles.map(function (r) {
+        return '<option value="' + escAttr(r) + '">' + escAttr(r) + '</option>';
+      }).join("") + '<option value="' + ROLE_ADD_NEW + '">+ Add new role…</option>';
+      selectEl.value = selected && roles.indexOf(selected) !== -1 ? selected : roles[0];
+      lastRealValue = selectEl.value;
+    }
+
+    function showAddRow() {
+      addRowEl.style.display = "flex";
+      inputEl.value = "";
+      inputEl.focus();
+    }
+
+    function hideAddRow() {
+      addRowEl.style.display = "none";
+    }
+
+    selectEl.addEventListener("change", function () {
+      if (selectEl.value === ROLE_ADD_NEW) showAddRow();
+      else lastRealValue = selectEl.value;
+    });
+
+    function commitAdd() {
+      var name = inputEl.value.trim();
+      if (!name) { inputEl.focus(); return; }
+      var roles = window.Data.getUserRoles();
+      var existing = roles.filter(function (r) { return r.toLowerCase() === name.toLowerCase(); })[0];
+      if (!existing) {
+        roles.push(name);
+        window.Data.saveUserRoles(roles);
+      }
+      populate(existing || name);
+      hideAddRow();
+    }
+
+    confirmBtn.addEventListener("click", commitAdd);
+    inputEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); commitAdd(); }
+      else if (e.key === "Escape") { e.preventDefault(); cancelBtn.click(); }
+    });
+    cancelBtn.addEventListener("click", function () {
+      hideAddRow();
+      selectEl.value = lastRealValue;
+    });
+
+    populate(null);
+
+    return {
+      setValue: function (val) { hideAddRow(); populate(val); },
+      isPendingAdd: function () { return selectEl.value === ROLE_ADD_NEW; }
+    };
+  }
+
   window.App = {
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
     login: login,
     getOrgId: getOrgId,
+    consumePostLoginRedirect: consumePostLoginRedirect,
     logout: logout,
     initSidebar: initSidebar,
     initLogout: initLogout,
@@ -538,6 +743,10 @@
     filterByDuration: filterByDuration,
     initSessionTimeout: initSessionTimeout,
     logActivity: logActivity,
-    formatLogTimestamp: formatLogTimestamp
+    formatLogTimestamp: formatLogTimestamp,
+    parseUploadFile: parseUploadFile,
+    mapUploadRow: mapUploadRow,
+    readImageAsDataUrl: readImageAsDataUrl,
+    initRoleSelect: initRoleSelect
   };
 })();

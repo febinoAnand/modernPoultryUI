@@ -68,9 +68,9 @@
         User
       </a>
 
-      <a class="nav-item" href="add-group.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Groups
+      <a class="nav-item" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
       </a>
 
       <span class="nav-section-label">Account</span>
@@ -126,6 +126,10 @@
           <p>View, add, edit and manage every registered farm code.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openUploadModal" data-perm-action="create">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
           <button class="btn btn-outline" id="openDownloadModal">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download
@@ -328,6 +332,40 @@
   </div>
 </div>
 
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Upload Farm Codes</h3>
+        <p>Bulk-import farm codes from a CSV or Excel file.</p>
+      </div>
+      <button class="modal-close" id="closeUploadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-template-row">
+        <span>Columns: Farm Code, Farmer Name, Batch Number, Mobile, Location</span>
+        <button type="button" class="btn btn-outline btn-sm" id="downloadTemplateBtn">Download Template</button>
+      </div>
+      <div class="field full">
+        <label for="uploadFileInput">CSV or Excel File <span class="req">*</span></label>
+        <input type="file" id="uploadFileInput" accept=".csv,.xlsx,.xls">
+        <span class="field-error" id="errUploadFile">Please choose a .csv or .xlsx file.</span>
+      </div>
+      <div class="upload-summary" id="uploadSummary" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelUploadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmUploadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Download Modal -->
 <div class="modal-overlay" id="downloadModalOverlay">
   <div class="modal-box" style="max-width:420px">
@@ -397,6 +435,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -468,7 +507,8 @@
   }
 
   function initials(name) {
-    var parts = name.trim().split(" ");
+    var parts = (name || "").trim().split(" ");
+    if (!parts[0]) return "?";
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
@@ -833,6 +873,97 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Upload modal ---------------- */
+  var uploadModalOverlay = document.getElementById("uploadModalOverlay");
+  var uploadFileInput = document.getElementById("uploadFileInput");
+  var errUploadFile = document.getElementById("errUploadFile");
+  var uploadSummary = document.getElementById("uploadSummary");
+
+  var UPLOAD_HEADER_MAP = {
+    "farm code": "farmCode",
+    "farmer name": "farmerName",
+    "batch number": "batchNumber",
+    "mobile": "mobile",
+    "location": "location"
+  };
+  var UPLOAD_TEMPLATE_HEADERS = ["Farm Code", "Farmer Name", "Batch Number", "Mobile", "Location"];
+
+  document.getElementById("openUploadModal").addEventListener("click", function () {
+    uploadFileInput.value = "";
+    errUploadFile.classList.remove("show");
+    uploadSummary.style.display = "none";
+    uploadModalOverlay.classList.add("show");
+  });
+
+  function closeUploadModal() { uploadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeUploadModal").addEventListener("click", closeUploadModal);
+  document.getElementById("cancelUploadModal").addEventListener("click", closeUploadModal);
+  uploadModalOverlay.addEventListener("click", function (e) { if (e.target === uploadModalOverlay) closeUploadModal(); });
+
+  document.getElementById("downloadTemplateBtn").addEventListener("click", function () {
+    App.downloadCSV("farm-codes-template.csv", UPLOAD_TEMPLATE_HEADERS, []);
+  });
+
+  document.getElementById("confirmUploadBtn").addEventListener("click", function () {
+    var file = uploadFileInput.files[0];
+    if (!file) {
+      errUploadFile.classList.add("show");
+      return;
+    }
+    errUploadFile.classList.remove("show");
+    uploadSummary.style.display = "none";
+
+    App.parseUploadFile(file, function (rows) {
+      var mobileRe = /^[0-9]{10}$/;
+      var existingCodes = new Set(farmCodes.map(function (f) { return f.farmCode.trim().toLowerCase(); }));
+      var added = 0, duplicates = 0, invalid = 0;
+
+      rows.forEach(function (row) {
+        var mapped = App.mapUploadRow(row, UPLOAD_HEADER_MAP);
+        var farmCode = (mapped.farmCode || "").trim();
+        var farmerName = (mapped.farmerName || "").trim();
+        var batchNumber = (mapped.batchNumber || "").trim();
+        var mobile = (mapped.mobile || "").trim();
+        var location = (mapped.location || "").trim();
+
+        if (!farmCode || !farmerName || !batchNumber || !mobileRe.test(mobile) || !location) {
+          invalid++;
+          return;
+        }
+        if (existingCodes.has(farmCode.toLowerCase())) {
+          duplicates++;
+          return;
+        }
+        farmCodes.unshift({
+          id: nextId++,
+          farmCode: farmCode,
+          farmerName: farmerName,
+          batchNumber: batchNumber,
+          mobile: mobile,
+          location: location,
+          status: "Active"
+        });
+        existingCodes.add(farmCode.toLowerCase());
+        added++;
+      });
+
+      persist();
+      render();
+
+      uploadSummary.style.display = "block";
+      uploadSummary.classList.toggle("has-errors", invalid > 0 || duplicates > 0);
+      uploadSummary.innerHTML = "<strong>" + added + "</strong> farm code" + (added === 1 ? "" : "s") + " imported." +
+        (duplicates ? " <strong>" + duplicates + "</strong> duplicate" + (duplicates === 1 ? "" : "s") + " skipped." : "") +
+        (invalid ? " <strong>" + invalid + "</strong> row" + (invalid === 1 ? "" : "s") + " skipped (missing or invalid fields)." : "");
+
+      if (added > 0) showToast(added + " farm code" + (added === 1 ? "" : "s") + " imported successfully.");
+    }, function (err) {
+      uploadSummary.style.display = "block";
+      uploadSummary.classList.add("has-errors");
+      uploadSummary.innerHTML = "<strong>Upload failed:</strong> " + escapeHtml(err.message || "Could not process the file.");
+    });
+  });
 
   /* ---------------- Download modal ---------------- */
   var downloadModalOverlay = document.getElementById("downloadModalOverlay");

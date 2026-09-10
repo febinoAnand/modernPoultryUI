@@ -68,9 +68,9 @@
         User
       </a>
 
-      <a class="nav-item" href="add-group.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Groups
+      <a class="nav-item" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
       </a>
 
       <span class="nav-section-label">Account</span>
@@ -179,6 +179,7 @@
             <option value="Pending">Pending</option>
             <option value="Confirmed">Confirmed</option>
             <option value="Delivered">Delivered</option>
+            <option value="Rejected">Rejected</option>
           </select>
           <div class="toolbar-meta" id="toolbarMeta">0 orders</div>
         </div>
@@ -198,6 +199,7 @@
                 <th data-sort="totalAmount" class="field-col-totalAmount">Total Amount</th>
                 <th data-sort="orderDate" class="field-col-orderDate">Order Date</th>
                 <th data-sort="orderStatus" class="field-col-orderStatus">Status</th>
+                <th data-sort="customField" class="field-col-customField">Custom Field</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -311,7 +313,13 @@
               <option value="Pending">Pending</option>
               <option value="Confirmed">Confirmed</option>
               <option value="Delivered">Delivered</option>
+              <option value="Rejected">Rejected</option>
             </select>
+          </div>
+
+          <div class="field full field-col-customField">
+            <label for="oCustomField">Custom Field</label>
+            <input type="text" id="oCustomField" placeholder="e.g. any additional note">
           </div>
         </div>
       </form>
@@ -465,7 +473,7 @@
   var currentPerms = App.enforcePermissions("salesOrder");
 
   /* ---------------- Field-level permissions (see Roles & Permissions) ---------------- */
-  var FIELD_KEYS = ["orderNumber", "branch", "supervisor", "product", "quantity", "rate", "totalAmount", "orderDate", "orderStatus"];
+  var FIELD_KEYS = ["orderNumber", "branch", "supervisor", "product", "quantity", "rate", "totalAmount", "orderDate", "orderStatus", "customField"];
   var FIELD_INPUT_SELECTORS = {
     orderNumber: "#oOrderNumber",
     branch: "#oBranch",
@@ -475,7 +483,8 @@
     rate: "#oRate",
     totalAmount: "#oTotalAmount",
     orderDate: "#oOrderDate",
-    orderStatus: "#oStatus"
+    orderStatus: "#oStatus",
+    customField: "#oCustomField"
   };
 
   function fieldVisible(key) {
@@ -535,7 +544,8 @@
   }
 
   function initials(name) {
-    var parts = name.trim().split(" ");
+    var parts = (name || "").trim().split(" ");
+    if (!parts[0]) return "?";
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
@@ -596,8 +606,17 @@
             '<td class="field-col-totalAmount"><span class="total-amount">' + formatCurrency(o.totalAmount) + '</span></td>' +
             '<td class="field-col-orderDate">' + escapeHtml(o.orderDate) + '</td>' +
             '<td class="field-col-orderStatus"><span class="status-pill ' + statusClass + '">' + o.orderStatus + '</span></td>' +
+            '<td class="field-col-customField">' + escapeHtml(o.customField || "—") + '</td>' +
             '<td>' +
               '<div class="row-actions">' +
+                (o.orderStatus === 'Pending' ?
+                  '<button class="icon-btn-approve" data-action="approve" data-id="' + o.id + '" title="Approve" aria-label="Approve order">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+                  '</button>' +
+                  '<button class="icon-btn-reject" data-action="reject" data-id="' + o.id + '" title="Reject" aria-label="Reject order">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+                  '</button>'
+                : '') +
                 '<button class="action-trigger" data-menu-toggle="' + o.id + '" aria-label="Actions">' +
                   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>' +
                 '</button>' +
@@ -709,7 +728,19 @@
     if (action === "view") openViewModal(order);
     else if (action === "edit") openOrderModal(order);
     else if (action === "rename") openRenameModal(order);
-    else if (action === "toggle") {
+    else if (action === "approve") {
+      order.orderStatus = "Confirmed";
+      App.logActivity(order, "Status changed", "Order approved (status set to Confirmed).");
+      persist();
+      render();
+      showToast(order.orderNumber + " has been approved.");
+    } else if (action === "reject") {
+      order.orderStatus = "Rejected";
+      App.logActivity(order, "Status changed", "Order rejected.");
+      persist();
+      render();
+      showToast(order.orderNumber + " has been rejected.");
+    } else if (action === "toggle") {
       order.status = order.status === "Active" ? "Inactive" : "Active";
       App.logActivity(order, "Status changed", "Status changed to " + order.status + ".");
       persist();
@@ -733,6 +764,7 @@
   var oRate = document.getElementById("oRate");
   var oTotalAmount = document.getElementById("oTotalAmount");
   var oStatus = document.getElementById("oStatus");
+  var oCustomField = document.getElementById("oCustomField");
 
   branchPool.forEach(function (b) {
     var opt = document.createElement("option");
@@ -828,6 +860,7 @@
       oQuantity.value = order.quantity;
       oRate.value = order.rate;
       oStatus.value = order.orderStatus;
+      oCustomField.value = order.customField || "";
     } else {
       orderModalTitle.textContent = "Add Order";
       orderModalSubtitle.textContent = "Fill in the details to create a new sales order.";
@@ -839,6 +872,7 @@
       oQuantity.value = "";
       oRate.value = "";
       oStatus.value = "Pending";
+      oCustomField.value = "";
     }
     recalcTotal();
     orderModalOverlay.classList.add("show");
@@ -893,6 +927,7 @@
       order.rate = rate;
       order.totalAmount = qty * rate;
       order.orderStatus = oStatus.value;
+      order.customField = oCustomField.value.trim();
       App.logActivity(order, "Updated", "Order details were updated.");
       showToast("Order updated successfully.");
     } else {
@@ -908,6 +943,7 @@
         rate: rate,
         totalAmount: qty * rate,
         orderStatus: oStatus.value,
+        customField: oCustomField.value.trim(),
         status: "Active"
       };
       App.logActivity(newOrder, "Created", "Order " + newOrder.orderNumber + " was created.");
@@ -978,7 +1014,8 @@
       ["Rate", formatCurrency(order.rate), "rate"],
       ["Total Amount", formatCurrency(order.totalAmount), "totalAmount"],
       ["Order Date", order.orderDate, "orderDate"],
-      ["Order Status", order.orderStatus, "orderStatus"]
+      ["Order Status", order.orderStatus, "orderStatus"],
+      ["Custom Field", order.customField || "—", "customField"]
     ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
@@ -1072,9 +1109,9 @@
     var format = document.querySelector('input[name="downloadFormat"]:checked').value;
     var data = App.filterByDuration(getFiltered(), function (o) { return App.parseDisplayDate(o.orderDate); }, duration, downloadFrom.value, downloadTo.value);
 
-    var headers = ["Order Number", "Trader", "Branch", "Supervisor", "Product", "Quantity", "Rate", "Total Amount", "Order Date", "Status"];
+    var headers = ["Order Number", "Trader", "Branch", "Supervisor", "Product", "Quantity", "Rate", "Total Amount", "Order Date", "Status", "Custom Field"];
     var rows = data.map(function (o) {
-      return [o.orderNumber, o.trader, o.branch, o.supervisor, o.product, o.quantity, formatCurrency(o.rate), formatCurrency(o.totalAmount), o.orderDate, o.orderStatus];
+      return [o.orderNumber, o.trader, o.branch, o.supervisor, o.product, o.quantity, formatCurrency(o.rate), formatCurrency(o.totalAmount), o.orderDate, o.orderStatus, o.customField || ""];
     });
 
     if (format === "csv") {

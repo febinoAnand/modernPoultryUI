@@ -68,9 +68,9 @@
         User
       </a>
 
-      <a class="nav-item" href="add-group.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Groups
+      <a class="nav-item" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
       </a>
 
       <span class="nav-section-label">Account</span>
@@ -191,6 +191,11 @@
           </div>
         </div>
 
+        <div class="section-heading">Signatures &amp; Vehicle</div>
+        <div class="table-card">
+          <div class="signature-gallery" id="signatureGallery" style="padding:20px 22px"></div>
+        </div>
+
         <div class="section-heading">Activity Log</div>
         <div class="table-card">
           <div class="activity-list" id="activityLogList" style="padding:20px 22px"></div>
@@ -252,6 +257,7 @@
       ["Sale Order No", bill.salesOrderNumber],
       ["Date", bill.date],
       ["Weighing Machine", bill.machineNumber],
+      ["Custom Field", bill.customField],
       ["Start Time", bill.startTime],
       ["End Time", bill.endTime],
       ["Supervisor", bill.supervisor],
@@ -279,6 +285,21 @@
 
     document.getElementById("registrationRows").innerHTML = registrationFields.map(function (f) { return row(f[0], f[1]); }).join("");
     document.getElementById("weighingRows").innerHTML = weighingFields.map(function (f) { return row(f[0], f[1]); }).join("");
+
+    var SIGNATURE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>';
+    var VEHICLE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>';
+    var SIGNATURE_FIELDS = [
+      ["Farmer Signature", "farmerSignature", SIGNATURE_ICON],
+      ["Trader Signature", "traderSignature", SIGNATURE_ICON],
+      ["Driver Signature", "driverSignature", SIGNATURE_ICON],
+      ["Supervisor Signature", "supervisorSignature", SIGNATURE_ICON],
+      ["Vehicle Photo", "vehiclePhoto", VEHICLE_ICON]
+    ];
+    document.getElementById("signatureGallery").innerHTML = SIGNATURE_FIELDS.map(function (f) {
+      var url = bill[f[1]];
+      var thumb = url ? '<div class="thumb"><img src="' + url + '" alt="' + escapeHtml(f[0]) + '"></div>' : '<div class="thumb">' + f[2] + '</div>';
+      return '<div class="signature-gallery-item">' + thumb + '<span>' + f[0] + '</span></div>';
+    }).join("");
 
     var activityLog = bill.activityLog || [];
     document.getElementById("activityLogList").innerHTML = activityLog.length
@@ -334,7 +355,7 @@
     lines.push("Registration");
     [
       ["Name", bill.company], ["Branch", bill.branch], ["Bill No", bill.billNumber], ["Sale Order No", bill.salesOrderNumber], ["Date", bill.date],
-      ["Weighing Machine", bill.machineNumber],
+      ["Weighing Machine", bill.machineNumber], ["Custom Field", bill.customField],
       ["Start Time", bill.startTime], ["End Time", bill.endTime], ["Supervisor", bill.supervisor],
       ["Driver", bill.driver], ["Vehicle No", bill.vehicleNo], ["Farmer", bill.farmer],
       ["Mobile No", bill.mobileNo], ["Farm Code", bill.farmCode], ["Age", bill.age],

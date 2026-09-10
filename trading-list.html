@@ -68,9 +68,9 @@
         User
       </a>
 
-      <a class="nav-item" href="add-group.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Groups
+      <a class="nav-item" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
       </a>
 
       <span class="nav-section-label">Account</span>
@@ -126,6 +126,10 @@
           <p>View, add, edit and manage every trade order.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openDownloadModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
           <button class="btn btn-primary" id="openAddTrade">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add Trade
@@ -333,11 +337,75 @@
   </div>
 </div>
 
+<!-- Download Modal -->
+<div class="modal-overlay" id="downloadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Download Trades</h3>
+        <p>Export trades as a file, optionally within a date range.</p>
+      </div>
+      <button class="modal-close" id="closeDownloadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field full">
+        <label>File Format</label>
+        <div class="format-toggle-group">
+          <label>
+            <input type="radio" name="downloadFormat" value="csv" checked>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>CSV</span>
+          </label>
+          <label>
+            <input type="radio" name="downloadFormat" value="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>PDF</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="downloadDuration">Duration</label>
+        <select id="downloadDuration">
+          <option value="all">All Time</option>
+          <option value="7">Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="month">This Month</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+
+      <div class="duration-custom-range" id="customRangeFields" style="display:none">
+        <div class="field">
+          <label for="downloadFrom">From</label>
+          <input type="date" id="downloadFrom">
+        </div>
+        <div class="field">
+          <label for="downloadTo">To</label>
+          <input type="date" id="downloadTo">
+        </div>
+      </div>
+      <span class="field-error" id="errDownloadRange">Please select both a from and to date.</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelDownloadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmDownloadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-notice" id="toastNotice">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
   <span id="toastNoticeText">Saved successfully.</span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -372,7 +440,8 @@
   }
 
   function initials(name) {
-    var parts = name.trim().split(" ");
+    var parts = (name || "").trim().split(" ");
+    if (!parts[0]) return "?";
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
@@ -634,7 +703,8 @@
         machineNumber: tMachineNumber.value.trim(),
         orderNumber: tOrderNumber.value.trim(),
         driverName: tDriverName.value.trim(),
-        status: "Active"
+        status: "Active",
+        createdDate: App.formatLogTimestamp(new Date()).split(",")[0]
       });
       state.search = "";
       searchInput.value = "";
@@ -749,6 +819,54 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Download modal ---------------- */
+  var downloadModalOverlay = document.getElementById("downloadModalOverlay");
+  var downloadDuration = document.getElementById("downloadDuration");
+  var customRangeFields = document.getElementById("customRangeFields");
+  var downloadFrom = document.getElementById("downloadFrom");
+  var downloadTo = document.getElementById("downloadTo");
+  var errDownloadRange = document.getElementById("errDownloadRange");
+
+  document.getElementById("openDownloadModal").addEventListener("click", function () {
+    downloadModalOverlay.classList.add("show");
+  });
+
+  function closeDownloadModal() { downloadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeDownloadModal").addEventListener("click", closeDownloadModal);
+  document.getElementById("cancelDownloadModal").addEventListener("click", closeDownloadModal);
+  downloadModalOverlay.addEventListener("click", function (e) { if (e.target === downloadModalOverlay) closeDownloadModal(); });
+
+  downloadDuration.addEventListener("change", function () {
+    customRangeFields.style.display = downloadDuration.value === "custom" ? "grid" : "none";
+    errDownloadRange.classList.remove("show");
+  });
+
+  document.getElementById("confirmDownloadBtn").addEventListener("click", function () {
+    var duration = downloadDuration.value;
+
+    if (duration === "custom" && (!downloadFrom.value || !downloadTo.value)) {
+      errDownloadRange.classList.add("show");
+      return;
+    }
+    errDownloadRange.classList.remove("show");
+
+    var format = document.querySelector('input[name="downloadFormat"]:checked').value;
+    var data = App.filterByDuration(getFiltered(), function (t) { return App.parseDisplayDate(t.createdDate); }, duration, downloadFrom.value, downloadTo.value);
+
+    var headers = ["Name", "Customer ID", "Mobile", "Vehicle Number", "Machine Number", "Order Number", "Driver Name", "Status"];
+    var rows = data.map(function (t) {
+      return [t.name, t.customerId, t.mobile, t.vehicleNumber, t.machineNumber, t.orderNumber, t.driverName, t.status];
+    });
+
+    if (format === "csv") {
+      App.downloadCSV("trades.csv", headers, rows);
+    } else {
+      App.downloadPDF("trades.pdf", "Trading List", headers, rows);
+    }
+    closeDownloadModal();
+    showToast("Trades downloaded as " + format.toUpperCase() + ".");
+  });
 
   /* ---------------- Init ---------------- */
   App.initSortableTable(tableHeadRow, state, function () { state.page = 1; render(); });

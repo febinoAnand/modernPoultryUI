@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tenant Dashboard</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">P</div>
+      <div class="brand-text">
+        <strong>Poultry</strong>
+        <span>Control Center</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="tenant-admin.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg>
+        Tenant
+      </a>
+
+      <a class="nav-item active" href="tenant-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+
+      <button class="nav-item logout-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" data-user-initial>V</div>
+      <div class="who">
+        <strong data-user-name>Vijay</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="page-title">
+          Dashboard
+          <span>Platform-wide totals across every tenant</span>
+        </div>
+      </div>
+      <div class="topbar-right"></div>
+    </header>
+
+    <main class="content">
+
+      <div class="page-header-row centered">
+        <div class="header-spacer"></div>
+        <div class="header-center">
+          <div class="page-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          </div>
+          <h2>Tenant Dashboard</h2>
+          <p>A platform-wide overview of every tenant's data on this system.</p>
+        </div>
+        <div class="header-spacer"></div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-violet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/></svg>
+          </div>
+          <div class="stat-value" id="statTenants">0</div>
+          <div class="stat-label">Total Tenants</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="stat-value" id="statUsers">0</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
+          </div>
+          <div class="stat-value" id="statFarms">0</div>
+          <div class="stat-label">Total Farms</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+          </div>
+          <div class="stat-value" id="statTraders">0</div>
+          <div class="stat-label">Total Traders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-violet">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
+          </div>
+          <div class="stat-value" id="statBranches">0</div>
+          <div class="stat-label">Total Branches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+          </div>
+          <div class="stat-value" id="statBills">0</div>
+          <div class="stat-label">Total Bills</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+          <div class="stat-value" id="statSalesOrders">0</div>
+          <div class="stat-label">Total Sales Orders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+          </div>
+          <div class="stat-value" id="statMachines">0</div>
+          <div class="stat-label">Total Machines</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="detail-card-header">
+          <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg></span>
+          Tenants Overview
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tenantsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/></svg>
+          <p>No tenants have been provisioned yet.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  App.requireAuth();
+  App.initSidebar();
+  App.initLogout();
+  App.initUserBadge();
+  App.initSessionTimeout();
+
+  /* Same hidden-page rules as tenant-admin.html: not linked from the
+     tenant-facing app's own sidebar, dashboard, or profile page —
+     reachable only via this Control Center's own nav (Tenant <->
+     Dashboard). The stats below are platform-wide totals — this app
+     doesn't partition farms/users/bills/branches per tenant, so the
+     dashboard reports the whole dataset rather than per-tenant splits. */
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  var orgs = Data.getOrganizations();
+  var users = Data.getUsers();
+  var farms = Data.getFarmCodes();
+  var traders = Data.getTraderCodes();
+  var branches = Data.getBranches();
+  var bills = Data.getBills();
+  var salesOrders = Data.getSalesOrders();
+  var machines = Data.getMachines();
+
+  document.getElementById("statTenants").textContent = orgs.length;
+  document.getElementById("statUsers").textContent = users.length;
+  document.getElementById("statFarms").textContent = farms.length;
+  document.getElementById("statTraders").textContent = traders.length;
+  document.getElementById("statBranches").textContent = branches.length;
+  document.getElementById("statBills").textContent = bills.length;
+  document.getElementById("statSalesOrders").textContent = salesOrders.length;
+  document.getElementById("statMachines").textContent = machines.length;
+
+  function statusClass(status) { return status === "Active" ? "active" : "inactive"; }
+
+  var tenantsTableBody = document.getElementById("tenantsTableBody");
+  var emptyState = document.getElementById("emptyState");
+
+  if (orgs.length === 0) {
+    tenantsTableBody.innerHTML = "";
+    emptyState.style.display = "block";
+  } else {
+    emptyState.style.display = "none";
+    tenantsTableBody.innerHTML = orgs.map(function (o) {
+      return (
+        '<tr>' +
+          '<td>' + escapeHtml(o.companyName) + '</td>' +
+          '<td>' + escapeHtml(o.email) + '</td>' +
+          '<td>' + escapeHtml(o.username) + '</td>' +
+          '<td><span class="status-pill ' + statusClass(o.status) + '">' + escapeHtml(o.status) + '</span></td>' +
+        '</tr>'
+      );
+    }).join("");
+  }
+</script>
+
+</body>
+</html>

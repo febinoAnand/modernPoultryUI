@@ -68,9 +68,9 @@
         User
       </a>
 
-      <a class="nav-item" href="add-group.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Groups
+      <a class="nav-item" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
       </a>
 
       <span class="nav-section-label">Account</span>
@@ -137,6 +137,11 @@
         </div>
       </div>
 
+      <div class="form-alert" id="userLimitAlert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="userLimitAlertText">User limit reached.</span>
+      </div>
+
       <div class="stat-grid stat-grid-tight">
         <div class="stat-card">
           <div class="stat-icon icon-violet">
@@ -161,10 +166,10 @@
         </div>
         <div class="stat-card">
           <div class="stat-icon icon-amber">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <div class="stat-value" id="statGroups">0</div>
-          <div class="stat-label">Company Groups</div>
+          <div class="stat-value" id="statAdmins">0</div>
+          <div class="stat-label">Admins</div>
         </div>
       </div>
 
@@ -172,7 +177,7 @@
         <div class="table-toolbar">
           <div class="search-box">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="searchInput" placeholder="Search by name, email, group or machine ID...">
+            <input type="text" id="searchInput" placeholder="Search by name, email or role...">
           </div>
           <select id="filterStatus" class="filter-select">
             <option value="all">All Status</option>
@@ -189,10 +194,9 @@
                 <th>S.No</th>
                 <th data-sort="name">Name</th>
                 <th data-sort="email" class="field-col-email">Email Address</th>
-                <th data-sort="group" class="field-col-group">Company Group</th>
+                <th data-sort="role" class="field-col-role">Role</th>
                 <th data-sort="mobile" class="field-col-mobile">Mobile</th>
                 <th data-sort="status" class="field-col-status">Status</th>
-                <th data-sort="machineId" class="field-col-machineId">Machine ID</th>
                 <th data-sort="createdDate" class="field-col-createdDate">Created Date</th>
                 <th>Action</th>
               </tr>
@@ -243,22 +247,21 @@
             <span class="field-error" id="errEmail">Please enter a valid email address.</span>
           </div>
 
-          <div class="field field-col-group">
-            <label for="fGroup">Company Group <span class="req">*</span></label>
-            <input type="text" id="fGroup" placeholder="e.g. Group A">
-            <span class="field-error" id="errGroup">Please enter a company group.</span>
+          <div class="field full field-col-role">
+            <label for="fRole">Role <span class="req">*</span></label>
+            <select id="fRole"></select>
+            <div class="role-add-row" id="roleAddRow" style="display:none">
+              <input type="text" id="newRoleInput" placeholder="e.g. Supervisor">
+              <button type="button" class="btn btn-outline btn-sm" id="confirmAddRole">Add</button>
+              <button type="button" class="btn btn-outline btn-sm" id="cancelAddRole">Cancel</button>
+            </div>
+            <span class="field-error" id="errRole">Please add or select a role.</span>
           </div>
 
           <div class="field field-col-mobile">
             <label for="fMobile">Mobile <span class="req">*</span></label>
             <input type="text" id="fMobile" maxlength="10" placeholder="10-digit number">
             <span class="field-error" id="errMobile">Enter a valid 10-digit mobile number.</span>
-          </div>
-
-          <div class="field field-col-machineId">
-            <label for="fMachineId">Machine ID <span class="req">*</span></label>
-            <input type="text" id="fMachineId" placeholder="e.g. MC-1042">
-            <span class="field-error" id="errMachineId">Please enter a machine ID.</span>
           </div>
 
           <div class="field field-col-createdDate" id="createdDateField" style="display:none">
@@ -435,12 +438,11 @@
      column, add/edit form, view popup) via a shared "field-col-<key>"
      class; a field with view=true but edit=false stays visible but its
      form input is disabled. */
-  var FIELD_KEYS = ["email", "group", "mobile", "status", "machineId", "createdDate"];
+  var FIELD_KEYS = ["email", "role", "mobile", "status", "createdDate"];
   var FIELD_INPUT_SELECTORS = {
     email: "#fEmail",
-    group: "#fGroup",
+    role: "#fRole",
     mobile: "#fMobile",
-    machineId: "#fMachineId",
     createdDate: "#fCreatedDate",
     status: 'input[name="fStatus"]'
   };
@@ -477,6 +479,44 @@
 
   function persist() { Data.saveUsers(users); }
 
+  /* ---------------- Tenant user limit (set on the Tenants page) ----------
+     This app doesn't partition Data.getUsers() per tenant — the signed-in
+     session's own org (App.getOrgId()) is the only tenant with real data
+     here, so its configured maxUsers caps the whole list's length. No org
+     match or no limit configured both mean "unlimited", same as before
+     this feature existed. */
+  function getUserLimit() {
+    var orgId = App.getOrgId();
+    var org = orgId ? Data.findOrganization(orgId) : null;
+    return org && org.limits && org.limits.maxUsers !== undefined ? org.limits.maxUsers : null;
+  }
+
+  function updateUserLimitUI() {
+    var limit = getUserLimit();
+    var atLimit = limit !== null && users.length >= limit;
+    var openAddUserBtn = document.getElementById("openAddUser");
+    var alertEl = document.getElementById("userLimitAlert");
+
+    /* Only touch disabled/perm-disabled here if WE were the ones who set
+       it — otherwise this would fight with app.js's permission-based
+       disabling of the same button (data-perm-action="create"). */
+    if (atLimit) {
+      openAddUserBtn.disabled = true;
+      openAddUserBtn.classList.add("perm-disabled");
+      openAddUserBtn.setAttribute("data-limit-disabled", "true");
+    } else if (openAddUserBtn.getAttribute("data-limit-disabled") === "true") {
+      openAddUserBtn.disabled = false;
+      openAddUserBtn.classList.remove("perm-disabled");
+      openAddUserBtn.removeAttribute("data-limit-disabled");
+    }
+
+    alertEl.classList.toggle("show", atLimit);
+    if (atLimit) {
+      document.getElementById("userLimitAlertText").textContent =
+        "This tenant's user limit (" + limit + ") has been reached — remove or disable a user before adding another.";
+    }
+  }
+
   /* ---------------- State ---------------- */
   var state = { search: "", filterStatus: "all", page: 1, pageSize: 10, openMenuId: null, sortKey: null, sortDir: "asc" };
 
@@ -497,7 +537,8 @@
   }
 
   function initials(name) {
-    var parts = name.trim().split(" ");
+    var parts = (name || "").trim().split(" ");
+    if (!parts[0]) return "?";
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
@@ -508,8 +549,7 @@
       if (!term) return true;
       return u.name.toLowerCase().indexOf(term) !== -1 ||
         u.email.toLowerCase().indexOf(term) !== -1 ||
-        u.group.toLowerCase().indexOf(term) !== -1 ||
-        u.machineId.toLowerCase().indexOf(term) !== -1;
+        u.role.toLowerCase().indexOf(term) !== -1;
     });
   }
 
@@ -543,10 +583,9 @@
             '<td>' + (start + idx + 1) + '</td>' +
             '<td><div class="cell-user"><div class="cell-avatar">' + initials(u.name) + '</div><span class="cell-user-name">' + escapeHtml(u.name) + '</span></div></td>' +
             '<td class="field-col-email"><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(u.email) + '</span></td>' +
-            '<td class="field-col-group"><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>' + escapeHtml(u.group) + '</span></td>' +
+            '<td class="field-col-role"><span class="chip chip-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>' + escapeHtml(u.role) + '</span></td>' +
             '<td class="field-col-mobile"><span class="chip chip-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' + escapeHtml(u.mobile) + '</span></td>' +
             '<td class="field-col-status"><span class="status-pill ' + statusClass + '">' + u.status + '</span></td>' +
-            '<td class="field-col-machineId"><span class="chip chip-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/></svg>' + escapeHtml(u.machineId) + '</span></td>' +
             '<td class="field-col-createdDate">' + u.createdDate + '</td>' +
             '<td>' +
               '<div class="row-actions">' +
@@ -584,17 +623,18 @@
     if (state.openMenuId !== null) App.positionActionMenu(state.openMenuId);
 
     updateStats();
+    updateUserLimitUI();
   }
 
   function updateStats() {
     var total = users.length;
     var active = users.filter(function (u) { return u.status === "Active"; }).length;
     var inactive = total - active;
-    var groups = new Set(users.map(function (u) { return u.group.trim(); }).filter(Boolean)).size;
+    var admins = users.filter(function (u) { return u.role === "Admin"; }).length;
     document.getElementById("statTotal").textContent = total;
     document.getElementById("statActive").textContent = active;
     document.getElementById("statInactive").textContent = inactive;
-    document.getElementById("statGroups").textContent = groups;
+    document.getElementById("statAdmins").textContent = admins;
   }
 
   /* ---------------- Search ---------------- */
@@ -677,10 +717,16 @@
   var fUserId = document.getElementById("userId");
   var fName = document.getElementById("fName");
   var fEmail = document.getElementById("fEmail");
-  var fGroup = document.getElementById("fGroup");
+  var fRole = document.getElementById("fRole");
   var fMobile = document.getElementById("fMobile");
-  var fMachineId = document.getElementById("fMachineId");
   var fCreatedDate = document.getElementById("fCreatedDate");
+  var roleSelectCtrl = App.initRoleSelect(
+    fRole,
+    document.getElementById("roleAddRow"),
+    document.getElementById("newRoleInput"),
+    document.getElementById("confirmAddRole"),
+    document.getElementById("cancelAddRole")
+  );
 
   function openUserModal(user) {
     document.querySelectorAll("#userForm .field-error").forEach(function (el) { el.classList.remove("show"); });
@@ -692,9 +738,8 @@
       fUserId.value = user.id;
       fName.value = user.name;
       fEmail.value = user.email;
-      fGroup.value = user.group;
+      roleSelectCtrl.setValue(user.role);
       fMobile.value = user.mobile;
-      fMachineId.value = user.machineId;
       fCreatedDate.value = user.createdDate;
       createdDateField.style.display = "flex";
       document.querySelector('input[name="fStatus"][value="' + user.status + '"]').checked = true;
@@ -704,9 +749,8 @@
       fUserId.value = "";
       fName.value = "";
       fEmail.value = "";
-      fGroup.value = "";
+      roleSelectCtrl.setValue(null);
       fMobile.value = "";
-      fMachineId.value = "";
       createdDateField.style.display = "none";
       document.querySelector('input[name="fStatus"][value="Active"]').checked = true;
     }
@@ -742,25 +786,27 @@
       valid = valid && emailOk;
     }
 
-    if (fieldEditable("group")) {
-      var groupOk = fGroup.value.trim() !== "";
-      setFieldError(fGroup, document.getElementById("errGroup"), !groupOk);
-      valid = valid && groupOk;
-    }
-
     if (fieldEditable("mobile")) {
       var mobileOk = mobileRe.test(fMobile.value.trim());
       setFieldError(fMobile, document.getElementById("errMobile"), !mobileOk);
       valid = valid && mobileOk;
     }
 
-    if (fieldEditable("machineId")) {
-      var machineOk = fMachineId.value.trim().length > 0;
-      setFieldError(fMachineId, document.getElementById("errMachineId"), !machineOk);
-      valid = valid && machineOk;
+    if (fieldEditable("role")) {
+      var roleOk = !roleSelectCtrl.isPendingAdd();
+      setFieldError(fRole, document.getElementById("errRole"), !roleOk);
+      valid = valid && roleOk;
     }
 
     if (!valid) return;
+
+    if (!fUserId.value) {
+      var limit = getUserLimit();
+      if (limit !== null && users.length >= limit) {
+        showToast("This tenant's user limit (" + limit + ") has been reached.");
+        return;
+      }
+    }
 
     var status = document.querySelector('input[name="fStatus"]:checked').value;
 
@@ -768,9 +814,8 @@
       var user = users.find(function (u) { return u.id === parseInt(fUserId.value, 10); });
       user.name = fName.value.trim();
       user.email = fEmail.value.trim();
-      user.group = fGroup.value.trim();
+      user.role = fRole.value;
       user.mobile = fMobile.value.trim();
-      user.machineId = fMachineId.value.trim();
       user.status = status;
       showToast("User updated successfully.");
     } else {
@@ -781,10 +826,9 @@
         id: nextId++,
         name: fName.value.trim(),
         email: fEmail.value.trim(),
-        group: fGroup.value.trim(),
+        role: fRole.value,
         mobile: fMobile.value.trim(),
         status: status,
-        machineId: fMachineId.value.trim(),
         createdDate: createdDate
       });
       state.search = "";
@@ -844,10 +888,9 @@
     var fields = [
       ["Name", user.name, null],
       ["Email Address", user.email, "email"],
-      ["Company Group", user.group, "group"],
+      ["Role", user.role, "role"],
       ["Mobile", user.mobile, "mobile"],
       ["Status", user.status, "status"],
-      ["Machine ID", user.machineId, "machineId"],
       ["Created Date", user.createdDate, "createdDate"]
     ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
@@ -930,8 +973,8 @@
 
     var format = document.querySelector('input[name="downloadFormat"]:checked').value;
     var data = App.filterByDuration(getFiltered(), function (u) { return App.parseDisplayDate(u.createdDate); }, duration, downloadFrom.value, downloadTo.value);
-    var headers = ["Name", "Email Address", "Company Group", "Mobile", "Status", "Machine ID", "Created Date"];
-    var rows = data.map(function (u) { return [u.name, u.email, u.group, u.mobile, u.status, u.machineId, u.createdDate]; });
+    var headers = ["Name", "Email Address", "Role", "Mobile", "Status", "Created Date"];
+    var rows = data.map(function (u) { return [u.name, u.email, u.role, u.mobile, u.status, u.createdDate]; });
 
     if (format === "csv") {
       App.downloadCSV("users.csv", headers, rows);
