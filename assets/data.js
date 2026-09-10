@@ -11,7 +11,6 @@
   var TRADES_KEY = "ui_trades_v1";
   var BILLS_KEY = "ui_bills_v2";
   var PROFILE_KEY = "ui_profile_v1";
-  var GROUPS_KEY = "ui_groups_v2";
   var FARM_CODES_KEY = "ui_farm_codes_v1";
   var TRADER_CODES_KEY = "ui_trader_codes_v1";
   var SALES_ORDERS_KEY = "ui_sales_orders_v1";
@@ -20,23 +19,15 @@
   var ORGANIZATIONS_KEY = "ui_organizations_v1";
   var MACHINES_KEY = "ui_machines_v1";
   var APP_SETTINGS_KEY = "ui_app_settings_v1";
-
-  var GROUP_OPTIONS = [
-    "VPS BROILER", "KONGU BROILERS", "KM CHICKEN", "VASANTHAA POULTRY FARM", "MP CHICKEN",
-    "workout", "temp", "febino2", "NEW TECH TRADERS", "DURAI BROILERS",
-    "MANIES BROILERS", "PP AGENCY", "SELVAM BROILERS", "ASS BROILER", "MINNAL TRADERS",
-    "SRS COUNTRY CHICKEN", "Maya", "KONAR CHICKEN", "GR CHICKEN", "Febinosolutions",
-    "Abi chicken", "ABU BROILERS", "VHL", "RG CHICKEN", "THARANI POULTRY",
-    "AADHI CHICKEN", "BASHA FRESH CHICKEN", "MOHA POULTRY FARMS", "MURUGAN TRADERS", "JK CHICKEN",
-    "MJ CHICKEN", "SR BISMI", "RRG CHICKEN", "KONGU BROILERS GUDALUR", "KONGU BROILERS PANDALUR",
-    "KONGU BROILERS MANJOOR", "KONGU BROILERS COONOOR", "KONGU BROILERS OOTY", "ANNAI POULTRY FARM", "CLEAN KANNUR VENTURES"
-  ];
+  var USER_ROLES_KEY = "ui_user_roles_v1";
+  var ROLE_PERMISSIONS_KEY = "ui_role_permissions_v1";
 
   var FIRST_NAMES = ["Ramesh", "Suresh", "Priya", "Anitha", "Karthik", "Vijay", "Deepa", "Manoj", "Lakshmi", "Arjun", "Sneha", "Vikram", "Divya", "Rahul", "Meena", "Sathish", "Pooja", "Naveen", "Kavya", "Ashok", "Revathi", "Bala", "Nithya", "Ganesh"];
   var LAST_NAMES = ["Kumar", "Raj", "Nair", "Iyer", "Reddy", "Sharma", "Pillai", "Menon", "Gupta", "Rao"];
   var DRIVER_FIRST = ["Murugan", "Selvam", "Kannan", "Raja", "Mani", "Senthil", "Vasu", "Elango", "Prakash", "Dinesh"];
   var STATE_CODES = ["TN10", "TN37", "KA05", "AP09", "KL07"];
   var GROUPS = ["Group A", "Group B", "Group C", "Group D"];
+  var USER_ROLES = ["Admin", "Manager", "Viewer"];
 
   function buildSeedUsers() {
     return FIRST_NAMES.map(function (first, i) {
@@ -48,10 +39,9 @@
         id: i + 1,
         name: name,
         email: first.toLowerCase() + "." + last.toLowerCase() + "@example.com",
-        group: GROUPS[i % GROUPS.length],
+        role: USER_ROLES[i % USER_ROLES.length],
         mobile: "98" + String(40000000 + i * 137).slice(0, 8),
         status: i % 5 === 0 ? "Inactive" : "Active",
-        machineId: "MC-" + (1000 + i * 3),
         createdDate: String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026"
       };
     });
@@ -70,7 +60,8 @@
         machineNumber: "MC-" + (2000 + i * 5),
         orderNumber: "ORD-" + (20000 + i * 13),
         driverName: DRIVER_FIRST[i % DRIVER_FIRST.length] + " " + LAST_NAMES[(i + 3) % LAST_NAMES.length],
-        status: i % 6 === 0 ? "Inactive" : "Active"
+        status: i % 6 === 0 ? "Inactive" : "Active",
+        createdDate: seedCreatedDate(i)
       };
     });
   }
@@ -188,7 +179,8 @@
         loadingTime: loadingTime,
 
         weighingSessions: sessions,
-        birdTypeBreakdown: birdTypeBreakdown
+        birdTypeBreakdown: birdTypeBreakdown,
+        customField: ""
       };
     });
   }
@@ -196,7 +188,15 @@
   function getUsers() {
     var raw = localStorage.getItem(USERS_KEY);
     if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+      try {
+        var users = JSON.parse(raw);
+        var migrated = false;
+        users.forEach(function (u, i) {
+          if (u.role === undefined) { u.role = USER_ROLES[i % USER_ROLES.length]; migrated = true; }
+        });
+        if (migrated) saveUsers(users);
+        return users;
+      } catch (e) { /* fall through to reseed */ }
     }
     var seeded = buildSeedUsers();
     saveUsers(seeded);
@@ -207,10 +207,40 @@
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
 
+  /* ---------------- User roles (open-ended, not a fixed enum) ----------
+     Starts with Admin/Manager/Viewer but any page can add a new role on
+     the fly (see App.initRoleSelect) — it's appended here so it shows up
+     in every Role dropdown from then on, across user-list and tenant
+     profiles alike. */
+  function getUserRoles() {
+    var raw = localStorage.getItem(USER_ROLES_KEY);
+    if (raw) {
+      try {
+        var roles = JSON.parse(raw);
+        if (Array.isArray(roles) && roles.length) return roles;
+      } catch (e) { /* fall through to reseed */ }
+    }
+    var seeded = USER_ROLES.slice();
+    saveUserRoles(seeded);
+    return seeded;
+  }
+
+  function saveUserRoles(roles) {
+    localStorage.setItem(USER_ROLES_KEY, JSON.stringify(roles));
+  }
+
   function getTrades() {
     var raw = localStorage.getItem(TRADES_KEY);
     if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+      try {
+        var trades = JSON.parse(raw);
+        var migrated = false;
+        trades.forEach(function (t, i) {
+          if (t.createdDate === undefined) { t.createdDate = seedCreatedDate(i); migrated = true; }
+        });
+        if (migrated) saveTrades(trades);
+        return trades;
+      } catch (e) { /* fall through to reseed */ }
     }
     var seeded = buildSeedTrades();
     saveTrades(seeded);
@@ -235,45 +265,10 @@
     localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
   }
 
-  var GROUP_DESCRIPTIONS = [
-    "Regular poultry supplier", "Trusted trading partner", "Bulk order specialist",
-    "Premium quality broilers", "Long-term associate", "Local farm distributor",
-    "Wholesale chicken trader", "Verified vendor", "High volume dealer", "New partnership"
-  ];
-
   function seedCreatedDate(i) {
     var day = 3 + (i % 24);
     var month = 1 + (i % 8);
     return String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026";
-  }
-
-  function buildSeedGroups() {
-    return GROUP_OPTIONS.map(function (name, i) {
-      var m = i % 10;
-      var status = m === 0 ? "Inactive" : (m === 1 || m === 2 ? "Pending Approval" : "Active");
-      return {
-        id: i + 1,
-        groupName: name,
-        mobile: "96" + String(40000000 + i * 151).slice(0, 8),
-        description: GROUP_DESCRIPTIONS[i % GROUP_DESCRIPTIONS.length],
-        status: status,
-        createdDate: seedCreatedDate(i)
-      };
-    });
-  }
-
-  function getGroups() {
-    var raw = localStorage.getItem(GROUPS_KEY);
-    if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
-    }
-    var seeded = buildSeedGroups();
-    saveGroups(seeded);
-    return seeded;
-  }
-
-  function saveGroups(groups) {
-    localStorage.setItem(GROUPS_KEY, JSON.stringify(groups));
   }
 
   var LOCATIONS = ["Erode", "Namakkal", "Salem", "Coimbatore", "Tirupur", "Karur", "Dindigul", "Trichy", "Madurai", "Theni"];
@@ -362,7 +357,8 @@
         totalAmount: qty * rate,
         orderDate: String(day).padStart(2, "0") + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"][month - 1] + " 2026",
         orderStatus: ORDER_STATUSES[i % 3],
-        status: i % 8 === 0 ? "Inactive" : "Active"
+        status: i % 8 === 0 ? "Inactive" : "Active",
+        customField: ""
       };
     });
   }
@@ -370,7 +366,18 @@
   function getSalesOrders() {
     var raw = localStorage.getItem(SALES_ORDERS_KEY);
     if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
+      try {
+        var parsed = JSON.parse(raw);
+        var migrated = false;
+        parsed.forEach(function (o) {
+          if (o.trader === undefined) { o.trader = o.customerName || ""; delete o.customerName; migrated = true; }
+          if (o.branch === undefined) { o.branch = ""; migrated = true; }
+          if (o.supervisor === undefined) { o.supervisor = ""; migrated = true; }
+          if (o.customField === undefined) { o.customField = ""; migrated = true; }
+        });
+        if (migrated) saveSalesOrders(parsed);
+        return parsed;
+      } catch (e) { /* fall through to reseed */ }
     }
     var seeded = buildSeedSalesOrders();
     saveSalesOrders(seeded);
@@ -451,7 +458,7 @@
       email: email,
       mobile: "",
       machineId: "",
-      group: "",
+      role: "",
       orgId: "POULTRY",
       companyName: "Poultry Pvt Ltd",
       companyWebsite: "www.poultry.com",
@@ -472,7 +479,15 @@
   function getOrganizations() {
     var raw = localStorage.getItem(ORGANIZATIONS_KEY);
     if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through */ }
+      try {
+        var orgs = JSON.parse(raw);
+        var migrated = false;
+        orgs.forEach(function (o) {
+          if (o.status === "Inactive") { o.status = "Suspended"; migrated = true; }
+        });
+        if (migrated) saveOrganizations(orgs);
+        return orgs;
+      } catch (e) { /* fall through */ }
     }
     return [];
   }
@@ -619,25 +634,42 @@
     localStorage.setItem(MACHINES_KEY, JSON.stringify(machines));
   }
 
+  /* ---------------- Role permissions (Roles & Permissions page) ----------
+     Keyed by role name (the same open-ended list as Data.getUserRoles),
+     so { "Admin": {...}, "Manager": {...} }. Each role's permissions
+     object has the same shape as a module's CRUD + field permissions. */
+
+  function getRolePermissions() {
+    var raw = localStorage.getItem(ROLE_PERMISSIONS_KEY);
+    if (raw) {
+      try { return JSON.parse(raw); } catch (e) { /* fall through */ }
+    }
+    return {};
+  }
+
+  function saveRolePermissions(rolePermissions) {
+    localStorage.setItem(ROLE_PERMISSIONS_KEY, JSON.stringify(rolePermissions));
+  }
+
   /* ---------------- Effective permissions ----------------
      Resolves the CRUD permissions that apply to the current
-     session for a given module, based on the profile's selected
-     group. No group selected (or a group with no saved
-     permissions yet) falls back to full access so the app stays
-     usable out of the box — restrictions only kick in once an
-     admin actually configures a group's Permissions tab and the
-     signed-in profile is assigned to that group. */
+     session for a given module, based on the profile's assigned
+     role. No role assigned (or a role with no saved permissions
+     yet) falls back to full access so the app stays usable out of
+     the box — restrictions only kick in once an admin actually
+     configures a role on the Roles & Permissions page and the
+     signed-in profile is assigned that role. */
 
   function getModulePermissions(moduleKey) {
     var fullAccess = { create: true, read: true, update: true, delete: true, fields: null };
     var profile = getProfile();
-    if (!profile.group) return fullAccess;
+    if (!profile.role) return fullAccess;
 
-    var groups = getGroups();
-    var matched = groups.find(function (g) { return g.groupName === profile.group; });
-    if (!matched || !matched.permissions) return fullAccess;
+    var rolePermissions = getRolePermissions();
+    var matched = rolePermissions[profile.role];
+    if (!matched) return fullAccess;
 
-    var modulePerms = matched.permissions[moduleKey];
+    var modulePerms = matched[moduleKey];
     if (!modulePerms) return fullAccess;
 
     return {
@@ -668,14 +700,16 @@
   window.Data = {
     getUsers: getUsers,
     saveUsers: saveUsers,
+    getUserRoles: getUserRoles,
+    saveUserRoles: saveUserRoles,
     getTrades: getTrades,
     saveTrades: saveTrades,
     getBills: getBills,
     saveBills: saveBills,
     getProfile: getProfile,
     saveProfile: saveProfile,
-    getGroups: getGroups,
-    saveGroups: saveGroups,
+    getRolePermissions: getRolePermissions,
+    saveRolePermissions: saveRolePermissions,
     getFarmCodes: getFarmCodes,
     saveFarmCodes: saveFarmCodes,
     getTraderCodes: getTraderCodes,
@@ -686,9 +720,9 @@
     saveBranches: saveBranches,
     getProducts: getProducts,
     saveProducts: saveProducts,
-    GROUP_OPTIONS: GROUP_OPTIONS,
     getOrganizations: getOrganizations,
     saveOrganizations: saveOrganizations,
+    generateOrgId: generateOrgId,
     findOrganization: findOrganization,
     isUsernameTaken: isUsernameTaken,
     registerOrganization: registerOrganization,

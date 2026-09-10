@@ -68,9 +68,9 @@
         User
       </a>
 
-      <a class="nav-item" href="add-group.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-        Groups
+      <a class="nav-item" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
       </a>
 
       <span class="nav-section-label">Account</span>
@@ -126,6 +126,10 @@
           <p>View, add, edit and manage every branch location.</p>
         </div>
         <div class="header-actions">
+          <button class="btn btn-outline" id="openUploadModal" data-perm-action="create">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload
+          </button>
           <button class="btn btn-outline" id="openDownloadModal">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download
@@ -213,7 +217,7 @@
 
 <!-- Add / Edit Branch Modal -->
 <div class="modal-overlay" id="branchModalOverlay">
-  <div class="modal-box">
+  <div class="modal-box wide">
     <div class="modal-header">
       <div>
         <h3 id="branchModalTitle">Add Branch</h3>
@@ -223,27 +227,118 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
+
+    <div class="modal-tabs">
+      <button type="button" class="modal-tab active" data-tab="details">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
+        Details
+      </button>
+      <button type="button" class="modal-tab" data-tab="members">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Members
+        <span class="tab-count" id="branchMemberTabCount">0</span>
+      </button>
+      <button type="button" class="modal-tab" data-tab="farm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
+        Farm
+        <span class="tab-count" id="branchFarmTabCount">0</span>
+      </button>
+      <button type="button" class="modal-tab" data-tab="trader">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+        Trader
+        <span class="tab-count" id="branchTraderTabCount">0</span>
+      </button>
+    </div>
+
     <div class="modal-body">
       <form id="branchForm" novalidate>
         <input type="hidden" id="branchId">
-        <div class="field-grid">
-          <div class="field full">
-            <label for="bName">Branch Name <span class="req">*</span></label>
-            <input type="text" id="bName" placeholder="e.g. Erode Branch">
-            <span class="field-error" id="errBName">Please enter a branch name.</span>
+
+        <div class="modal-tab-panel active" data-tab-panel="details">
+          <p class="section-heading">Branch Details</p>
+          <p class="section-subheading">Name, code and address for this branch.</p>
+          <div class="field-grid">
+            <div class="field full field-col-branchCode">
+              <label for="bCode">Branch Code <span class="req">*</span></label>
+              <input type="text" id="bCode" placeholder="e.g. BR-1021">
+              <span class="field-error" id="errBCode">Please enter a branch code.</span>
+            </div>
+
+            <div class="field full">
+              <label for="bName">Branch Name <span class="req">*</span></label>
+              <input type="text" id="bName" placeholder="e.g. Erode Branch">
+              <span class="field-error" id="errBName">Please enter a branch name.</span>
+            </div>
+
+            <div class="field full field-col-address">
+              <label for="bAddress">Address <span class="req">*</span></label>
+              <textarea id="bAddress" placeholder="e.g. 45 Main Road, Erode"></textarea>
+              <span class="field-error" id="errBAddress">Please enter an address.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-tab-panel" data-tab-panel="members">
+          <p class="section-heading">Members</p>
+          <p class="section-subheading">Search every user by name, email or role and select who belongs to this branch.</p>
+
+          <div class="member-context-banner">
+            <span class="member-context-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <span>Adding members to <strong id="branchMemberContextName">this branch</strong></span>
           </div>
 
-          <div class="field full field-col-branchCode">
-            <label for="bCode">Branch Code <span class="req">*</span></label>
-            <input type="text" id="bCode" placeholder="e.g. BR-1021">
-            <span class="field-error" id="errBCode">Please enter a branch code.</span>
+          <div class="member-chip-row" id="branchMemberChipRow"></div>
+
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="branchMemberSearchInput" placeholder="Search users by name, email or role...">
           </div>
 
-          <div class="field full field-col-address">
-            <label for="bAddress">Address <span class="req">*</span></label>
-            <textarea id="bAddress" placeholder="e.g. 45 Main Road, Erode"></textarea>
-            <span class="field-error" id="errBAddress">Please enter an address.</span>
+          <div class="member-search-list" id="branchMemberSearchList"></div>
+        </div>
+
+        <div class="modal-tab-panel" data-tab-panel="farm">
+          <p class="section-heading">Farm</p>
+          <p class="section-subheading">Search every farmer by name, farm code or location and select who is linked to this branch.</p>
+
+          <div class="member-context-banner">
+            <span class="member-context-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
+            </span>
+            <span>Adding farms to <strong id="branchFarmContextName">this branch</strong></span>
           </div>
+
+          <div class="member-chip-row" id="branchFarmChipRow"></div>
+
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="branchFarmSearchInput" placeholder="Search farmers by name, farm code or location...">
+          </div>
+
+          <div class="member-search-list" id="branchFarmSearchList"></div>
+        </div>
+
+        <div class="modal-tab-panel" data-tab-panel="trader">
+          <p class="section-heading">Trader</p>
+          <p class="section-subheading">Search every trader by name, trader code or city and select who is linked to this branch.</p>
+
+          <div class="member-context-banner">
+            <span class="member-context-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+            </span>
+            <span>Adding traders to <strong id="branchTraderContextName">this branch</strong></span>
+          </div>
+
+          <div class="member-chip-row" id="branchTraderChipRow"></div>
+
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="branchTraderSearchInput" placeholder="Search traders by name, trader code or city...">
+          </div>
+
+          <div class="member-search-list" id="branchTraderSearchList"></div>
         </div>
       </form>
     </div>
@@ -283,7 +378,7 @@
 
 <!-- View Modal -->
 <div class="modal-overlay" id="viewModalOverlay">
-  <div class="modal-box">
+  <div class="modal-box wide">
     <div class="modal-header">
       <div>
         <h3>Branch Details</h3>
@@ -295,6 +390,15 @@
     </div>
     <div class="modal-body">
       <div class="view-detail-grid" id="viewDetailGrid"></div>
+
+      <p class="section-heading" id="viewMembersHeading">Members</p>
+      <div class="member-chip-row" id="viewMembersChipRow"></div>
+
+      <p class="section-heading" id="viewFarmHeading">Farm</p>
+      <div class="member-chip-row" id="viewFarmChipRow"></div>
+
+      <p class="section-heading" id="viewTraderHeading">Trader</p>
+      <div class="member-chip-row" id="viewTraderChipRow"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" id="viewEditBtn">
@@ -310,6 +414,40 @@
         <span id="viewToggleLabel">Disable</span>
       </button>
       <button class="btn btn-outline" id="closeViewModalBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="uploadModalOverlay">
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-header">
+      <div>
+        <h3>Upload Branches</h3>
+        <p>Bulk-import branches from a CSV or Excel file.</p>
+      </div>
+      <button class="modal-close" id="closeUploadModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-template-row">
+        <span>Columns: Branch Name, Branch Code, Address</span>
+        <button type="button" class="btn btn-outline btn-sm" id="downloadTemplateBtn">Download Template</button>
+      </div>
+      <div class="field full">
+        <label for="uploadFileInput">CSV or Excel File <span class="req">*</span></label>
+        <input type="file" id="uploadFileInput" accept=".csv,.xlsx,.xls">
+        <span class="field-error" id="errUploadFile">Please choose a .csv or .xlsx file.</span>
+      </div>
+      <div class="upload-summary" id="uploadSummary" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancelUploadModal">Cancel</button>
+      <button class="btn btn-primary" id="confirmUploadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload
+      </button>
     </div>
   </div>
 </div>
@@ -383,6 +521,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.8/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/data.js"></script>
 <script>
@@ -452,7 +591,8 @@
   }
 
   function initials(name) {
-    var parts = name.trim().split(" ");
+    var parts = (name || "").trim().split(" ");
+    if (!parts[0]) return "?";
     return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
   }
 
@@ -622,6 +762,166 @@
     }
   }
 
+  /* ---------------- Modal tabs ---------------- */
+  var modalTabs = document.querySelectorAll(".modal-tab");
+  var modalPanels = document.querySelectorAll(".modal-tab-panel");
+
+  function switchToTab(tabKey) {
+    modalTabs.forEach(function (t) { t.classList.toggle("active", t.getAttribute("data-tab") === tabKey); });
+    modalPanels.forEach(function (p) { p.classList.toggle("active", p.getAttribute("data-tab-panel") === tabKey); });
+  }
+
+  modalTabs.forEach(function (tabBtn) {
+    tabBtn.addEventListener("click", function () { switchToTab(tabBtn.getAttribute("data-tab")); });
+  });
+
+  /* ---------------- Members / Farm / Trader pickers ----------------
+     Same search-and-select pattern as the Groups page's member picker,
+     reused three times (users, farm codes, trader codes) via one small
+     factory instead of copy-pasting the render/search/toggle logic. */
+  var allUsers = Data.getUsers();
+  var allFarms = Data.getFarmCodes().filter(function (f) { return f.status !== "Inactive"; });
+  var allTraders = Data.getTraderCodes().filter(function (t) { return t.status !== "Inactive"; });
+
+  var BADGE_CLASSES = ["chip-violet", "chip-blue", "chip-pink", "chip-amber", "chip-green", "chip-slate"];
+  function badgeClass(name) {
+    var hash = 0;
+    for (var i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+    return BADGE_CLASSES[hash % BADGE_CLASSES.length];
+  }
+
+  function createEntityPicker(opts) {
+    var activeIds = [];
+
+    function renderChips() {
+      opts.tabCountEl.textContent = activeIds.length;
+      if (!activeIds.length) {
+        opts.chipRowEl.innerHTML = '<span class="member-chip-empty">' + opts.emptyChipText + '</span>';
+        return;
+      }
+      opts.chipRowEl.innerHTML = activeIds.map(function (id) {
+        var item = opts.items.find(function (it) { return opts.getId(it) === id; });
+        if (!item) return "";
+        return (
+          '<span class="member-chip">' +
+            '<span class="member-chip-avatar">' + initials(opts.getLabel(item)) + '</span>' +
+            '<span class="member-chip-text">' +
+              '<span class="member-chip-name">' + escapeHtml(opts.getLabel(item)) + '</span>' +
+              '<span class="member-chip-group ' + badgeClass(opts.getBadge(item)).replace("chip-", "text-") + '">' + escapeHtml(opts.getBadge(item)) + '</span>' +
+            '</span>' +
+            '<button type="button" data-remove-item="' + id + '" title="Remove">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+            '</button>' +
+          '</span>'
+        );
+      }).join("");
+    }
+
+    function renderList() {
+      var term = opts.searchInputEl.value.trim().toLowerCase();
+      var filtered = opts.items.filter(function (item) {
+        if (!term) return true;
+        return opts.getSearchText(item).toLowerCase().indexOf(term) !== -1;
+      });
+
+      if (!filtered.length) {
+        opts.searchListEl.innerHTML = '<div class="combo-empty">No matches found.</div>';
+        return;
+      }
+
+      opts.searchListEl.innerHTML = filtered.map(function (item) {
+        var id = opts.getId(item);
+        var checked = activeIds.indexOf(id) !== -1;
+        return (
+          '<label class="member-row' + (checked ? " checked" : "") + '" data-item-row="' + id + '">' +
+            '<input type="checkbox" ' + (checked ? "checked" : "") + '>' +
+            '<div class="cell-avatar">' + initials(opts.getLabel(item)) + '</div>' +
+            '<div class="member-info">' +
+              '<div class="member-name">' + escapeHtml(opts.getLabel(item)) + '</div>' +
+              '<div class="member-email">' + escapeHtml(opts.getSub(item)) + '</div>' +
+            '</div>' +
+            '<span class="chip ' + badgeClass(opts.getBadge(item)) + ' member-group-badge">' + escapeHtml(opts.getBadge(item)) + '</span>' +
+          '</label>'
+        );
+      }).join("");
+    }
+
+    opts.searchInputEl.addEventListener("input", renderList);
+
+    opts.searchListEl.addEventListener("click", function (e) {
+      var row = e.target.closest("[data-item-row]");
+      if (!row) return;
+      var id = parseInt(row.getAttribute("data-item-row"), 10);
+      var idx = activeIds.indexOf(id);
+      if (idx === -1) activeIds.push(id); else activeIds.splice(idx, 1);
+      renderChips();
+      renderList();
+    });
+
+    opts.chipRowEl.addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-remove-item]");
+      if (!btn) return;
+      var id = parseInt(btn.getAttribute("data-remove-item"), 10);
+      activeIds = activeIds.filter(function (x) { return x !== id; });
+      renderChips();
+      renderList();
+    });
+
+    return {
+      getIds: function () { return activeIds.slice(); },
+      setIds: function (ids) {
+        activeIds = (ids || []).filter(function (id) {
+          return opts.items.some(function (it) { return opts.getId(it) === id; });
+        });
+        opts.searchInputEl.value = "";
+        renderChips();
+        renderList();
+      }
+    };
+  }
+
+  var memberPicker = createEntityPicker({
+    items: allUsers,
+    getId: function (u) { return u.id; },
+    getLabel: function (u) { return u.name; },
+    getSub: function (u) { return u.email; },
+    getBadge: function (u) { return u.role; },
+    getSearchText: function (u) { return u.name + " " + u.email + " " + u.role; },
+    chipRowEl: document.getElementById("branchMemberChipRow"),
+    tabCountEl: document.getElementById("branchMemberTabCount"),
+    searchInputEl: document.getElementById("branchMemberSearchInput"),
+    searchListEl: document.getElementById("branchMemberSearchList"),
+    emptyChipText: "No members selected yet — search below to add some."
+  });
+
+  var farmPicker = createEntityPicker({
+    items: allFarms,
+    getId: function (f) { return f.id; },
+    getLabel: function (f) { return f.farmerName; },
+    getSub: function (f) { return f.location; },
+    getBadge: function (f) { return f.farmCode; },
+    getSearchText: function (f) { return f.farmerName + " " + f.farmCode + " " + f.location; },
+    chipRowEl: document.getElementById("branchFarmChipRow"),
+    tabCountEl: document.getElementById("branchFarmTabCount"),
+    searchInputEl: document.getElementById("branchFarmSearchInput"),
+    searchListEl: document.getElementById("branchFarmSearchList"),
+    emptyChipText: "No farms selected yet — search below to add some."
+  });
+
+  var traderPicker = createEntityPicker({
+    items: allTraders,
+    getId: function (t) { return t.id; },
+    getLabel: function (t) { return t.traderName; },
+    getSub: function (t) { return t.city; },
+    getBadge: function (t) { return t.traderCode; },
+    getSearchText: function (t) { return t.traderName + " " + t.traderCode + " " + t.city; },
+    chipRowEl: document.getElementById("branchTraderChipRow"),
+    tabCountEl: document.getElementById("branchTraderTabCount"),
+    searchInputEl: document.getElementById("branchTraderSearchInput"),
+    searchListEl: document.getElementById("branchTraderSearchList"),
+    emptyChipText: "No traders selected yet — search below to add some."
+  });
+
   /* ---------------- Add / Edit modal ---------------- */
   var branchModalOverlay = document.getElementById("branchModalOverlay");
   var branchModalTitle = document.getElementById("branchModalTitle");
@@ -630,6 +930,18 @@
   var bName = document.getElementById("bName");
   var bCode = document.getElementById("bCode");
   var bAddress = document.getElementById("bAddress");
+  var branchMemberContextName = document.getElementById("branchMemberContextName");
+  var branchFarmContextName = document.getElementById("branchFarmContextName");
+  var branchTraderContextName = document.getElementById("branchTraderContextName");
+
+  function updateBranchContextNames() {
+    var typedName = bName.value.trim() || "this branch";
+    branchMemberContextName.textContent = typedName;
+    branchFarmContextName.textContent = typedName;
+    branchTraderContextName.textContent = typedName;
+  }
+
+  bName.addEventListener("input", updateBranchContextNames);
 
   function openBranchModal(branch) {
     document.querySelectorAll("#branchForm .field-error").forEach(function (el) { el.classList.remove("show"); });
@@ -642,6 +954,9 @@
       bName.value = branch.branchName;
       bCode.value = branch.branchCode;
       bAddress.value = branch.address;
+      memberPicker.setIds(branch.members);
+      farmPicker.setIds(branch.farms);
+      traderPicker.setIds(branch.traders);
     } else {
       branchModalTitle.textContent = "Add Branch";
       branchModalSubtitle.textContent = "Fill in the details to create a new branch.";
@@ -649,7 +964,12 @@
       bName.value = "";
       bCode.value = "";
       bAddress.value = "";
+      memberPicker.setIds([]);
+      farmPicker.setIds([]);
+      traderPicker.setIds([]);
     }
+    updateBranchContextNames();
+    switchToTab("details");
     branchModalOverlay.classList.add("show");
   }
 
@@ -687,6 +1007,9 @@
       branch.branchName = bName.value.trim();
       branch.branchCode = bCode.value.trim();
       branch.address = bAddress.value.trim();
+      branch.members = memberPicker.getIds();
+      branch.farms = farmPicker.getIds();
+      branch.traders = traderPicker.getIds();
       showToast("Branch updated successfully.");
     } else {
       branches.unshift({
@@ -694,7 +1017,10 @@
         branchName: bName.value.trim(),
         branchCode: bCode.value.trim(),
         address: bAddress.value.trim(),
-        status: "Active"
+        status: "Active",
+        members: memberPicker.getIds(),
+        farms: farmPicker.getIds(),
+        traders: traderPicker.getIds()
       });
       state.search = "";
       searchInput.value = "";
@@ -748,17 +1074,56 @@
   var viewToggleLabel = document.getElementById("viewToggleLabel");
   var currentViewBranch = null;
 
+  function renderViewChipList(chipRowEl, headingEl, label, ids, items, getId, getLabel, getBadge, emptyText) {
+    ids = ids || [];
+    headingEl.textContent = label + " (" + ids.length + ")";
+    if (!ids.length) {
+      chipRowEl.innerHTML = '<span class="member-chip-empty">' + emptyText + '</span>';
+      return;
+    }
+    chipRowEl.innerHTML = ids.map(function (id) {
+      var item = items.find(function (it) { return getId(it) === id; });
+      if (!item) return "";
+      return (
+        '<span class="member-chip">' +
+          '<span class="member-chip-avatar">' + initials(getLabel(item)) + '</span>' +
+          '<span class="member-chip-text">' +
+            '<span class="member-chip-name">' + escapeHtml(getLabel(item)) + '</span>' +
+            '<span class="member-chip-group ' + badgeClass(getBadge(item)).replace("chip-", "text-") + '">' + escapeHtml(getBadge(item)) + '</span>' +
+          '</span>' +
+        '</span>'
+      );
+    }).join("");
+  }
+
   function openViewModal(branch) {
     currentViewBranch = branch;
     var fields = [
-      ["Branch Name", branch.branchName, null],
       ["Branch Code", branch.branchCode, "branchCode"],
+      ["Branch Name", branch.branchName, null],
       ["Address", branch.address, "address"],
       ["Status", branch.status, null]
     ].filter(function (f) { return !f[2] || fieldVisible(f[2]); });
     viewDetailGrid.innerHTML = fields.map(function (f) {
       return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
     }).join("");
+
+    renderViewChipList(
+      document.getElementById("viewMembersChipRow"), document.getElementById("viewMembersHeading"), "Members",
+      branch.members, allUsers, function (u) { return u.id; }, function (u) { return u.name; }, function (u) { return u.role; },
+      "No members linked yet."
+    );
+    renderViewChipList(
+      document.getElementById("viewFarmChipRow"), document.getElementById("viewFarmHeading"), "Farm",
+      branch.farms, allFarms, function (f) { return f.id; }, function (f) { return f.farmerName; }, function (f) { return f.farmCode; },
+      "No farms linked yet."
+    );
+    renderViewChipList(
+      document.getElementById("viewTraderChipRow"), document.getElementById("viewTraderHeading"), "Trader",
+      branch.traders, allTraders, function (t) { return t.id; }, function (t) { return t.traderName; }, function (t) { return t.traderCode; },
+      "No traders linked yet."
+    );
+
     viewToggleLabel.textContent = branch.status === "Active" ? "Disable" : "Enable";
     viewToggleBtn.classList.toggle("danger", branch.status === "Active");
     viewModalOverlay.classList.add("show");
@@ -802,6 +1167,90 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
+
+  /* ---------------- Upload modal ---------------- */
+  var uploadModalOverlay = document.getElementById("uploadModalOverlay");
+  var uploadFileInput = document.getElementById("uploadFileInput");
+  var errUploadFile = document.getElementById("errUploadFile");
+  var uploadSummary = document.getElementById("uploadSummary");
+
+  var UPLOAD_HEADER_MAP = {
+    "branch name": "branchName",
+    "branch code": "branchCode",
+    "address": "address"
+  };
+  var UPLOAD_TEMPLATE_HEADERS = ["Branch Name", "Branch Code", "Address"];
+
+  document.getElementById("openUploadModal").addEventListener("click", function () {
+    uploadFileInput.value = "";
+    errUploadFile.classList.remove("show");
+    uploadSummary.style.display = "none";
+    uploadModalOverlay.classList.add("show");
+  });
+
+  function closeUploadModal() { uploadModalOverlay.classList.remove("show"); }
+  document.getElementById("closeUploadModal").addEventListener("click", closeUploadModal);
+  document.getElementById("cancelUploadModal").addEventListener("click", closeUploadModal);
+  uploadModalOverlay.addEventListener("click", function (e) { if (e.target === uploadModalOverlay) closeUploadModal(); });
+
+  document.getElementById("downloadTemplateBtn").addEventListener("click", function () {
+    App.downloadCSV("branches-template.csv", UPLOAD_TEMPLATE_HEADERS, []);
+  });
+
+  document.getElementById("confirmUploadBtn").addEventListener("click", function () {
+    var file = uploadFileInput.files[0];
+    if (!file) {
+      errUploadFile.classList.add("show");
+      return;
+    }
+    errUploadFile.classList.remove("show");
+    uploadSummary.style.display = "none";
+
+    App.parseUploadFile(file, function (rows) {
+      var existingCodes = new Set(branches.map(function (b) { return b.branchCode.trim().toLowerCase(); }));
+      var added = 0, duplicates = 0, invalid = 0;
+
+      rows.forEach(function (row) {
+        var mapped = App.mapUploadRow(row, UPLOAD_HEADER_MAP);
+        var branchName = (mapped.branchName || "").trim();
+        var branchCode = (mapped.branchCode || "").trim();
+        var address = (mapped.address || "").trim();
+
+        if (!branchName || !branchCode || !address) {
+          invalid++;
+          return;
+        }
+        if (existingCodes.has(branchCode.toLowerCase())) {
+          duplicates++;
+          return;
+        }
+        branches.unshift({
+          id: nextId++,
+          branchName: branchName,
+          branchCode: branchCode,
+          address: address,
+          status: "Active"
+        });
+        existingCodes.add(branchCode.toLowerCase());
+        added++;
+      });
+
+      persist();
+      render();
+
+      uploadSummary.style.display = "block";
+      uploadSummary.classList.toggle("has-errors", invalid > 0 || duplicates > 0);
+      uploadSummary.innerHTML = "<strong>" + added + "</strong> branch" + (added === 1 ? "" : "es") + " imported." +
+        (duplicates ? " <strong>" + duplicates + "</strong> duplicate" + (duplicates === 1 ? "" : "s") + " skipped." : "") +
+        (invalid ? " <strong>" + invalid + "</strong> row" + (invalid === 1 ? "" : "s") + " skipped (missing fields)." : "");
+
+      if (added > 0) showToast(added + " branch" + (added === 1 ? "" : "es") + " imported successfully.");
+    }, function (err) {
+      uploadSummary.style.display = "block";
+      uploadSummary.classList.add("has-errors");
+      uploadSummary.innerHTML = "<strong>Upload failed:</strong> " + escapeHtml(err.message || "Could not process the file.");
+    });
+  });
 
   /* ---------------- Download modal ---------------- */
   var downloadModalOverlay = document.getElementById("downloadModalOverlay");

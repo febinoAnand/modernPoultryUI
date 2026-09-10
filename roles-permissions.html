@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roles &amp; Permissions</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">P</div>
+      <div class="brand-text">
+        <strong>Poultry</strong>
+        <span>Admin Console</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Menu</span>
+
+      <a class="nav-item" href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+
+      <a class="nav-item" href="add-farm-code.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/></svg>
+        Farm
+      </a>
+
+      <a class="nav-item" href="add-trader-code.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+        Trader
+      </a>
+
+      <a class="nav-item" href="branch.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
+        Branch
+      </a>
+
+      <a class="nav-item" href="machine-management.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg>
+        Machine
+      </a>
+
+      <span class="nav-section-label">Sales</span>
+
+      <a class="nav-item" href="sales-order.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Sales Order
+      </a>
+
+      <a class="nav-item" href="bill-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        Bill List
+      </a>
+
+      <span class="nav-section-label">User Management</span>
+
+      <a class="nav-item" href="user-list.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        User
+      </a>
+
+      <a class="nav-item active" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        Permissions
+      </a>
+
+      <span class="nav-section-label">Account</span>
+
+      <a class="nav-item" href="profile.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        Profile
+      </a>
+
+      <a class="nav-item" href="settings.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+
+      <button class="nav-item logout-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" data-user-initial>V</div>
+      <div class="who">
+        <strong data-user-name>Vijay</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="page-title">
+          Roles &amp; Permissions
+          <span>Configure module and field access for every role</span>
+        </div>
+      </div>
+      <div class="topbar-right"></div>
+    </header>
+
+    <main class="content">
+
+      <div class="page-header-row centered">
+        <div class="header-spacer"></div>
+        <div class="header-center">
+          <div class="page-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          </div>
+          <h2>Roles &amp; Permissions</h2>
+          <p>Pick a role and configure exactly what it can see and do across every page.</p>
+        </div>
+        <div class="header-spacer"></div>
+      </div>
+
+      <div class="roles-perms-layout">
+        <div class="table-card">
+          <div class="detail-card-header">
+            <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></span>
+            Roles
+          </div>
+          <div class="roles-add-row">
+            <input type="text" id="newRoleNameInput" placeholder="e.g. Supervisor">
+            <button type="button" class="btn btn-outline btn-sm" id="addRoleBtn">Add</button>
+          </div>
+          <div class="roles-list" id="rolesList"></div>
+        </div>
+
+        <div class="table-card">
+          <div class="detail-card-header" style="justify-content:space-between">
+            <span style="display:flex; align-items:center">
+              <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+              <span id="selectedRoleHeading">Select a role</span>
+            </span>
+            <span class="panel-tag" id="selectedRoleUserCount" style="display:none"></span>
+          </div>
+
+          <div id="noRoleSelectedState" class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            <p>Select a role on the left to configure its permissions.</p>
+          </div>
+
+          <div id="permsPanelBody" style="display:none; padding:20px">
+            <div class="perm-toolbar">
+              <button type="button" id="permEnableAll">Enable all</button>
+              <button type="button" id="permReadOnly">Read only</button>
+              <button type="button" id="permClearAll">Clear all</button>
+            </div>
+
+            <div class="perm-table" id="permTable"></div>
+
+            <div class="field-perms-section">
+              <p class="section-heading">Field-Level Permissions</p>
+              <p class="section-subheading">Pick a page to choose which of its fields this role can view and edit.</p>
+              <div class="field-perms-select-row">
+                <label for="fieldPermsModuleSelect">Page</label>
+                <select id="fieldPermsModuleSelect"></select>
+              </div>
+              <div class="field-perms-head">
+                <span>Field</span>
+                <span>View</span>
+                <span>Edit</span>
+              </div>
+              <div class="field-perms-panel" id="fieldPermsPanel"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toast-notice" id="toastNotice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastNoticeText">Saved successfully.</span>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  App.requireAuth();
+  App.initSidebar();
+  App.initLogout();
+  App.initUserBadge();
+  App.initSessionTimeout();
+  App.enforcePermissions("rolesPermissions");
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* ---------------- Toast ---------------- */
+  var toastNotice = document.getElementById("toastNotice");
+  var toastNoticeText = document.getElementById("toastNoticeText");
+  var toastTimer = null;
+  function showToast(message) {
+    toastNoticeText.textContent = message;
+    toastNotice.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
+  }
+
+  /* ---------------- Modules this page can grant access to ----------------
+     Same catalogue Groups used to configure, one row per protected page.
+     "rolesPermissions" covers this page itself, taking the seat "groups"
+     used to hold. */
+  var PERMISSION_MODULES = [
+    { key: "dashboard", label: "Dashboard", desc: "Overview widgets and analytics", icon: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>', readOnlyModule: true },
+    { key: "billList", label: "Bill List", desc: "Weighing bills and trade records", icon: '<path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/>', fieldList: [
+      { key: "date", label: "Date" },
+      { key: "billNumber", label: "Bill Number" },
+      { key: "salesOrderNumber", label: "Sale Order No" },
+      { key: "email", label: "Email ID" },
+      { key: "totalBirds", label: "Total Birds" },
+      { key: "birdsWeight", label: "Birds Weight" },
+      { key: "company", label: "Company" },
+      { key: "branch", label: "Branch" }
+    ] },
+    { key: "salesOrder", label: "Sales Order", desc: "Sales order management", icon: '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>', fieldList: [
+      { key: "orderNumber", label: "Order Number" },
+      { key: "branch", label: "Branch" },
+      { key: "supervisor", label: "Supervisor" },
+      { key: "product", label: "Product" },
+      { key: "quantity", label: "Quantity" },
+      { key: "rate", label: "Rate" },
+      { key: "totalAmount", label: "Total Amount" },
+      { key: "orderDate", label: "Order Date" },
+      { key: "orderStatus", label: "Status" },
+      { key: "customField", label: "Custom Field" }
+    ] },
+    { key: "addFarm", label: "Farm", desc: "Farm code registry", icon: '<path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/>', fieldList: [
+      { key: "farmCode", label: "Farm Code" },
+      { key: "batchNumber", label: "Batch Number" },
+      { key: "mobile", label: "Mobile" },
+      { key: "location", label: "Location" }
+    ] },
+    { key: "addTrader", label: "Trader", desc: "Trader code registry", icon: '<path d="M20.59 13.41L11 3.83A2 2 0 0 0 9.59 3.24L4 3v5.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l3.59-3.59a2 2 0 0 0 0-2.83z"/><circle cx="8.5" cy="8.5" r="1.5"/>', fieldList: [
+      { key: "traderCode", label: "Trader Code" },
+      { key: "mobile", label: "Mobile" },
+      { key: "city", label: "City" }
+    ] },
+    { key: "branch", label: "Branch", desc: "Branch locations", icon: '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/><path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/>', fieldList: [
+      { key: "branchCode", label: "Branch Code" },
+      { key: "address", label: "Address" }
+    ] },
+    { key: "product", label: "Product", desc: "Product catalog", icon: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>', fieldList: [
+      { key: "productCode", label: "Product Code" },
+      { key: "status", label: "Status" }
+    ] },
+    { key: "machineManagement", label: "Machine", desc: "Weighing machines, parameters & service history", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/>', singleToggle: true, fieldList: [
+      { key: "machineNumber", label: "Machine Number" },
+      { key: "capacity", label: "Capacity" },
+      { key: "calibrationDue", label: "Calibration Due" },
+      { key: "status", label: "Status" },
+      { key: "branch", label: "Service Report: Branch" },
+      { key: "type", label: "Service Report: Service Type" },
+      { key: "date", label: "Service Report: Date" },
+      { key: "technician", label: "Service Report: Technician" }
+    ] },
+    { key: "user", label: "User", desc: "User accounts and access", icon: '<path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', fieldList: [
+      { key: "email", label: "Email Address" },
+      { key: "role", label: "Role" },
+      { key: "mobile", label: "Mobile" },
+      { key: "status", label: "Status" },
+      { key: "createdDate", label: "Created Date" }
+    ] },
+    { key: "rolesPermissions", label: "Roles & Permissions", desc: "This page — role and access configuration", icon: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>' }
+  ];
+
+  var PERM_ACTIONS = ["create", "read", "update", "delete"];
+
+  /* Each field's permission is { view, edit } — edit implies view, and
+     turning view off forces edit off too (enforced wherever these are
+     mutated, not just here). Both default to true (full access). */
+  function defaultFieldPermissions(m) {
+    var fields = {};
+    (m.fieldList || []).forEach(function (f) { fields[f.key] = { view: true, edit: true }; });
+    return fields;
+  }
+
+  function defaultPermissions() {
+    var perms = {};
+    PERMISSION_MODULES.forEach(function (m) {
+      perms[m.key] = { create: false, read: false, update: false, delete: false };
+      if (m.fieldList) perms[m.key].fields = defaultFieldPermissions(m);
+    });
+    return perms;
+  }
+
+  function countEnabledPermissions(perms) {
+    var count = 0;
+    PERMISSION_MODULES.forEach(function (m) {
+      PERM_ACTIONS.forEach(function (a) { if (perms[m.key][a]) count++; });
+    });
+    return count;
+  }
+
+  /* Some modules (e.g. Dashboard) have no create/edit/delete action anywhere
+     in the app — Read is the only permission that can ever mean anything for
+     them, so Create/Update/Delete are always forced off, no matter which
+     bulk action or toggle touched them. */
+  function sanitizeReadOnlyModules(perms) {
+    PERMISSION_MODULES.forEach(function (m) {
+      if (!m.readOnlyModule) return;
+      perms[m.key].create = false;
+      perms[m.key].update = false;
+      perms[m.key].delete = false;
+    });
+  }
+
+  /* ---------------- Data ---------------- */
+  var allUsers = Data.getUsers();
+  var rolePermissionsStore = Data.getRolePermissions();
+  var roles = Data.getUserRoles();
+
+  var selectedRole = null;
+  var activePermissions = null;
+  var selectedFieldPermsModule = null;
+
+  function userCountForRole(role) {
+    return allUsers.filter(function (u) { return u.role === role; }).length;
+  }
+
+  function getRolePerms(role) {
+    var perms = defaultPermissions();
+    var saved = rolePermissionsStore[role];
+    if (saved) {
+      Object.keys(perms).forEach(function (key) {
+        if (saved[key]) perms[key] = Object.assign({}, perms[key], saved[key]);
+      });
+    }
+    sanitizeReadOnlyModules(perms);
+    return perms;
+  }
+
+  function persistActivePermissions() {
+    rolePermissionsStore[selectedRole] = activePermissions;
+    Data.saveRolePermissions(rolePermissionsStore);
+  }
+
+  /* ---------------- Roles list ---------------- */
+  var rolesList = document.getElementById("rolesList");
+  var newRoleNameInput = document.getElementById("newRoleNameInput");
+  var selectedRoleHeading = document.getElementById("selectedRoleHeading");
+  var selectedRoleUserCount = document.getElementById("selectedRoleUserCount");
+  var noRoleSelectedState = document.getElementById("noRoleSelectedState");
+  var permsPanelBody = document.getElementById("permsPanelBody");
+
+  function renderRolesList() {
+    roles = Data.getUserRoles();
+    rolesList.innerHTML = roles.map(function (r) {
+      var count = userCountForRole(r);
+      var enabled = countEnabledPermissions(r === selectedRole ? activePermissions : getRolePerms(r));
+      return (
+        '<div class="role-list-item' + (r === selectedRole ? ' active' : '') + '" data-role="' + escapeHtml(r) + '">' +
+          '<div>' +
+            '<div class="role-list-item-name">' + escapeHtml(r) + '</div>' +
+            '<div class="role-list-item-meta">' + count + ' user' + (count === 1 ? '' : 's') + '</div>' +
+          '</div>' +
+          '<span class="role-list-item-count">' + enabled + '</span>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  function selectRole(role) {
+    selectedRole = role;
+    activePermissions = getRolePerms(role);
+
+    selectedRoleHeading.textContent = role;
+    selectedRoleUserCount.textContent = userCountForRole(role) + " user(s)";
+    selectedRoleUserCount.style.display = "";
+    noRoleSelectedState.style.display = "none";
+    permsPanelBody.style.display = "block";
+
+    renderRolesList();
+    renderPermTable();
+
+    selectedFieldPermsModule = FIELD_LIST_MODULES.length ? FIELD_LIST_MODULES[0].key : null;
+    fieldPermsModuleSelect.value = selectedFieldPermsModule || "";
+    renderFieldPermsPanel();
+  }
+
+  rolesList.addEventListener("click", function (e) {
+    var item = e.target.closest("[data-role]");
+    if (!item) return;
+    selectRole(item.getAttribute("data-role"));
+  });
+
+  function addRole() {
+    var name = newRoleNameInput.value.trim();
+    if (!name) { newRoleNameInput.focus(); return; }
+    var existing = roles.filter(function (r) { return r.toLowerCase() === name.toLowerCase(); })[0];
+    if (!existing) {
+      roles.push(name);
+      Data.saveUserRoles(roles);
+      showToast('Role "' + name + '" added.');
+    }
+    newRoleNameInput.value = "";
+    selectRole(existing || name);
+  }
+
+  document.getElementById("addRoleBtn").addEventListener("click", addRole);
+  newRoleNameInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); addRole(); }
+  });
+
+  /* ---------------- Permissions table ---------------- */
+  var permTable = document.getElementById("permTable");
+
+  function renderPermTable() {
+    sanitizeReadOnlyModules(activePermissions);
+
+    var head = '<div class="perm-head-row"><span></span>' +
+      PERM_ACTIONS.map(function (a) {
+        return '<span class="perm-col-label" data-toggle-col="' + a + '">' + a.toUpperCase() + '</span>';
+      }).join("") +
+      '</div>';
+
+    var rows = PERMISSION_MODULES.map(function (m) {
+      var switches;
+      var rowClass = "perm-row";
+      if (m.singleToggle) {
+        rowClass += " perm-row-single";
+        var on = activePermissions[m.key].read;
+        switches =
+          '<span class="perm-single-toggle"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-single="true" ' + (on ? "checked" : "") + '><span class="slider"></span></label><span>ACCESS</span></span>';
+      } else {
+        switches = PERM_ACTIONS.map(function (a) {
+          var checked = activePermissions[m.key][a];
+          var locked = m.readOnlyModule && a !== "read";
+          return '<span class="perm-switch-cell"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-action="' + a + '" ' + (checked ? "checked" : "") + (locked ? " disabled" : "") + '><span class="slider"></span></label></span>';
+        }).join("");
+      }
+      var lockNote = m.readOnlyModule
+        ? '<div class="perm-module-lock-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Read only — no create/edit/delete for this page</div>'
+        : "";
+
+      return (
+        '<div class="' + rowClass + '">' +
+          '<div class="perm-module">' +
+            '<div class="perm-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + m.icon + '</svg></div>' +
+            '<div class="perm-module-text"><div class="perm-module-name">' + m.label + '</div><div class="perm-module-desc">' + m.desc + '</div>' + lockNote + '</div>' +
+          '</div>' +
+          switches +
+        '</div>'
+      );
+    }).join("");
+
+    permTable.innerHTML = head + rows;
+  }
+
+  /* ---------------- Field-level permissions (per-page View / Edit picker) ---------------- */
+  var FIELD_LIST_MODULES = PERMISSION_MODULES.filter(function (m) { return m.fieldList; });
+  var fieldPermsModuleSelect = document.getElementById("fieldPermsModuleSelect");
+  var fieldPermsPanel = document.getElementById("fieldPermsPanel");
+
+  fieldPermsModuleSelect.innerHTML = FIELD_LIST_MODULES.map(function (m) {
+    return '<option value="' + m.key + '">' + m.label + '</option>';
+  }).join("");
+
+  function renderFieldPermsPanel() {
+    var m = FIELD_LIST_MODULES.find(function (x) { return x.key === selectedFieldPermsModule; });
+    if (!m) {
+      fieldPermsPanel.innerHTML = '<div class="field-perms-empty">No fields to configure.</div>';
+      return;
+    }
+    var fieldState = activePermissions[m.key].fields || defaultFieldPermissions(m);
+    fieldPermsPanel.innerHTML = m.fieldList.map(function (f) {
+      var perm = fieldState[f.key] || { view: true, edit: true };
+      var viewOn = perm.view !== false;
+      var editOn = perm.edit !== false;
+      return (
+        '<div class="field-perm-row">' +
+          '<span class="field-perm-name">' + f.label + '</span>' +
+          '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="view" ' + (viewOn ? "checked" : "") + ' title="View ' + f.label + '">' +
+          '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="edit" ' + (editOn ? "checked" : "") + (viewOn ? "" : " disabled") + ' title="Edit ' + f.label + '">' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  fieldPermsModuleSelect.addEventListener("change", function () {
+    selectedFieldPermsModule = fieldPermsModuleSelect.value;
+    renderFieldPermsPanel();
+  });
+
+  fieldPermsPanel.addEventListener("change", function (e) {
+    var input = e.target;
+    if (input.tagName !== "INPUT") return;
+    var moduleKey = input.getAttribute("data-fp-module");
+    var fieldKey = input.getAttribute("data-fp-key");
+    var type = input.getAttribute("data-fp-type");
+    var fieldObj = activePermissions[moduleKey].fields[fieldKey];
+    if (type === "view") {
+      fieldObj.view = input.checked;
+      if (!input.checked) fieldObj.edit = false;
+    } else {
+      fieldObj.edit = input.checked;
+      if (input.checked) fieldObj.view = true;
+    }
+    renderFieldPermsPanel();
+    persistActivePermissions();
+  });
+
+  permTable.addEventListener("change", function (e) {
+    var input = e.target;
+    if (input.tagName !== "INPUT") return;
+
+    var moduleKey = input.getAttribute("data-module");
+    if (input.getAttribute("data-single") === "true") {
+      var existingFields = activePermissions[moduleKey].fields;
+      activePermissions[moduleKey] = { create: input.checked, read: input.checked, update: input.checked, delete: input.checked };
+      if (existingFields) activePermissions[moduleKey].fields = existingFields;
+    } else {
+      activePermissions[moduleKey][input.getAttribute("data-action")] = input.checked;
+    }
+    persistActivePermissions();
+    renderRolesList();
+  });
+
+  permTable.addEventListener("click", function (e) {
+    var colLabel = e.target.closest("[data-toggle-col]");
+    if (!colLabel) return;
+    var action = colLabel.getAttribute("data-toggle-col");
+    var allOn = PERMISSION_MODULES.every(function (m) { return activePermissions[m.key][action]; });
+    var next = !allOn;
+    PERMISSION_MODULES.forEach(function (m) {
+      if (m.singleToggle) {
+        var existingFields = activePermissions[m.key].fields;
+        activePermissions[m.key] = { create: next, read: next, update: next, delete: next };
+        if (existingFields) activePermissions[m.key].fields = existingFields;
+      } else {
+        activePermissions[m.key][action] = next;
+      }
+    });
+    renderPermTable();
+    persistActivePermissions();
+    renderRolesList();
+  });
+
+  document.getElementById("permEnableAll").addEventListener("click", function () {
+    PERMISSION_MODULES.forEach(function (m) {
+      PERM_ACTIONS.forEach(function (a) { activePermissions[m.key][a] = true; });
+      if (m.fieldList) activePermissions[m.key].fields = defaultFieldPermissions(m);
+    });
+    renderPermTable();
+    renderFieldPermsPanel();
+    persistActivePermissions();
+    renderRolesList();
+  });
+  document.getElementById("permReadOnly").addEventListener("click", function () {
+    PERMISSION_MODULES.forEach(function (m) {
+      activePermissions[m.key] = { create: false, read: true, update: false, delete: false };
+      if (m.fieldList) activePermissions[m.key].fields = defaultFieldPermissions(m);
+    });
+    renderPermTable();
+    renderFieldPermsPanel();
+    persistActivePermissions();
+    renderRolesList();
+  });
+  document.getElementById("permClearAll").addEventListener("click", function () {
+    activePermissions = defaultPermissions();
+    renderPermTable();
+    renderFieldPermsPanel();
+    persistActivePermissions();
+    renderRolesList();
+  });
+
+  /* ---------------- Init ---------------- */
+  renderRolesList();
+  if (roles.length) selectRole(roles[0]);
+</script>
+
+</body>
+</html>
