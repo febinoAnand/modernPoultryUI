@@ -22,14 +22,14 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="nav-item" href="tenant-admin.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg>
-        Tenant
-      </a>
-
       <a class="nav-item active" href="tenant-dashboard.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         Dashboard
+      </a>
+
+      <a class="nav-item" href="tenant-admin.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg>
+        Tenant
       </a>
 
       <button class="nav-item logout-item" data-logout>
@@ -64,7 +64,6 @@
     <main class="content">
 
       <div class="page-header-row centered">
-        <div class="header-spacer"></div>
         <div class="header-center">
           <div class="page-icon-badge">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
@@ -72,7 +71,6 @@
           <h2>Tenant Dashboard</h2>
           <p>A platform-wide overview of every tenant's data on this system.</p>
         </div>
-        <div class="header-spacer"></div>
       </div>
 
       <div class="stat-grid">
@@ -139,6 +137,7 @@
           <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg></span>
           Tenants Overview
         </div>
+        <p class="section-subheading" style="padding:16px 20px 0">Click a tenant to open its dashboard - Users, Farm, Trader, Branch, Machine, Sales Order and Bill List, scoped to that tenant only.</p>
         <div class="table-scroll">
           <table class="data-table">
             <thead>
@@ -171,11 +170,11 @@
   App.initSessionTimeout();
 
   /* Same hidden-page rules as tenant-admin.html: not linked from the
-     tenant-facing app's own sidebar, dashboard, or profile page —
-     reachable only via this Control Center's own nav (Tenant <->
-     Dashboard). The stats below are platform-wide totals — this app
-     doesn't partition farms/users/bills/branches per tenant, so the
-     dashboard reports the whole dataset rather than per-tenant splits. */
+     tenant-facing app's own sidebar. Platform-wide totals only -
+     clicking a tenant hands off to the real app (dashboard.html and
+     everything under its sidebar) scoped to that one tenant via
+     App.viewTenantDashboard, same as the equivalent link on
+     Tenant Admin. */
 
   function escapeHtml(str) {
     return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
@@ -183,14 +182,16 @@
     });
   }
 
+  function statusClass(status) { return status === "Active" ? "active" : "inactive"; }
+
   var orgs = Data.getOrganizations();
-  var users = Data.getUsers();
-  var farms = Data.getFarmCodes();
-  var traders = Data.getTraderCodes();
-  var branches = Data.getBranches();
-  var bills = Data.getBills();
-  var salesOrders = Data.getSalesOrders();
-  var machines = Data.getMachines();
+  var users = Data.getAllUsers();
+  var farms = Data.getAllFarmCodes();
+  var traders = Data.getAllTraderCodes();
+  var branches = Data.getAllBranches();
+  var bills = Data.getAllBills();
+  var salesOrders = Data.getAllSalesOrders();
+  var machines = Data.getAllMachines();
 
   document.getElementById("statTenants").textContent = orgs.length;
   document.getElementById("statUsers").textContent = users.length;
@@ -200,8 +201,6 @@
   document.getElementById("statBills").textContent = bills.length;
   document.getElementById("statSalesOrders").textContent = salesOrders.length;
   document.getElementById("statMachines").textContent = machines.length;
-
-  function statusClass(status) { return status === "Active" ? "active" : "inactive"; }
 
   var tenantsTableBody = document.getElementById("tenantsTableBody");
   var emptyState = document.getElementById("emptyState");
@@ -214,7 +213,7 @@
     tenantsTableBody.innerHTML = orgs.map(function (o) {
       return (
         '<tr>' +
-          '<td>' + escapeHtml(o.companyName) + '</td>' +
+          '<td><button type="button" class="cell-user cell-user-link" data-id="' + o.orgId + '"><span class="cell-user-name">' + escapeHtml(o.companyName) + '</span></button></td>' +
           '<td>' + escapeHtml(o.email) + '</td>' +
           '<td>' + escapeHtml(o.username) + '</td>' +
           '<td><span class="status-pill ' + statusClass(o.status) + '">' + escapeHtml(o.status) + '</span></td>' +
@@ -222,6 +221,12 @@
       );
     }).join("");
   }
+
+  tenantsTableBody.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-id]");
+    if (!btn) return;
+    App.viewTenantDashboard(btn.getAttribute("data-id"));
+  });
 </script>
 
 </body>

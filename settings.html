@@ -164,6 +164,55 @@
         </div>
       </div>
 
+      <div class="detail-card" style="max-width:640px; margin:24px auto 0" id="planLimitsCard">
+        <div class="detail-card-header">
+          <div class="card-header-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </div>
+          Plan Limits
+        </div>
+
+        <div style="padding:24px 26px">
+          <p class="subtitle" style="margin:0 0 16px; font-size:12.5px" id="planLimitsSubtitle">
+            Cap how much this tenant can use. Leave a field blank for no limit.
+          </p>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="lMaxFarms">Max Farmers</label>
+              <input type="number" id="lMaxFarms" min="0" placeholder="Unlimited">
+              <span class="field-error" id="errLMaxFarms">Enter 0 or a positive whole number.</span>
+            </div>
+
+            <div class="field">
+              <label for="lMaxUsers">Max Users</label>
+              <input type="number" id="lMaxUsers" min="0" placeholder="Unlimited">
+              <span class="field-error" id="errLMaxUsers">Enter 0 or a positive whole number.</span>
+            </div>
+
+            <div class="field">
+              <label for="lMaxTraders">Max Traders</label>
+              <input type="number" id="lMaxTraders" min="0" placeholder="Unlimited">
+              <span class="field-error" id="errLMaxTraders">Enter 0 or a positive whole number.</span>
+            </div>
+
+            <div class="field">
+              <label for="lMaxBranches">Max Branches</label>
+              <input type="number" id="lMaxBranches" min="0" placeholder="Unlimited">
+              <span class="field-error" id="errLMaxBranches">Enter 0 or a positive whole number.</span>
+            </div>
+
+            <div class="field full">
+              <label for="lMaxBillsPerYear">Max Bills Per Year</label>
+              <input type="number" id="lMaxBillsPerYear" min="0" placeholder="Unlimited">
+              <span class="field-error" id="errLMaxBillsPerYear">Enter 0 or a positive whole number.</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="saveLimitsBtn" style="margin-top:20px">Save Limits</button>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -236,6 +285,63 @@
     Data.saveAppSettings(appSettings);
     showToast("Settings saved successfully.");
   });
+
+  /* ---------------- Plan Limits ----------------
+     Per-tenant usage caps, stored as org.limits = { key: number },
+     scoped to whichever tenant is currently active (this page, not
+     a shared setting). A field left blank means "no limit" — nothing
+     in this demo app reads these yet; they're recorded for future
+     enforcement. */
+  var LIMIT_FIELDS = [
+    { key: "maxFarms", inputId: "lMaxFarms", errId: "errLMaxFarms" },
+    { key: "maxUsers", inputId: "lMaxUsers", errId: "errLMaxUsers" },
+    { key: "maxTraders", inputId: "lMaxTraders", errId: "errLMaxTraders" },
+    { key: "maxBranches", inputId: "lMaxBranches", errId: "errLMaxBranches" },
+    { key: "maxBillsPerYear", inputId: "lMaxBillsPerYear", errId: "errLMaxBillsPerYear" }
+  ];
+
+  var planLimitsCard = document.getElementById("planLimitsCard");
+  var planLimitsSubtitle = document.getElementById("planLimitsSubtitle");
+  var currentOrg = Data.findOrganization(App.getOrgId());
+
+  function setFieldError(input, errorEl, hasError) {
+    input.classList.toggle("error", hasError);
+    errorEl.classList.toggle("show", hasError);
+  }
+
+  if (!currentOrg) {
+    planLimitsCard.style.display = "none";
+  } else {
+    planLimitsSubtitle.textContent = "Cap how much " + currentOrg.companyName + " can use. Leave a field blank for no limit.";
+    var currentLimits = currentOrg.limits || {};
+    LIMIT_FIELDS.forEach(function (f) {
+      document.getElementById(f.inputId).value = currentLimits[f.key] !== undefined ? currentLimits[f.key] : "";
+    });
+
+    document.getElementById("saveLimitsBtn").addEventListener("click", function () {
+      var valid = true;
+      var values = {};
+
+      LIMIT_FIELDS.forEach(function (f) {
+        var input = document.getElementById(f.inputId);
+        var errorEl = document.getElementById(f.errId);
+        var raw = input.value.trim();
+        var ok = raw === "" || (/^[0-9]+$/.test(raw) && Number(raw) >= 0);
+        setFieldError(input, errorEl, !ok);
+        valid = valid && ok;
+        if (ok) values[f.key] = raw === "" ? undefined : Number(raw);
+      });
+
+      if (!valid) return;
+
+      var orgs = Data.getOrganizations();
+      var org = orgs.find(function (o) { return o.orgId === currentOrg.orgId; });
+      if (!org) return;
+      org.limits = values;
+      Data.saveOrganizations(orgs);
+      showToast("Limits updated for " + org.companyName + ".");
+    });
+  }
 </script>
 
 </body>

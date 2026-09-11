@@ -22,14 +22,14 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="nav-item active" href="tenant-admin.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg>
-        Tenant
-      </a>
-
       <a class="nav-item" href="tenant-dashboard.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         Dashboard
+      </a>
+
+      <a class="nav-item active" href="tenant-admin.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg>
+        Tenant
       </a>
 
       <button class="nav-item logout-item" data-logout>
@@ -228,61 +228,6 @@
   </div>
 </div>
 
-<!-- Set Limits Modal -->
-<div class="modal-overlay" id="limitsModalOverlay">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div>
-        <h3>Set Limits</h3>
-        <p id="limitsModalSubtitle">Cap how much this tenant can use. Leave a field blank for no limit.</p>
-      </div>
-      <button class="modal-close" id="closeLimitsModal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form id="limitsForm" novalidate>
-        <input type="hidden" id="lOrgId">
-        <div class="field-grid">
-          <div class="field">
-            <label for="lMaxFarms">Max Farmers</label>
-            <input type="number" id="lMaxFarms" min="0" placeholder="Unlimited">
-            <span class="field-error" id="errLMaxFarms">Enter 0 or a positive whole number.</span>
-          </div>
-
-          <div class="field">
-            <label for="lMaxUsers">Max Users</label>
-            <input type="number" id="lMaxUsers" min="0" placeholder="Unlimited">
-            <span class="field-error" id="errLMaxUsers">Enter 0 or a positive whole number.</span>
-          </div>
-
-          <div class="field">
-            <label for="lMaxTraders">Max Traders</label>
-            <input type="number" id="lMaxTraders" min="0" placeholder="Unlimited">
-            <span class="field-error" id="errLMaxTraders">Enter 0 or a positive whole number.</span>
-          </div>
-
-          <div class="field">
-            <label for="lMaxBranches">Max Branches</label>
-            <input type="number" id="lMaxBranches" min="0" placeholder="Unlimited">
-            <span class="field-error" id="errLMaxBranches">Enter 0 or a positive whole number.</span>
-          </div>
-
-          <div class="field full">
-            <label for="lMaxBillsPerYear">Max Bills Per Year</label>
-            <input type="number" id="lMaxBillsPerYear" min="0" placeholder="Unlimited">
-            <span class="field-error" id="errLMaxBillsPerYear">Enter 0 or a positive whole number.</span>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" id="cancelLimitsModal">Cancel</button>
-      <button class="btn btn-primary" id="saveLimitsBtn">Save Limits</button>
-    </div>
-  </div>
-</div>
-
 <!-- Download Modal -->
 <div class="modal-overlay" id="downloadModalOverlay">
   <div class="modal-box" style="max-width:440px">
@@ -431,7 +376,7 @@
         var rowClass = o.status !== "Active" ? "row-inactive" : "";
         return (
           '<tr class="' + rowClass + '">' +
-            '<td><div class="cell-user"><div class="cell-avatar">' + initials(o.companyName) + '</div><span class="cell-user-name">' + escapeHtml(o.companyName) + '</span></div></td>' +
+            '<td><button type="button" class="cell-user cell-user-link" data-action="viewDashboard" data-id="' + o.orgId + '"><div class="cell-avatar">' + initials(o.companyName) + '</div><span class="cell-user-name">' + escapeHtml(o.companyName) + '</span></button></td>' +
             '<td><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(o.email) + '</span></td>' +
             '<td><span class="status-pill ' + statusClass(o.status) + '">' + escapeHtml(o.status) + '</span></td>' +
             '<td>' +
@@ -442,7 +387,6 @@
                 '<div class="action-menu' + (isMenuOpen ? ' show' : '') + '" data-menu="' + o.orgId + '">' +
                   '<button data-action="view" data-id="' + o.orgId + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>' +
                   '<button data-action="edit" data-id="' + o.orgId + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Edit</button>' +
-                  '<button data-action="limits" data-id="' + o.orgId + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>Set Limits</button>' +
                   '<button data-action="toggle" data-id="' + o.orgId + '" class="' + (o.status === "Active" ? "danger" : "") + '">' +
                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg>' +
                     (o.status === "Active" ? "Suspend" : "Activate") +
@@ -534,9 +478,9 @@
     if (!org) return;
     if (action === "view") openViewModal(org);
     else if (action === "edit") openTenantModal(org);
-    else if (action === "limits") openLimitsModal(org);
     else if (action === "toggle") { toggleStatus(org); render(); }
     else if (action === "delete") deleteOrg(org);
+    else if (action === "viewDashboard") App.viewTenantDashboard(org.orgId);
   }
 
   function toggleStatus(org) {
@@ -727,66 +671,6 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
   }
-
-  /* ---------------- Set Limits modal ----------------
-     Per-tenant usage caps, stored as org.limits = { key: number }.
-     A field left blank (or 0) means "no limit" — only positive whole
-     numbers are actually enforced-worthy, but nothing in this demo
-     app reads these yet; they're recorded for future enforcement. */
-  var LIMIT_FIELDS = [
-    { key: "maxFarms", inputId: "lMaxFarms", errId: "errLMaxFarms" },
-    { key: "maxUsers", inputId: "lMaxUsers", errId: "errLMaxUsers" },
-    { key: "maxTraders", inputId: "lMaxTraders", errId: "errLMaxTraders" },
-    { key: "maxBranches", inputId: "lMaxBranches", errId: "errLMaxBranches" },
-    { key: "maxBillsPerYear", inputId: "lMaxBillsPerYear", errId: "errLMaxBillsPerYear" }
-  ];
-
-  var limitsModalOverlay = document.getElementById("limitsModalOverlay");
-  var limitsModalSubtitle = document.getElementById("limitsModalSubtitle");
-  var lOrgId = document.getElementById("lOrgId");
-
-  function openLimitsModal(org) {
-    document.querySelectorAll("#limitsForm .field-error").forEach(function (el) { el.classList.remove("show"); });
-    document.querySelectorAll("#limitsForm input").forEach(function (el) { el.classList.remove("error"); });
-
-    lOrgId.value = org.orgId;
-    limitsModalSubtitle.textContent = "Cap how much " + org.companyName + " can use. Leave a field blank for no limit.";
-    var limits = org.limits || {};
-    LIMIT_FIELDS.forEach(function (f) {
-      document.getElementById(f.inputId).value = limits[f.key] !== undefined ? limits[f.key] : "";
-    });
-    limitsModalOverlay.classList.add("show");
-  }
-
-  function closeLimitsModal() { limitsModalOverlay.classList.remove("show"); }
-
-  document.getElementById("closeLimitsModal").addEventListener("click", closeLimitsModal);
-  document.getElementById("cancelLimitsModal").addEventListener("click", closeLimitsModal);
-  limitsModalOverlay.addEventListener("click", function (e) { if (e.target === limitsModalOverlay) closeLimitsModal(); });
-
-  document.getElementById("saveLimitsBtn").addEventListener("click", function () {
-    var valid = true;
-    var values = {};
-
-    LIMIT_FIELDS.forEach(function (f) {
-      var input = document.getElementById(f.inputId);
-      var errorEl = document.getElementById(f.errId);
-      var raw = input.value.trim();
-      var ok = raw === "" || (/^[0-9]+$/.test(raw) && Number(raw) >= 0);
-      setFieldError(input, errorEl, !ok);
-      valid = valid && ok;
-      if (ok) values[f.key] = raw === "" ? undefined : Number(raw);
-    });
-
-    if (!valid) return;
-
-    var org = orgs.find(function (o) { return o.orgId === lOrgId.value; });
-    if (!org) return;
-    org.limits = values;
-    persist();
-    closeLimitsModal();
-    showToast("Limits updated for " + org.companyName + ".");
-  });
 
   /* ---------------- Download modal ---------------- */
   var downloadModalOverlay = document.getElementById("downloadModalOverlay");

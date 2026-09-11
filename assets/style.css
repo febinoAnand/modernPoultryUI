@@ -1164,6 +1164,35 @@ button {
   white-space: nowrap;
 }
 
+.cell-user-link { cursor: pointer; }
+.cell-user-link:hover .cell-user-name { color: var(--accent-2); text-decoration: underline; }
+button.cell-user-link { background: none; border: none; padding: 0; font: inherit; text-align: left; color: inherit; width: 100%; }
+
+.impersonation-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 28px;
+  background: rgba(217, 119, 6, 0.12);
+  border-bottom: 1px solid rgba(217, 119, 6, 0.3);
+  color: var(--warning);
+  font-size: 13px;
+  font-weight: 600;
+}
+.impersonation-banner .impersonation-exit {
+  border: 1px solid var(--warning);
+  background: transparent;
+  color: var(--warning);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.impersonation-banner .impersonation-exit:hover { background: var(--warning); color: #fff; }
+
 .cell-mono {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 12.5px;

@@ -22,6 +22,55 @@
   var USER_ROLES_KEY = "ui_user_roles_v1";
   var ROLE_PERMISSIONS_KEY = "ui_role_permissions_v1";
 
+  /* ---------------- Per-tenant data isolation ----------------
+     Every Farm/Trader/Branch/Machine/SalesOrder/Bill/User record carries
+     an orgId. The tenant-facing app only ever sees (and only ever writes)
+     the signed-in session's own org's slice — getX()/saveX() below do
+     that filtering/merging transparently, so every existing page keeps
+     calling Data.getUsers()/Data.saveUsers(users) exactly as before and
+     "just works" scoped to one tenant. getAllX() (no scoping) and
+     getXByOrg(orgId) (one specific tenant) are for the Control Center
+     pages, which need to see across every tenant. DEFAULT_ORG_ID is the
+     bucket every pre-existing seeded record (and the built-in demo
+     login, which has no real Organization record) belongs to. */
+  var DEFAULT_ORG_ID = "POULTRY";
+
+  /* Four extra example tenants (beyond the DEFAULT_ORG_ID one), each with
+     one Farm/Trader/Branch/Sales Order/Bill of its own — demonstrates
+     the per-tenant isolation with real, distinct data per tenant rather
+     than one tenant owning everything. Appended (not replacing) whatever
+     seed/migration already ran, so they show up even on a browser that
+     already has localStorage data from before this existed. */
+  var EXAMPLE_TENANTS = [
+    { orgId: "TENANT01", username: "northbridge_admin", email: "admin@northbridge.com", password: "north123", companyName: "Northbridge Logistics", companyWebsite: "www.northbridge.com", contactNumber: "9810000001", teamSize: "1-10" },
+    { orgId: "TENANT02", username: "sunrise_admin", email: "admin@sunrisepoultry.com", password: "sunrise123", companyName: "Sunrise Poultry Farms", companyWebsite: "www.sunrisepoultry.com", contactNumber: "9810000002", teamSize: "11-50" },
+    { orgId: "TENANT03", username: "goldenharvest_admin", email: "admin@goldenharvest.com", password: "golden123", companyName: "Golden Harvest Traders", companyWebsite: "www.goldenharvest.com", contactNumber: "9810000003", teamSize: "1-10" },
+    { orgId: "TENANT04", username: "greenvalley_admin", email: "admin@greenvalleyagro.com", password: "green123", companyName: "Green Valley Agro", companyWebsite: "www.greenvalleyagro.com", contactNumber: "9810000004", teamSize: "51-200" }
+  ];
+
+  function currentOrgId() {
+    return sessionStorage.getItem("ui_org_id") || DEFAULT_ORG_ID;
+  }
+
+  function recordOrgId(record) {
+    return record.orgId || DEFAULT_ORG_ID;
+  }
+
+  /* Builds the public getX()/getAllX()/getXByOrg()/saveX() quartet for one
+     entity store from its raw (unscoped) getAll/save pair. */
+  function scopeByOrg(getAllRaw, saveAllRaw) {
+    function getAllX() { return getAllRaw(); }
+    function getXByOrg(orgId) { return getAllRaw().filter(function (r) { return recordOrgId(r) === orgId; }); }
+    function getX() { return getXByOrg(currentOrgId()); }
+    function saveX(scopedList) {
+      var org = currentOrgId();
+      scopedList.forEach(function (r) { if (r.orgId === undefined) r.orgId = org; });
+      var others = getAllRaw().filter(function (r) { return recordOrgId(r) !== org; });
+      saveAllRaw(others.concat(scopedList));
+    }
+    return { getX: getX, getAllX: getAllX, getXByOrg: getXByOrg, saveX: saveX };
+  }
+
   var FIRST_NAMES = ["Ramesh", "Suresh", "Priya", "Anitha", "Karthik", "Vijay", "Deepa", "Manoj", "Lakshmi", "Arjun", "Sneha", "Vikram", "Divya", "Rahul", "Meena", "Sathish", "Pooja", "Naveen", "Kavya", "Ashok", "Revathi", "Bala", "Nithya", "Ganesh"];
   var LAST_NAMES = ["Kumar", "Raj", "Nair", "Iyer", "Reddy", "Sharma", "Pillai", "Menon", "Gupta", "Rao"];
   var DRIVER_FIRST = ["Murugan", "Selvam", "Kannan", "Raja", "Mani", "Senthil", "Vasu", "Elango", "Prakash", "Dinesh"];
@@ -185,7 +234,7 @@
     });
   }
 
-  function getUsers() {
+  function getUsersRaw() {
     var raw = localStorage.getItem(USERS_KEY);
     if (raw) {
       try {
@@ -194,18 +243,24 @@
         users.forEach(function (u, i) {
           if (u.role === undefined) { u.role = USER_ROLES[i % USER_ROLES.length]; migrated = true; }
         });
-        if (migrated) saveUsers(users);
+        if (migrated) saveUsersRaw(users);
         return users;
       } catch (e) { /* fall through to reseed */ }
     }
     var seeded = buildSeedUsers();
-    saveUsers(seeded);
+    saveUsersRaw(seeded);
     return seeded;
   }
 
-  function saveUsers(users) {
+  function saveUsersRaw(users) {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
+
+  var _usersScope = scopeByOrg(getUsersRaw, saveUsersRaw);
+  function getUsers() { return _usersScope.getX(); }
+  function getAllUsers() { return _usersScope.getAllX(); }
+  function getUsersByOrg(orgId) { return _usersScope.getXByOrg(orgId); }
+  function saveUsers(list) { return _usersScope.saveX(list); }
 
   /* ---------------- User roles (open-ended, not a fixed enum) ----------
      Starts with Admin/Manager/Viewer but any page can add a new role on
@@ -251,19 +306,96 @@
     localStorage.setItem(TRADES_KEY, JSON.stringify(trades));
   }
 
-  function getBills() {
-    var raw = localStorage.getItem(BILLS_KEY);
-    if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
-    }
-    var seeded = buildSeedBills();
-    saveBills(seeded);
-    return seeded;
+  function buildExampleBill(o) {
+    var emptyWeight = Math.round(o.netWeight * 0.28 * 10) / 10;
+    var loadWeight = Math.round((o.netWeight + emptyWeight) * 10) / 10;
+    var avgWeight = Math.round((o.netWeight / o.totalBirds) * 100) / 100;
+    return {
+      id: o.id,
+      date: "05 Sep 2026",
+      billNumber: o.billNumber,
+      salesOrderNumber: o.salesOrderNumber,
+      trader: o.trader,
+      email: o.email,
+      totalBirds: o.totalBirds,
+      birdsWeight: o.netWeight,
+      company: o.company,
+      branch: o.branch,
+      status: "Active",
+      startTime: "2026-09-05 09:00:00",
+      endTime: "2026-09-05 09:30:00",
+      supervisor: o.supervisor,
+      driver: o.driver,
+      vehicleNo: o.vehicleNo,
+      farmer: o.farmer,
+      mobileNo: o.mobileNo,
+      farmCode: o.farmCode,
+      age: 35,
+      balanceStock: 200,
+      birdType: o.birdType,
+      filledBox: o.totalBox,
+      emptyBox: 0,
+      totalBox: o.totalBox,
+      loadWeight: loadWeight,
+      emptyWeight: emptyWeight,
+      netWeight: o.netWeight,
+      avgWeight: avgWeight,
+      loadingTime: "12Min 30Sec",
+      weighingSessions: [{
+        noOfBox: o.totalBox,
+        filledBox: o.totalBox,
+        emptyWeight: emptyWeight,
+        grossWeight: loadWeight,
+        netWeight: o.netWeight,
+        time: "2026-09-05 09:15:00"
+      }],
+      birdTypeBreakdown: [{ slNo: 1, birdsType: o.birdType, box: o.totalBox, count: o.totalBirds, total: o.netWeight }],
+      customField: "",
+      orgId: o.orgId
+    };
   }
 
-  function saveBills(bills) {
+  var EXAMPLE_BILLS = [
+    { id: 1001, billNumber: "BILL-90001", salesOrderNumber: "SO-9001", trader: "Ramesh Traders", email: "ramesh@northbridge.com", company: "Northbridge Logistics", branch: "Northbridge Main Branch", supervisor: "Suresh Kumar", driver: "Murugan Vasu", vehicleNo: "TN10AB9001", farmer: "Arun Prakash", mobileNo: "9833300001", farmCode: "FC-9001", birdType: "Broiler", totalBirds: 200, netWeight: 380, totalBox: 5, orgId: "TENANT01" },
+    { id: 1002, billNumber: "BILL-90002", salesOrderNumber: "SO-9002", trader: "Sunrise Trading Co", email: "contact@sunrisepoultry.com", company: "Sunrise Poultry Farms", branch: "Sunrise Main Branch", supervisor: "Elango Raj", driver: "Selvam Iyer", vehicleNo: "TN37AB9002", farmer: "Meena Rani", mobileNo: "9833300002", farmCode: "FC-9002", birdType: "Country Chicken", totalBirds: 150, netWeight: 270, totalBox: 4, orgId: "TENANT02" },
+    { id: 1003, billNumber: "BILL-90003", salesOrderNumber: "SO-9003", trader: "Golden Harvest Trading", email: "contact@goldenharvest.com", company: "Golden Harvest Traders", branch: "Golden Harvest Main Branch", supervisor: "Prakash Menon", driver: "Kannan Reddy", vehicleNo: "KA05AB9003", farmer: "Karthik Selvam", mobileNo: "9833300003", farmCode: "FC-9003", birdType: "Layer", totalBirds: 300, netWeight: 540, totalBox: 6, orgId: "TENANT03" },
+    { id: 1004, billNumber: "BILL-90004", salesOrderNumber: "SO-9004", trader: "Green Valley Traders", email: "contact@greenvalleyagro.com", company: "Green Valley Agro", branch: "Green Valley Main Branch", supervisor: "Dinesh Iyer", driver: "Raja Sharma", vehicleNo: "AP09AB9004", farmer: "Divya Shree", mobileNo: "9833300004", farmCode: "FC-9004", birdType: "Broiler", totalBirds: 250, netWeight: 475, totalBox: 5, orgId: "TENANT04" }
+  ];
+
+  function ensureExampleBills(list) {
+    var added = false;
+    EXAMPLE_BILLS.forEach(function (o) {
+      if (list.some(function (x) { return x.id === o.id; })) return;
+      list.push(buildExampleBill(o));
+      added = true;
+    });
+    return added;
+  }
+
+  function getBillsRaw() {
+    var raw = localStorage.getItem(BILLS_KEY);
+    var list;
+    var migrated = false;
+    if (raw) {
+      try { list = JSON.parse(raw); } catch (e) { list = buildSeedBills(); migrated = true; }
+    } else {
+      list = buildSeedBills();
+      migrated = true;
+    }
+    if (ensureExampleBills(list)) migrated = true;
+    if (migrated) saveBillsRaw(list);
+    return list;
+  }
+
+  function saveBillsRaw(bills) {
     localStorage.setItem(BILLS_KEY, JSON.stringify(bills));
   }
+
+  var _billsScope = scopeByOrg(getBillsRaw, saveBillsRaw);
+  function getBills() { return _billsScope.getX(); }
+  function getAllBills() { return _billsScope.getAllX(); }
+  function getBillsByOrg(orgId) { return _billsScope.getXByOrg(orgId); }
+  function saveBills(list) { return _billsScope.saveX(list); }
 
   function seedCreatedDate(i) {
     var day = 3 + (i % 24);
@@ -290,19 +422,47 @@
     });
   }
 
-  function getFarmCodes() {
-    var raw = localStorage.getItem(FARM_CODES_KEY);
-    if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
-    }
-    var seeded = buildSeedFarmCodes();
-    saveFarmCodes(seeded);
-    return seeded;
+  var EXAMPLE_FARM_CODES = [
+    { id: 1001, farmCode: "FC-9001", farmerName: "Arun Prakash", batchNumber: "BATCH-901", mobile: "9811100001", location: "Salem", orgId: "TENANT01" },
+    { id: 1002, farmCode: "FC-9002", farmerName: "Meena Rani", batchNumber: "BATCH-902", mobile: "9811100002", location: "Coimbatore", orgId: "TENANT02" },
+    { id: 1003, farmCode: "FC-9003", farmerName: "Karthik Selvam", batchNumber: "BATCH-903", mobile: "9811100003", location: "Madurai", orgId: "TENANT03" },
+    { id: 1004, farmCode: "FC-9004", farmerName: "Divya Shree", batchNumber: "BATCH-904", mobile: "9811100004", location: "Trichy", orgId: "TENANT04" }
+  ];
+
+  function ensureExampleFarmCodes(list) {
+    var added = false;
+    EXAMPLE_FARM_CODES.forEach(function (f) {
+      if (list.some(function (x) { return x.id === f.id; })) return;
+      list.push(Object.assign({ status: "Active", createdDate: "05 Sep 2026" }, f));
+      added = true;
+    });
+    return added;
   }
 
-  function saveFarmCodes(farmCodes) {
+  function getFarmCodesRaw() {
+    var raw = localStorage.getItem(FARM_CODES_KEY);
+    var list;
+    var migrated = false;
+    if (raw) {
+      try { list = JSON.parse(raw); } catch (e) { list = buildSeedFarmCodes(); migrated = true; }
+    } else {
+      list = buildSeedFarmCodes();
+      migrated = true;
+    }
+    if (ensureExampleFarmCodes(list)) migrated = true;
+    if (migrated) saveFarmCodesRaw(list);
+    return list;
+  }
+
+  function saveFarmCodesRaw(farmCodes) {
     localStorage.setItem(FARM_CODES_KEY, JSON.stringify(farmCodes));
   }
+
+  var _farmCodesScope = scopeByOrg(getFarmCodesRaw, saveFarmCodesRaw);
+  function getFarmCodes() { return _farmCodesScope.getX(); }
+  function getAllFarmCodes() { return _farmCodesScope.getAllX(); }
+  function getFarmCodesByOrg(orgId) { return _farmCodesScope.getXByOrg(orgId); }
+  function saveFarmCodes(list) { return _farmCodesScope.saveX(list); }
 
   function buildSeedTraderCodes() {
     return FIRST_NAMES.map(function (first, i) {
@@ -320,19 +480,47 @@
     });
   }
 
-  function getTraderCodes() {
-    var raw = localStorage.getItem(TRADER_CODES_KEY);
-    if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
-    }
-    var seeded = buildSeedTraderCodes();
-    saveTraderCodes(seeded);
-    return seeded;
+  var EXAMPLE_TRADER_CODES = [
+    { id: 1001, traderCode: "TC-9001", traderName: "Ramesh Traders", mobile: "9822200001", city: "Salem", orgId: "TENANT01" },
+    { id: 1002, traderCode: "TC-9002", traderName: "Sunrise Trading Co", mobile: "9822200002", city: "Coimbatore", orgId: "TENANT02" },
+    { id: 1003, traderCode: "TC-9003", traderName: "Golden Harvest Trading", mobile: "9822200003", city: "Madurai", orgId: "TENANT03" },
+    { id: 1004, traderCode: "TC-9004", traderName: "Green Valley Traders", mobile: "9822200004", city: "Trichy", orgId: "TENANT04" }
+  ];
+
+  function ensureExampleTraderCodes(list) {
+    var added = false;
+    EXAMPLE_TRADER_CODES.forEach(function (t) {
+      if (list.some(function (x) { return x.id === t.id; })) return;
+      list.push(Object.assign({ status: "Active", createdDate: "05 Sep 2026" }, t));
+      added = true;
+    });
+    return added;
   }
 
-  function saveTraderCodes(traderCodes) {
+  function getTraderCodesRaw() {
+    var raw = localStorage.getItem(TRADER_CODES_KEY);
+    var list;
+    var migrated = false;
+    if (raw) {
+      try { list = JSON.parse(raw); } catch (e) { list = buildSeedTraderCodes(); migrated = true; }
+    } else {
+      list = buildSeedTraderCodes();
+      migrated = true;
+    }
+    if (ensureExampleTraderCodes(list)) migrated = true;
+    if (migrated) saveTraderCodesRaw(list);
+    return list;
+  }
+
+  function saveTraderCodesRaw(traderCodes) {
     localStorage.setItem(TRADER_CODES_KEY, JSON.stringify(traderCodes));
   }
+
+  var _traderCodesScope = scopeByOrg(getTraderCodesRaw, saveTraderCodesRaw);
+  function getTraderCodes() { return _traderCodesScope.getX(); }
+  function getAllTraderCodes() { return _traderCodesScope.getAllX(); }
+  function getTraderCodesByOrg(orgId) { return _traderCodesScope.getXByOrg(orgId); }
+  function saveTraderCodes(list) { return _traderCodesScope.saveX(list); }
 
   var PRODUCTS = ["Broiler Chicken", "Country Chicken", "Chicken Feed", "Layer Feed", "Chick Starter Feed", "Poultry Vaccine", "Egg Tray", "Vitamin Supplement", "Broiler Chicks", "Layer Chicks"];
   var ORDER_STATUSES = ["Pending", "Confirmed", "Delivered"];
@@ -363,30 +551,63 @@
     });
   }
 
-  function getSalesOrders() {
+  var EXAMPLE_SALES_ORDERS = [
+    { id: 1001, orderNumber: "SO-9001", trader: "Ramesh Traders", branch: "Northbridge Main Branch", supervisor: "Suresh Kumar", product: "Broiler Chicken", quantity: 200, rate: 150, orderStatus: "Confirmed", orgId: "TENANT01" },
+    { id: 1002, orderNumber: "SO-9002", trader: "Sunrise Trading Co", branch: "Sunrise Main Branch", supervisor: "Elango Raj", product: "Country Chicken", quantity: 150, rate: 180, orderStatus: "Confirmed", orgId: "TENANT02" },
+    { id: 1003, orderNumber: "SO-9003", trader: "Golden Harvest Trading", branch: "Golden Harvest Main Branch", supervisor: "Prakash Menon", product: "Layer Chicks", quantity: 300, rate: 120, orderStatus: "Confirmed", orgId: "TENANT03" },
+    { id: 1004, orderNumber: "SO-9004", trader: "Green Valley Traders", branch: "Green Valley Main Branch", supervisor: "Dinesh Iyer", product: "Broiler Chicks", quantity: 250, rate: 140, orderStatus: "Confirmed", orgId: "TENANT04" }
+  ];
+
+  function ensureExampleSalesOrders(list) {
+    var added = false;
+    EXAMPLE_SALES_ORDERS.forEach(function (o) {
+      if (list.some(function (x) { return x.id === o.id; })) return;
+      list.push(Object.assign({
+        totalAmount: o.quantity * o.rate,
+        orderDate: "05 Sep 2026",
+        status: "Active",
+        customField: ""
+      }, o));
+      added = true;
+    });
+    return added;
+  }
+
+  function getSalesOrdersRaw() {
     var raw = localStorage.getItem(SALES_ORDERS_KEY);
+    var parsed;
+    var migrated = false;
     if (raw) {
       try {
-        var parsed = JSON.parse(raw);
-        var migrated = false;
+        parsed = JSON.parse(raw);
         parsed.forEach(function (o) {
           if (o.trader === undefined) { o.trader = o.customerName || ""; delete o.customerName; migrated = true; }
           if (o.branch === undefined) { o.branch = ""; migrated = true; }
           if (o.supervisor === undefined) { o.supervisor = ""; migrated = true; }
           if (o.customField === undefined) { o.customField = ""; migrated = true; }
         });
-        if (migrated) saveSalesOrders(parsed);
-        return parsed;
-      } catch (e) { /* fall through to reseed */ }
+      } catch (e) {
+        parsed = buildSeedSalesOrders();
+        migrated = true;
+      }
+    } else {
+      parsed = buildSeedSalesOrders();
+      migrated = true;
     }
-    var seeded = buildSeedSalesOrders();
-    saveSalesOrders(seeded);
-    return seeded;
+    if (ensureExampleSalesOrders(parsed)) migrated = true;
+    if (migrated) saveSalesOrdersRaw(parsed);
+    return parsed;
   }
 
-  function saveSalesOrders(salesOrders) {
+  function saveSalesOrdersRaw(salesOrders) {
     localStorage.setItem(SALES_ORDERS_KEY, JSON.stringify(salesOrders));
   }
+
+  var _salesOrdersScope = scopeByOrg(getSalesOrdersRaw, saveSalesOrdersRaw);
+  function getSalesOrders() { return _salesOrdersScope.getX(); }
+  function getAllSalesOrders() { return _salesOrdersScope.getAllX(); }
+  function getSalesOrdersByOrg(orgId) { return _salesOrdersScope.getXByOrg(orgId); }
+  function saveSalesOrders(list) { return _salesOrdersScope.saveX(list); }
 
   function buildSeedBranches() {
     return LOCATIONS.concat(LOCATIONS).map(function (city, i) {
@@ -402,19 +623,47 @@
     });
   }
 
-  function getBranches() {
-    var raw = localStorage.getItem(BRANCHES_KEY);
-    if (raw) {
-      try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
-    }
-    var seeded = buildSeedBranches();
-    saveBranches(seeded);
-    return seeded;
+  var EXAMPLE_BRANCHES = [
+    { id: 1001, branchName: "Northbridge Main Branch", branchCode: "BR-9001", address: "12 Anna Salai, Salem", orgId: "TENANT01", members: [], farms: [1001], traders: [1001] },
+    { id: 1002, branchName: "Sunrise Main Branch", branchCode: "BR-9002", address: "45 Race Course Road, Coimbatore", orgId: "TENANT02", members: [], farms: [1002], traders: [1002] },
+    { id: 1003, branchName: "Golden Harvest Main Branch", branchCode: "BR-9003", address: "8 Town Hall Road, Madurai", orgId: "TENANT03", members: [], farms: [1003], traders: [1003] },
+    { id: 1004, branchName: "Green Valley Main Branch", branchCode: "BR-9004", address: "20 Trichy Main Road, Trichy", orgId: "TENANT04", members: [], farms: [1004], traders: [1004] }
+  ];
+
+  function ensureExampleBranches(list) {
+    var added = false;
+    EXAMPLE_BRANCHES.forEach(function (b) {
+      if (list.some(function (x) { return x.id === b.id; })) return;
+      list.push(Object.assign({ status: "Active", createdDate: "05 Sep 2026" }, b));
+      added = true;
+    });
+    return added;
   }
 
-  function saveBranches(branches) {
+  function getBranchesRaw() {
+    var raw = localStorage.getItem(BRANCHES_KEY);
+    var list;
+    var migrated = false;
+    if (raw) {
+      try { list = JSON.parse(raw); } catch (e) { list = buildSeedBranches(); migrated = true; }
+    } else {
+      list = buildSeedBranches();
+      migrated = true;
+    }
+    if (ensureExampleBranches(list)) migrated = true;
+    if (migrated) saveBranchesRaw(list);
+    return list;
+  }
+
+  function saveBranchesRaw(branches) {
     localStorage.setItem(BRANCHES_KEY, JSON.stringify(branches));
   }
+
+  var _branchesScope = scopeByOrg(getBranchesRaw, saveBranchesRaw);
+  function getBranches() { return _branchesScope.getX(); }
+  function getAllBranches() { return _branchesScope.getAllX(); }
+  function getBranchesByOrg(orgId) { return _branchesScope.getXByOrg(orgId); }
+  function saveBranches(list) { return _branchesScope.saveX(list); }
 
   var PRODUCT_CATEGORIES = ["Poultry", "Feed", "Medicine", "Equipment"];
 
@@ -476,20 +725,69 @@
 
   /* ---------------- Organizations (multi-tenant registration) ---------------- */
 
+  /* Seeds one demo tenant whose orgId matches DEFAULT_ORG_ID, so it owns
+     all the pre-existing Farm/Trader/Branch/Machine/Bill/Sales
+     Order/User seed data (they all default to DEFAULT_ORG_ID when they
+     have no orgId of their own) — clicking into it from Tenant Admin
+     shows that data as a ready-made example instead of an empty tenant. */
+  function buildSeedOrganizations() {
+    return [{
+      orgId: DEFAULT_ORG_ID,
+      username: "poultry_admin",
+      email: "admin@poultry.com",
+      password: "poultry123",
+      companyName: "Poultry Pvt Ltd",
+      companyWebsite: "www.poultry.com",
+      contactNumber: "9840000000",
+      teamSize: "11-50",
+      status: "Active",
+      createdAt: new Date().toISOString()
+    }];
+  }
+
+  function ensureExampleTenants(orgs) {
+    var added = false;
+    EXAMPLE_TENANTS.forEach(function (t, i) {
+      var exists = orgs.some(function (o) { return o.orgId === t.orgId; });
+      if (exists) return;
+      orgs.push({
+        orgId: t.orgId,
+        username: t.username,
+        email: t.email,
+        password: t.password,
+        companyName: t.companyName,
+        companyWebsite: t.companyWebsite,
+        contactNumber: t.contactNumber,
+        teamSize: t.teamSize,
+        status: "Active",
+        createdAt: new Date(Date.now() - (EXAMPLE_TENANTS.length - i) * 86400000).toISOString()
+      });
+      added = true;
+    });
+    return added;
+  }
+
   function getOrganizations() {
     var raw = localStorage.getItem(ORGANIZATIONS_KEY);
+    var orgs;
+    var migrated = false;
     if (raw) {
       try {
-        var orgs = JSON.parse(raw);
-        var migrated = false;
+        orgs = JSON.parse(raw);
         orgs.forEach(function (o) {
           if (o.status === "Inactive") { o.status = "Suspended"; migrated = true; }
         });
-        if (migrated) saveOrganizations(orgs);
-        return orgs;
-      } catch (e) { /* fall through */ }
+      } catch (e) {
+        orgs = buildSeedOrganizations();
+        migrated = true;
+      }
+    } else {
+      orgs = buildSeedOrganizations();
+      migrated = true;
     }
-    return [];
+    if (ensureExampleTenants(orgs)) migrated = true;
+    if (migrated) saveOrganizations(orgs);
+    return orgs;
   }
 
   function saveOrganizations(orgs) {
@@ -620,19 +918,25 @@
     });
   }
 
-  function getMachines() {
+  function getMachinesRaw() {
     var raw = localStorage.getItem(MACHINES_KEY);
     if (raw) {
       try { return JSON.parse(raw); } catch (e) { /* fall through to reseed */ }
     }
     var seeded = buildSeedMachines();
-    saveMachines(seeded);
+    saveMachinesRaw(seeded);
     return seeded;
   }
 
-  function saveMachines(machines) {
+  function saveMachinesRaw(machines) {
     localStorage.setItem(MACHINES_KEY, JSON.stringify(machines));
   }
+
+  var _machinesScope = scopeByOrg(getMachinesRaw, saveMachinesRaw);
+  function getMachines() { return _machinesScope.getX(); }
+  function getAllMachines() { return _machinesScope.getAllX(); }
+  function getMachinesByOrg(orgId) { return _machinesScope.getXByOrg(orgId); }
+  function saveMachines(list) { return _machinesScope.saveX(list); }
 
   /* ---------------- Role permissions (Roles & Permissions page) ----------
      Keyed by role name (the same open-ended list as Data.getUserRoles),
@@ -700,24 +1004,36 @@
   window.Data = {
     getUsers: getUsers,
     saveUsers: saveUsers,
+    getAllUsers: getAllUsers,
+    getUsersByOrg: getUsersByOrg,
     getUserRoles: getUserRoles,
     saveUserRoles: saveUserRoles,
     getTrades: getTrades,
     saveTrades: saveTrades,
     getBills: getBills,
     saveBills: saveBills,
+    getAllBills: getAllBills,
+    getBillsByOrg: getBillsByOrg,
     getProfile: getProfile,
     saveProfile: saveProfile,
     getRolePermissions: getRolePermissions,
     saveRolePermissions: saveRolePermissions,
     getFarmCodes: getFarmCodes,
     saveFarmCodes: saveFarmCodes,
+    getAllFarmCodes: getAllFarmCodes,
+    getFarmCodesByOrg: getFarmCodesByOrg,
     getTraderCodes: getTraderCodes,
     saveTraderCodes: saveTraderCodes,
+    getAllTraderCodes: getAllTraderCodes,
+    getTraderCodesByOrg: getTraderCodesByOrg,
     getSalesOrders: getSalesOrders,
     saveSalesOrders: saveSalesOrders,
+    getAllSalesOrders: getAllSalesOrders,
+    getSalesOrdersByOrg: getSalesOrdersByOrg,
     getBranches: getBranches,
     saveBranches: saveBranches,
+    getAllBranches: getAllBranches,
+    getBranchesByOrg: getBranchesByOrg,
     getProducts: getProducts,
     saveProducts: saveProducts,
     getOrganizations: getOrganizations,
@@ -729,6 +1045,8 @@
     authenticateOrganization: authenticateOrganization,
     getMachines: getMachines,
     saveMachines: saveMachines,
+    getAllMachines: getAllMachines,
+    getMachinesByOrg: getMachinesByOrg,
     getModulePermissions: getModulePermissions,
     getAppSettings: getAppSettings,
     saveAppSettings: saveAppSettings
