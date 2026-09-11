@@ -207,10 +207,7 @@
                   </select>
                 </div>
 
-                <div class="field full">
-                  <label for="bCustomField">Custom Field</label>
-                  <input type="text" id="bCustomField" placeholder="e.g. any additional note">
-                </div>
+                <div id="billCustomFieldsContainer" style="display:contents"></div>
 
                 <div class="field-group-divider">
                   <span class="divider-icon-badge badge-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
@@ -590,7 +587,6 @@
   var bCompany = document.getElementById("bCompany");
   var bBranch = document.getElementById("bBranch");
   var bMachine = document.getElementById("bMachine");
-  var bCustomField = document.getElementById("bCustomField");
   var bSupervisor = document.getElementById("bSupervisor");
   var bDriver = document.getElementById("bDriver");
   var bVehicleNo = document.getElementById("bVehicleNo");
@@ -604,6 +600,35 @@
   var bEndTime = document.getElementById("bEndTime");
   var bLoadingTime = document.getElementById("bLoadingTime");
   var formAlert = document.getElementById("formAlert");
+
+  /* ---------------- Custom fields (per-tenant, see Tenant Settings > Features) ----------------
+     Each tenant can define its own extra Bill fields (e.g. "Delivery
+     Notes"). Rendered fresh here so a tenant only ever sees the fields
+     it configured for itself; values save under bill.customFields,
+     keyed by label. */
+  var billCustomFieldsContainer = document.getElementById("billCustomFieldsContainer");
+  var billCustomFieldLabels = Data.getOrgFeatures(App.getOrgId()).billFields;
+
+  function renderBillCustomFields(values) {
+    values = values || {};
+    billCustomFieldsContainer.innerHTML = billCustomFieldLabels.map(function (label, i) {
+      var inputId = "bCustomField_" + i;
+      return (
+        '<div class="field full">' +
+          '<label for="' + inputId + '">' + escapeHtml(label) + '</label>' +
+          '<input type="text" class="bill-custom-field-input" data-label="' + escapeHtml(label) + '" id="' + inputId + '" value="' + escapeHtml(values[label] || "") + '">' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  function collectBillCustomFields() {
+    var result = {};
+    document.querySelectorAll(".bill-custom-field-input").forEach(function (input) {
+      result[input.getAttribute("data-label")] = input.value.trim();
+    });
+    return result;
+  }
 
   /* ---------------- Image fields (signatures + vehicle photo) ---------------- */
   var PLACEHOLDER_ICONS = {
@@ -671,9 +696,9 @@
   });
 
   /* Selecting a Confirmed order fetches its known details straight into
-     the matching bill fields (Trader/Branch/Supervisor/Custom Field) so
-     they don't have to be retyped. Branch/Supervisor are <select>s, so a
-     value that isn't already an option gets added on the fly. */
+     the matching bill fields (Trader/Branch/Supervisor) so they don't
+     have to be retyped. Branch/Supervisor are <select>s, so a value
+     that isn't already an option gets added on the fly. */
   function setSelectValue(selectEl, value) {
     if (!value) return;
     var hasOption = Array.prototype.some.call(selectEl.options, function (opt) { return opt.value === value; });
@@ -692,7 +717,6 @@
     bTrader.value = order.trader || "";
     setSelectValue(bBranch, order.branch);
     setSelectValue(bSupervisor, order.supervisor);
-    bCustomField.value = order.customField || "";
   });
 
   var branches = Data.getBranches().filter(function (b) { return b.status !== "Inactive"; });
@@ -1072,7 +1096,6 @@
     bCompany.value = existingBill.company || "";
     bBranch.value = existingBill.branch || "";
     bMachine.value = existingBill.machineNumber || "";
-    bCustomField.value = existingBill.customField || "";
     bSupervisor.value = existingBill.supervisor || "";
     bDriver.value = existingBill.driver || "";
     bVehicleNo.value = existingBill.vehicleNo || "";
@@ -1101,6 +1124,7 @@
     });
   }
 
+  renderBillCustomFields(existingBill ? existingBill.customFields : null);
   renderSessionsTable();
   renderBirdTypeTable();
   recalcWeighingDetails();
@@ -1150,7 +1174,7 @@
       company: bCompany.value.trim(),
       branch: bBranch.value,
       machineNumber: bMachine.value,
-      customField: bCustomField.value.trim(),
+      customFields: collectBillCustomFields(),
       supervisor: bSupervisor.value,
       driver: bDriver.value.trim(),
       vehicleNo: bVehicleNo.value.trim(),

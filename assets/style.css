@@ -1817,6 +1817,189 @@ button.cell-user-link { background: none; border: none; padding: 0; font: inheri
   font-weight: 600;
 }
 
+/* ---------- Sales Order "View Details" modal - hero + highlights ---------- */
+
+.order-view-hero {
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  background: var(--gradient-brand);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.order-view-hero::before,
+.order-view-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.order-view-hero::before { width: 160px; height: 160px; top: -70px; right: -40px; }
+.order-view-hero::after { width: 100px; height: 100px; bottom: -50px; right: 90px; background: rgba(255, 255, 255, 0.08); }
+
+.order-view-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.order-view-hero-order { font-size: 20px; font-weight: 800; margin: 0 0 4px; position: relative; }
+
+.order-view-hero-trader {
+  margin: 0;
+  opacity: 0.92;
+  font-size: 13.5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.order-view-hero .status-pill { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.order-view-hero .status-pill::before { background: currentColor; }
+
+.order-view-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.order-view-stat {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.order-view-stat .ovs-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.order-view-stat .ovs-icon svg { width: 17px; height: 17px; }
+.order-view-stat .ovs-value { font-size: 16.5px; font-weight: 800; line-height: 1.15; }
+.order-view-stat .ovs-label { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+
+.order-view-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.order-view-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.order-view-info-item .ovi-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-2);
+  flex-shrink: 0;
+}
+
+.order-view-info-item .ovi-icon svg { width: 14px; height: 14px; }
+.order-view-info-item .ovi-text span { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); font-weight: 700; margin-bottom: 1px; }
+.order-view-info-item .ovi-text strong { font-size: 13.5px; font-weight: 700; }
+
+@media (max-width: 560px) {
+  .order-view-stats, .order-view-info { grid-template-columns: 1fr; }
+}
+
+/* ---------- Bill View page - hero banner + highlight stats ---------- */
+
+.bill-hero {
+  border-radius: var(--radius-lg);
+  padding: 28px 30px;
+  background: var(--gradient-brand);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+
+.bill-hero::before,
+.bill-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.bill-hero::before { width: 220px; height: 220px; top: -90px; right: -60px; }
+.bill-hero::after { width: 140px; height: 140px; bottom: -70px; right: 140px; background: rgba(255, 255, 255, 0.08); }
+
+.bill-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.bill-hero-top h2 { margin: 0 0 6px; font-size: 23px; font-weight: 800; }
+.bill-hero-top p { margin: 0; opacity: 0.9; font-size: 13.5px; }
+.bill-hero .status-pill { background: rgba(255, 255, 255, 0.22); color: #fff; font-size: 12px; }
+.bill-hero .status-pill::before { background: currentColor; }
+
+.bill-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+  position: relative;
+}
+
+.bill-hero-stat {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.bill-hero-stat .bhs-value { font-size: 20px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.bill-hero-stat .bhs-label { font-size: 11px; opacity: 0.88; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .bill-hero-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.detail-row { transition: background 0.15s ease; }
+.detail-row:hover { background: rgba(109, 40, 217, 0.06); }
+
+.signature-gallery-item .thumb { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.signature-gallery-item .thumb:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
 .toast-notice {
   position: fixed;
   bottom: 26px;
@@ -2945,6 +3128,10 @@ button.cell-user-link { background: none; border: none; padding: 0; font: inheri
 
 .field-perms-head span:not(:first-child) { text-align: center; }
 
+.field-perms-head.view-only,
+.field-perm-row.view-only { grid-template-columns: 1fr 64px; }
+.field-perms-head.view-only #fieldPermsEditHead { display: none; }
+
 .field-perms-panel {
   border: 1px solid var(--border);
   border-radius: 0 0 10px 10px;
@@ -3093,34 +3280,6 @@ button.cell-user-link { background: none; border: none; padding: 0; font: inheri
   .perm-switch { width: 30px; height: 18px; }
   .perm-switch .slider::before { width: 12px; height: 12px; }
   .perm-switch input:checked + .slider::before { transform: translateX(12px); }
-}
-
-/* ---------- Single-toggle permission row (e.g. Machine Management) ---------- */
-
-.perm-row.perm-row-single {
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-}
-
-.perm-single-toggle {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 14px 6px 6px;
-}
-
-.perm-single-toggle .perm-switch { width: 34px; height: 20px; }
-.perm-single-toggle .perm-switch .slider::before { width: 14px; height: 14px; }
-.perm-single-toggle .perm-switch input:checked + .slider::before { transform: translateX(14px); }
-
-.perm-single-toggle span {
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--muted);
 }
 
 /* ============================================================

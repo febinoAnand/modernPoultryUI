@@ -88,6 +88,7 @@
         id: i + 1,
         name: name,
         email: first.toLowerCase() + "." + last.toLowerCase() + "@example.com",
+        password: "Welcome123",
         role: USER_ROLES[i % USER_ROLES.length],
         mobile: "98" + String(40000000 + i * 137).slice(0, 8),
         status: i % 5 === 0 ? "Inactive" : "Active",
@@ -821,6 +822,30 @@
     return orgs.some(function (o) { return o.username.toLowerCase() === String(username).toLowerCase(); });
   }
 
+  /* ---------------- Per-tenant "Features" ----------------
+     Some tenants want an extra field or two on their own Bill or Sales
+     Order form (e.g. "Delivery Notes", "PO Reference") that no other
+     tenant needs. Each org can define its own list of these field
+     labels; bill-form.html / sales-order.html render one text input
+     per configured label for that tenant and save the values keyed by
+     label under record.customFields. */
+  function getOrgFeatures(orgId) {
+    var org = findOrganization(orgId);
+    var f = (org && org.features) || {};
+    return {
+      billFields: f.billFields || [],
+      salesOrderFields: f.salesOrderFields || []
+    };
+  }
+
+  function saveOrgFeatures(orgId, features) {
+    var orgs = getOrganizations();
+    var org = orgs.find(function (o) { return o.orgId === orgId; });
+    if (!org) return;
+    org.features = features;
+    saveOrganizations(orgs);
+  }
+
   function registerOrganization(details) {
     var orgs = getOrganizations();
     var org = {
@@ -832,7 +857,7 @@
       companyWebsite: details.companyWebsite,
       contactNumber: details.contactNumber,
       teamSize: details.teamSize,
-      status: "Active",
+      status: "Pending",
       createdAt: new Date().toISOString()
     };
     orgs.push(org);
@@ -964,6 +989,12 @@
      configures a role on the Roles & Permissions page and the
      signed-in profile is assigned that role. */
 
+  /* Modules with no create/edit/delete action anywhere in the app - Read
+     is the only permission that can ever mean anything for them. Enforced
+     here (not just as a UI convention on Roles & Permissions) so it holds
+     even for role data saved before a module was added to this list. */
+  var READ_ONLY_MODULES = ["dashboard", "machineManagement"];
+
   function getModulePermissions(moduleKey) {
     var fullAccess = { create: true, read: true, update: true, delete: true, fields: null };
     var profile = getProfile();
@@ -973,14 +1004,16 @@
     var matched = rolePermissions[profile.role];
     if (!matched) return fullAccess;
 
+    var readOnly = READ_ONLY_MODULES.indexOf(moduleKey) !== -1;
+
     var modulePerms = matched[moduleKey];
     if (!modulePerms) return fullAccess;
 
     return {
-      create: !!modulePerms.create,
+      create: !readOnly && !!modulePerms.create,
       read: !!modulePerms.read,
-      update: !!modulePerms.update,
-      delete: !!modulePerms.delete,
+      update: !readOnly && !!modulePerms.update,
+      delete: !readOnly && !!modulePerms.delete,
       fields: modulePerms.fields || null
     };
   }
@@ -1041,6 +1074,8 @@
     generateOrgId: generateOrgId,
     findOrganization: findOrganization,
     isUsernameTaken: isUsernameTaken,
+    getOrgFeatures: getOrgFeatures,
+    saveOrgFeatures: saveOrgFeatures,
     registerOrganization: registerOrganization,
     authenticateOrganization: authenticateOrganization,
     getMachines: getMachines,

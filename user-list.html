@@ -247,6 +247,12 @@
             <span class="field-error" id="errEmail">Please enter a valid email address.</span>
           </div>
 
+          <div class="field full">
+            <label for="fPassword">Password <span class="req" id="passwordReq">*</span></label>
+            <input type="password" id="fPassword" placeholder="Used by this user to sign in" autocomplete="new-password">
+            <span class="field-error" id="errPassword">Enter at least 6 characters.</span>
+          </div>
+
           <div class="field full field-col-role">
             <label for="fRole">Role <span class="req">*</span></label>
             <select id="fRole"></select>
@@ -719,6 +725,8 @@
   var fEmail = document.getElementById("fEmail");
   var fRole = document.getElementById("fRole");
   var fMobile = document.getElementById("fMobile");
+  var fPassword = document.getElementById("fPassword");
+  var passwordReq = document.getElementById("passwordReq");
   var fCreatedDate = document.getElementById("fCreatedDate");
   var roleSelectCtrl = App.initRoleSelect(
     fRole,
@@ -740,6 +748,9 @@
       fEmail.value = user.email;
       roleSelectCtrl.setValue(user.role);
       fMobile.value = user.mobile;
+      fPassword.value = "";
+      fPassword.placeholder = "Leave blank to keep the current password";
+      passwordReq.style.display = "none";
       fCreatedDate.value = user.createdDate;
       createdDateField.style.display = "flex";
       document.querySelector('input[name="fStatus"][value="' + user.status + '"]').checked = true;
@@ -748,6 +759,9 @@
       userModalSubtitle.textContent = "Fill in the details to create a new user.";
       fUserId.value = "";
       fName.value = "";
+      fPassword.value = "";
+      fPassword.placeholder = "Used by this user to sign in";
+      passwordReq.style.display = "";
       fEmail.value = "";
       roleSelectCtrl.setValue(null);
       fMobile.value = "";
@@ -792,6 +806,11 @@
       valid = valid && mobileOk;
     }
 
+    var isNewUser = !fUserId.value;
+    var passwordOk = isNewUser ? fPassword.value.length >= 6 : (fPassword.value === "" || fPassword.value.length >= 6);
+    setFieldError(fPassword, document.getElementById("errPassword"), !passwordOk);
+    valid = valid && passwordOk;
+
     if (fieldEditable("role")) {
       var roleOk = !roleSelectCtrl.isPendingAdd();
       setFieldError(fRole, document.getElementById("errRole"), !roleOk);
@@ -814,6 +833,7 @@
       var user = users.find(function (u) { return u.id === parseInt(fUserId.value, 10); });
       user.name = fName.value.trim();
       user.email = fEmail.value.trim();
+      if (fPassword.value) user.password = fPassword.value;
       user.role = fRole.value;
       user.mobile = fMobile.value.trim();
       user.status = status;
@@ -826,6 +846,7 @@
         id: nextId++,
         name: fName.value.trim(),
         email: fEmail.value.trim(),
+        password: fPassword.value,
         role: fRole.value,
         mobile: fMobile.value.trim(),
         status: status,

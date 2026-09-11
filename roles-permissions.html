@@ -171,10 +171,10 @@
                 <label for="fieldPermsModuleSelect">Page</label>
                 <select id="fieldPermsModuleSelect"></select>
               </div>
-              <div class="field-perms-head">
+              <div class="field-perms-head" id="fieldPermsHead">
                 <span>Field</span>
                 <span>View</span>
-                <span>Edit</span>
+                <span id="fieldPermsEditHead">Edit</span>
               </div>
               <div class="field-perms-panel" id="fieldPermsPanel"></div>
             </div>
@@ -242,8 +242,7 @@
       { key: "rate", label: "Rate" },
       { key: "totalAmount", label: "Total Amount" },
       { key: "orderDate", label: "Order Date" },
-      { key: "orderStatus", label: "Status" },
-      { key: "customField", label: "Custom Field" }
+      { key: "orderStatus", label: "Status" }
     ] },
     { key: "addFarm", label: "Farm", desc: "Farm code registry", icon: '<path d="M12 2C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-11z"/><path d="M12 22v-6"/>', fieldList: [
       { key: "farmCode", label: "Farm Code" },
@@ -264,7 +263,7 @@
       { key: "productCode", label: "Product Code" },
       { key: "status", label: "Status" }
     ] },
-    { key: "machineManagement", label: "Machine", desc: "Weighing machines, parameters & service history", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/>', singleToggle: true, fieldList: [
+    { key: "machineManagement", label: "Machine", desc: "Weighing machines, parameters & service history", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/>', readOnlyModule: true, fieldList: [
       { key: "machineNumber", label: "Machine Number" },
       { key: "capacity", label: "Capacity" },
       { key: "calibrationDue", label: "Calibration Due" },
@@ -435,20 +434,12 @@
       '</div>';
 
     var rows = PERMISSION_MODULES.map(function (m) {
-      var switches;
       var rowClass = "perm-row";
-      if (m.singleToggle) {
-        rowClass += " perm-row-single";
-        var on = activePermissions[m.key].read;
-        switches =
-          '<span class="perm-single-toggle"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-single="true" ' + (on ? "checked" : "") + '><span class="slider"></span></label><span>ACCESS</span></span>';
-      } else {
-        switches = PERM_ACTIONS.map(function (a) {
-          var checked = activePermissions[m.key][a];
-          var locked = m.readOnlyModule && a !== "read";
-          return '<span class="perm-switch-cell"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-action="' + a + '" ' + (checked ? "checked" : "") + (locked ? " disabled" : "") + '><span class="slider"></span></label></span>';
-        }).join("");
-      }
+      var switches = PERM_ACTIONS.map(function (a) {
+        var checked = activePermissions[m.key][a];
+        var locked = m.readOnlyModule && a !== "read";
+        return '<span class="perm-switch-cell"><label class="perm-switch"><input type="checkbox" data-module="' + m.key + '" data-action="' + a + '" ' + (checked ? "checked" : "") + (locked ? " disabled" : "") + '><span class="slider"></span></label></span>';
+      }).join("");
       var lockNote = m.readOnlyModule
         ? '<div class="perm-module-lock-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Read only — no create/edit/delete for this page</div>'
         : "";
@@ -471,6 +462,7 @@
   var FIELD_LIST_MODULES = PERMISSION_MODULES.filter(function (m) { return m.fieldList; });
   var fieldPermsModuleSelect = document.getElementById("fieldPermsModuleSelect");
   var fieldPermsPanel = document.getElementById("fieldPermsPanel");
+  var fieldPermsHead = document.getElementById("fieldPermsHead");
 
   fieldPermsModuleSelect.innerHTML = FIELD_LIST_MODULES.map(function (m) {
     return '<option value="' + m.key + '">' + m.label + '</option>';
@@ -482,16 +474,20 @@
       fieldPermsPanel.innerHTML = '<div class="field-perms-empty">No fields to configure.</div>';
       return;
     }
+    /* A read-only module (e.g. Machine) has no edit action anywhere in the
+       app, so "View" is the only field-level option that means anything. */
+    var viewOnly = !!m.readOnlyModule;
+    fieldPermsHead.classList.toggle("view-only", viewOnly);
     var fieldState = activePermissions[m.key].fields || defaultFieldPermissions(m);
     fieldPermsPanel.innerHTML = m.fieldList.map(function (f) {
       var perm = fieldState[f.key] || { view: true, edit: true };
       var viewOn = perm.view !== false;
       var editOn = perm.edit !== false;
       return (
-        '<div class="field-perm-row">' +
+        '<div class="field-perm-row' + (viewOnly ? " view-only" : "") + '">' +
           '<span class="field-perm-name">' + f.label + '</span>' +
           '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="view" ' + (viewOn ? "checked" : "") + ' title="View ' + f.label + '">' +
-          '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="edit" ' + (editOn ? "checked" : "") + (viewOn ? "" : " disabled") + ' title="Edit ' + f.label + '">' +
+          (viewOnly ? "" : '<input type="checkbox" data-fp-module="' + m.key + '" data-fp-key="' + f.key + '" data-fp-type="edit" ' + (editOn ? "checked" : "") + (viewOn ? "" : " disabled") + ' title="Edit ' + f.label + '">') +
         '</div>'
       );
     }).join("");
@@ -525,13 +521,7 @@
     if (input.tagName !== "INPUT") return;
 
     var moduleKey = input.getAttribute("data-module");
-    if (input.getAttribute("data-single") === "true") {
-      var existingFields = activePermissions[moduleKey].fields;
-      activePermissions[moduleKey] = { create: input.checked, read: input.checked, update: input.checked, delete: input.checked };
-      if (existingFields) activePermissions[moduleKey].fields = existingFields;
-    } else {
-      activePermissions[moduleKey][input.getAttribute("data-action")] = input.checked;
-    }
+    activePermissions[moduleKey][input.getAttribute("data-action")] = input.checked;
     persistActivePermissions();
     renderRolesList();
   });
@@ -543,13 +533,7 @@
     var allOn = PERMISSION_MODULES.every(function (m) { return activePermissions[m.key][action]; });
     var next = !allOn;
     PERMISSION_MODULES.forEach(function (m) {
-      if (m.singleToggle) {
-        var existingFields = activePermissions[m.key].fields;
-        activePermissions[m.key] = { create: next, read: next, update: next, delete: next };
-        if (existingFields) activePermissions[m.key].fields = existingFields;
-      } else {
-        activePermissions[m.key][action] = next;
-      }
+      activePermissions[m.key][action] = next;
     });
     renderPermTable();
     persistActivePermissions();

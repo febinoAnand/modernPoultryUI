@@ -143,13 +143,21 @@
       </div>
 
       <div id="billContent">
+        <div class="bill-hero" id="billHero"></div>
+
         <div class="detail-grid">
-          <div class="detail-card">
-            <div class="detail-card-header">Registration</div>
+          <div class="detail-card section-card accent-violet">
+            <div class="detail-card-header">
+              <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              Registration
+            </div>
             <div class="detail-rows" id="registrationRows"></div>
           </div>
-          <div class="detail-card">
-            <div class="detail-card-header">Weighing Details</div>
+          <div class="detail-card section-card accent-blue">
+            <div class="detail-card-header">
+              <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4"/><path d="M12 5V3"/><path d="M5 13H3"/><path d="M21 13h-2"/></svg></span>
+              Weighing Details
+            </div>
             <div class="detail-rows" id="weighingRows"></div>
           </div>
         </div>
@@ -246,6 +254,27 @@
     document.getElementById("pageDesc").textContent = "Full registration and weighing breakdown for this bill.";
     document.getElementById("pageSubtitle").textContent = bill.billNumber + " · " + bill.company;
 
+    var statusClass = bill.status === "Active" ? "active" : "inactive";
+    var heroStats = [
+      { value: bill.totalBirds, label: "Total Birds" },
+      { value: bill.netWeight, label: "Net Weight (kg)" },
+      { value: bill.totalBox, label: "Total Box" },
+      { value: bill.avgWeight, label: "Avg Weight (kg)" }
+    ];
+    document.getElementById("billHero").innerHTML =
+      '<div class="bill-hero-top">' +
+        '<div>' +
+          '<h2>Bill #' + escapeHtml(bill.billNumber) + '</h2>' +
+          '<p>' + escapeHtml(bill.company) + ' · ' + escapeHtml(bill.branch) + ' · ' + escapeHtml(bill.date) + '</p>' +
+        '</div>' +
+        '<span class="status-pill ' + statusClass + '">' + escapeHtml(bill.status) + '</span>' +
+      '</div>' +
+      '<div class="bill-hero-stats">' +
+        heroStats.map(function (s) {
+          return '<div class="bill-hero-stat"><div class="bhs-value">' + escapeHtml(s.value === undefined || s.value === null ? "—" : s.value) + '</div><div class="bhs-label">' + s.label + '</div></div>';
+        }).join("") +
+      '</div>';
+
     function row(label, value) {
       return '<div class="detail-row"><span class="detail-label">' + label + '</span><span class="detail-value">' + escapeHtml(value === undefined || value === null || value === "" ? "—" : value) + '</span></div>';
     }
@@ -257,7 +286,6 @@
       ["Sale Order No", bill.salesOrderNumber],
       ["Date", bill.date],
       ["Weighing Machine", bill.machineNumber],
-      ["Custom Field", bill.customField],
       ["Start Time", bill.startTime],
       ["End Time", bill.endTime],
       ["Supervisor", bill.supervisor],
@@ -269,7 +297,7 @@
       ["Age", bill.age || bill.age === 0 ? bill.age + " Days" : ""],
       ["Balance Stock", bill.balanceStock],
       ["Bird Type", bill.birdType]
-    ];
+    ].concat(Object.keys(bill.customFields || {}).map(function (label) { return [label, bill.customFields[label]]; }));
 
     var weighingFields = [
       ["Filled Box", bill.filledBox],
@@ -355,12 +383,13 @@
     lines.push("Registration");
     [
       ["Name", bill.company], ["Branch", bill.branch], ["Bill No", bill.billNumber], ["Sale Order No", bill.salesOrderNumber], ["Date", bill.date],
-      ["Weighing Machine", bill.machineNumber], ["Custom Field", bill.customField],
+      ["Weighing Machine", bill.machineNumber],
       ["Start Time", bill.startTime], ["End Time", bill.endTime], ["Supervisor", bill.supervisor],
       ["Driver", bill.driver], ["Vehicle No", bill.vehicleNo], ["Farmer", bill.farmer],
       ["Mobile No", bill.mobileNo], ["Farm Code", bill.farmCode], ["Age", bill.age],
       ["Balance Stock", bill.balanceStock], ["Bird Type", bill.birdType]
-    ].forEach(function (f) { lines.push(csvEscape(f[0]) + "," + csvEscape(f[1])); });
+    ].concat(Object.keys(bill.customFields || {}).map(function (label) { return [label, bill.customFields[label]]; }))
+     .forEach(function (f) { lines.push(csvEscape(f[0]) + "," + csvEscape(f[1])); });
 
     lines.push("");
     lines.push("Weighing Details");

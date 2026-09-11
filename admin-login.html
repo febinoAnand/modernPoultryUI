@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Sign In</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="auth-body">
+
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<div class="bg-blob b3"></div>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">P</div>
+    <h1>Control Center</h1>
+    <p class="subtitle">Admin sign-in — manage every tenant on this platform</p>
+
+    <div class="form-alert" id="formAlert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="formAlertText">Invalid credentials.</span>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-wrapper">
+          <svg class="leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          <input type="text" id="username" name="username" placeholder="admin" autocomplete="username" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <svg class="leading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+          <button type="button" class="toggle-password" id="togglePassword">Show</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary submit-btn">Sign In</button>
+    </form>
+
+    <div class="demo-hint">
+      <span>Admin login &mdash; user <b>admin</b> / <b>admin123</b></span>
+      <button type="button" class="demo-autofill-btn" id="autofillDemoBtn">Autofill</button>
+    </div>
+
+    <p class="auth-switch">Not an admin? <a href="index.html">Sign in to your organisation</a></p>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  var ADMIN_USERNAME = "admin";
+  var ADMIN_PASSWORD = "admin123";
+  var ADMIN_EMAIL = "admin@poultry";
+  var ADMIN_ORG = "POULTRY";
+
+  var form = document.getElementById("loginForm");
+  var usernameInput = document.getElementById("username");
+  var passwordInput = document.getElementById("password");
+  var togglePassword = document.getElementById("togglePassword");
+  var formAlert = document.getElementById("formAlert");
+  var formAlertText = document.getElementById("formAlertText");
+
+  togglePassword.addEventListener("click", function () {
+    var isPassword = passwordInput.type === "password";
+    passwordInput.type = isPassword ? "text" : "password";
+    togglePassword.textContent = isPassword ? "Hide" : "Show";
+  });
+
+  document.getElementById("autofillDemoBtn").addEventListener("click", function () {
+    usernameInput.value = ADMIN_USERNAME;
+    passwordInput.value = ADMIN_PASSWORD;
+    clearErrors();
+  });
+
+  function clearErrors() {
+    usernameInput.classList.remove("error");
+    passwordInput.classList.remove("error");
+    formAlert.classList.remove("show");
+  }
+
+  [usernameInput, passwordInput].forEach(function (el) {
+    el.addEventListener("input", clearErrors);
+  });
+
+  function showAlert(message) {
+    formAlertText.textContent = message;
+    formAlert.classList.add("show");
+    usernameInput.classList.add("error");
+    passwordInput.classList.add("error");
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    var username = usernameInput.value.trim();
+    var password = passwordInput.value;
+
+    if (!username || !password) {
+      showAlert("Please fill in all fields.");
+      return;
+    }
+
+    if (username.toLowerCase() === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      App.login(ADMIN_EMAIL, ADMIN_ORG);
+      window.location.href = "tenant-admin.html";
+    } else {
+      showAlert("Invalid username or password.");
+    }
+  });
+
+  // If already logged in, skip straight to the Control Center.
+  if (App.isLoggedIn()) {
+    window.location.href = "tenant-admin.html";
+  }
+</script>
+
+</body>
+</html>

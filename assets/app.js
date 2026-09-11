@@ -101,6 +101,7 @@
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem("ui_user_email");
     sessionStorage.removeItem("ui_org_id");
+    sessionStorage.removeItem(ADMIN_HOME_ORG_KEY);
     window.location.href = "index.html";
   }
 
@@ -122,6 +123,7 @@
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem("ui_user_email");
       sessionStorage.removeItem("ui_org_id");
+      sessionStorage.removeItem(ADMIN_HOME_ORG_KEY);
       window.location.href = "index.html?sessionExpired=1";
     }
 
