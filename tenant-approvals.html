@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tenant Approvals</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">P</div>
+      <div class="brand-text">
+        <strong>Poultry</strong>
+        <span>Control Center</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="tenant-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </a>
+
+      <a class="nav-item" href="tenant-admin.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M9 13h1"/><path d="M14 9h1"/><path d="M14 13h1"/></svg>
+        Tenant
+      </a>
+
+      <a class="nav-item active" href="tenant-approvals.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><path d="M9 14l2 2 4-4"/></svg>
+        Approvals
+      </a>
+
+      <button class="nav-item logout-item" data-logout>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar" data-user-initial>V</div>
+      <div class="who">
+        <strong data-user-name>Vijay</strong>
+        <span>Administrator</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="page-title">
+          Tenant Approvals
+          <span>Review and act on new organisation signups</span>
+        </div>
+      </div>
+      <div class="topbar-right"></div>
+    </header>
+
+    <main class="content">
+
+      <div class="page-header-row centered">
+        <div class="header-center">
+          <div class="page-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><path d="M9 14l2 2 4-4"/></svg>
+          </div>
+          <h2>Tenant Approvals</h2>
+          <p>Every new organisation signup lands here first - approve to let it sign in, or reject to remove the request.</p>
+        </div>
+      </div>
+
+      <div class="stat-grid stat-grid-tight">
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          </div>
+          <div class="stat-value" id="statPending">0</div>
+          <div class="stat-label">Pending Approval</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="stat-value" id="statActive">0</div>
+          <div class="stat-label">Active Tenants</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.9" y1="9.1" x2="9.1" y2="14.9"/><line x1="9.1" y1="9.1" x2="14.9" y2="14.9"/></svg>
+          </div>
+          <div class="stat-value" id="statSuspended">0</div>
+          <div class="stat-label">Suspended Tenants</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="detail-card-header">
+          <span class="card-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><path d="M9 14l2 2 4-4"/></svg></span>
+          Pending Requests
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Team Size</th>
+                <th>Requested</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pendingBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <p>No pending tenant approvals right now.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- View Modal -->
+<div class="modal-overlay" id="viewModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <h3 id="viewTenantTitle">Signup Details</h3>
+        <p>Full details submitted with this signup request.</p>
+      </div>
+      <button class="modal-close" id="closeViewModal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="view-detail-grid" id="viewDetailGrid"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="viewApproveBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M20 6L9 17l-5-5"/></svg>
+        Approve
+      </button>
+      <button class="btn btn-outline danger" id="viewRejectBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Reject
+      </button>
+      <button class="btn btn-outline" id="closeViewModalBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-notice" id="toastNotice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toastNoticeText">Saved successfully.</span>
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  App.requireAuth();
+  App.initSidebar();
+  App.initLogout();
+  App.initUserBadge();
+  App.initSessionTimeout();
+
+  /* Same hidden-page rules as tenant-admin.html: not linked from the
+     tenant-facing app's own sidebar, Control Center only. This page is
+     just tenant-admin.html's Pending queue pulled into its own focused
+     view - same Data.getOrganizations()/saveOrganizations() store, same
+     Approve (status -> Active) / Reject (removes the record) actions. */
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function initials(name) {
+    var parts = String(name || "").trim().split(/\s+/);
+    return ((parts[0] || "")[0] || "").toUpperCase() + ((parts[1] || "")[0] || "").toUpperCase();
+  }
+
+  function formatRequestedDate(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "—";
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return String(d.getDate()).padStart(2, "0") + " " + months[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  var orgs = Data.getOrganizations();
+  function persist() { Data.saveOrganizations(orgs); }
+
+  var pendingBody = document.getElementById("pendingBody");
+  var emptyState = document.getElementById("emptyState");
+
+  function updateStats() {
+    document.getElementById("statPending").textContent = orgs.filter(function (o) { return o.status === "Pending"; }).length;
+    document.getElementById("statActive").textContent = orgs.filter(function (o) { return o.status === "Active"; }).length;
+    document.getElementById("statSuspended").textContent = orgs.filter(function (o) { return o.status === "Suspended"; }).length;
+  }
+
+  function render() {
+    var pending = orgs.filter(function (o) { return o.status === "Pending"; });
+
+    if (!pending.length) {
+      pendingBody.innerHTML = "";
+      emptyState.style.display = "block";
+    } else {
+      emptyState.style.display = "none";
+      pendingBody.innerHTML = pending.map(function (o) {
+        return (
+          '<tr>' +
+            '<td><span class="cell-user"><div class="cell-avatar">' + initials(o.companyName) + '</div><span class="cell-user-name">' + escapeHtml(o.companyName) + '</span></span></td>' +
+            '<td><span class="chip chip-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>' + escapeHtml(o.email) + '</span></td>' +
+            '<td>' + escapeHtml(o.contactNumber || "—") + '</td>' +
+            '<td>' + escapeHtml(o.teamSize || "—") + '</td>' +
+            '<td>' + formatRequestedDate(o.createdAt) + '</td>' +
+            '<td>' +
+              '<div class="row-actions" style="display:flex; gap:8px; flex-wrap:wrap">' +
+                '<button class="btn btn-outline btn-sm" data-action="view" data-id="' + o.orgId + '">View</button>' +
+                '<button class="btn btn-primary btn-sm" data-action="approve" data-id="' + o.orgId + '">Approve</button>' +
+                '<button class="btn btn-outline danger btn-sm" data-action="reject" data-id="' + o.orgId + '">Reject</button>' +
+              '</div>' +
+            '</td>' +
+          '</tr>'
+        );
+      }).join("");
+    }
+
+    updateStats();
+  }
+  render();
+
+  function approveOrg(org) {
+    org.status = "Active";
+    persist();
+    render();
+    showToast(org.companyName + " has been approved.");
+  }
+
+  function rejectOrg(org) {
+    var confirmed = window.confirm('Reject the signup request from "' + org.companyName + '"? This cannot be undone.');
+    if (!confirmed) return;
+    orgs = orgs.filter(function (o) { return o.orgId !== org.orgId; });
+    persist();
+    render();
+    showToast(org.companyName + "'s signup request has been rejected.");
+  }
+
+  pendingBody.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    var org = orgs.find(function (o) { return o.orgId === btn.getAttribute("data-id"); });
+    if (!org) return;
+    var action = btn.getAttribute("data-action");
+    if (action === "view") openViewModal(org);
+    else if (action === "approve") approveOrg(org);
+    else if (action === "reject") rejectOrg(org);
+  });
+
+  /* ---------------- View modal ---------------- */
+  var viewModalOverlay = document.getElementById("viewModalOverlay");
+  var viewDetailGrid = document.getElementById("viewDetailGrid");
+  var currentViewOrg = null;
+
+  function openViewModal(org) {
+    currentViewOrg = org;
+    document.getElementById("viewTenantTitle").textContent = org.companyName;
+    var fields = [
+      ["Org ID", org.orgId],
+      ["Title", org.companyName],
+      ["Email", org.email],
+      ["Username", org.username],
+      ["Website", org.companyWebsite || "—"],
+      ["Contact Number", org.contactNumber || "—"],
+      ["Team Size", org.teamSize || "—"],
+      ["Requested", formatRequestedDate(org.createdAt)]
+    ];
+    viewDetailGrid.innerHTML = fields.map(function (f) {
+      return '<div class="view-detail-item"><span>' + f[0] + '</span><strong>' + escapeHtml(f[1]) + '</strong></div>';
+    }).join("");
+    viewModalOverlay.classList.add("show");
+  }
+
+  function closeViewModal() { viewModalOverlay.classList.remove("show"); }
+
+  document.getElementById("closeViewModal").addEventListener("click", closeViewModal);
+  document.getElementById("closeViewModalBtn").addEventListener("click", closeViewModal);
+  viewModalOverlay.addEventListener("click", function (e) { if (e.target === viewModalOverlay) closeViewModal(); });
+
+  document.getElementById("viewApproveBtn").addEventListener("click", function () {
+    if (!currentViewOrg) return;
+    var org = currentViewOrg;
+    closeViewModal();
+    approveOrg(org);
+  });
+
+  document.getElementById("viewRejectBtn").addEventListener("click", function () {
+    if (!currentViewOrg) return;
+    var org = currentViewOrg;
+    closeViewModal();
+    rejectOrg(org);
+  });
+
+  /* ---------------- Toast ---------------- */
+  var toastNotice = document.getElementById("toastNotice");
+  var toastNoticeText = document.getElementById("toastNoticeText");
+  var toastTimer = null;
+  function showToast(message) {
+    toastNoticeText.textContent = message;
+    toastNotice.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastNotice.classList.remove("show"); }, 2600);
+  }
+</script>
+
+</body>
+</html>
