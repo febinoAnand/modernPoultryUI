@@ -8,6 +8,7 @@
 
   var SESSION_KEY = "ui_session";
   var POST_LOGIN_REDIRECT_KEY = "ui_post_login_redirect";
+  var ADMIN_HOME_ORG_KEY = "ui_admin_home_org";
 
   function isLoggedIn() {
     return sessionStorage.getItem(SESSION_KEY) === "true";
@@ -32,6 +33,59 @@
 
   function getOrgId() {
     return sessionStorage.getItem("ui_org_id") || "";
+  }
+
+  /* ---------------- Admin "view as tenant" ----------------
+     Lets Tenant Admin (Control Center) drop straight into the real
+     app - dashboard.html and everything under its sidebar (Farm,
+     Trader, Branch, Machine, Sales Order, Bill List, User,
+     Permissions) - scoped to one specific tenant, by temporarily
+     swapping the session's org id. Every page already reads
+     Data.getX() using this same org id, so nothing else needs to
+     change for the data to come out scoped correctly. The admin's
+     own org id is stashed so "Exit to Tenant Admin" can restore it. */
+  function viewTenantDashboard(orgId) {
+    if (sessionStorage.getItem(ADMIN_HOME_ORG_KEY) === null) {
+      sessionStorage.setItem(ADMIN_HOME_ORG_KEY, getOrgId());
+    }
+    sessionStorage.setItem("ui_org_id", orgId);
+    window.location.href = "dashboard.html";
+  }
+
+  function isViewingTenant() {
+    return sessionStorage.getItem(ADMIN_HOME_ORG_KEY) !== null;
+  }
+
+  function exitTenantView() {
+    var homeOrg = sessionStorage.getItem(ADMIN_HOME_ORG_KEY) || "";
+    if (homeOrg) sessionStorage.setItem("ui_org_id", homeOrg);
+    else sessionStorage.removeItem("ui_org_id");
+    sessionStorage.removeItem(ADMIN_HOME_ORG_KEY);
+    window.location.href = "tenant-admin.html";
+  }
+
+  function initImpersonationBanner() {
+    if (!isViewingTenant()) return;
+    var main = document.querySelector(".main");
+    var content = document.querySelector(".content");
+    if (!main || !content) return;
+
+    var org = window.Data && window.Data.findOrganization ? window.Data.findOrganization(getOrgId()) : null;
+    var label = org ? org.companyName : getOrgId();
+
+    var bar = document.createElement("div");
+    bar.className = "impersonation-banner";
+    bar.innerHTML =
+      '<span>Viewing <strong>' + escapeHtmlLocal(label) + '</strong> as admin</span>' +
+      '<button type="button" class="impersonation-exit">Exit to Tenant Admin</button>';
+    main.insertBefore(bar, content);
+    bar.querySelector(".impersonation-exit").addEventListener("click", exitTenantView);
+  }
+
+  function escapeHtmlLocal(str) {
+    return String(str == null ? "" : str).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
   }
 
   /* Consumes (reads + clears) the page requireAuth() bounced the user
@@ -84,6 +138,8 @@
   }
 
   function initSidebar() {
+    initImpersonationBanner();
+
     var sidebar = document.querySelector(".sidebar");
     var backdrop = document.querySelector(".sidebar-backdrop");
     var toggleBtn = document.querySelector(".menu-toggle");
@@ -726,6 +782,9 @@
     requireAuth: requireAuth,
     login: login,
     getOrgId: getOrgId,
+    viewTenantDashboard: viewTenantDashboard,
+    exitTenantView: exitTenantView,
+    isViewingTenant: isViewingTenant,
     consumePostLoginRedirect: consumePostLoginRedirect,
     logout: logout,
     initSidebar: initSidebar,
